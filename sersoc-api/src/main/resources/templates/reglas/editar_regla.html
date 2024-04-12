@@ -1,0 +1,70 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head th:replace="~{layout/layout :: head}">
+
+</head>
+<body>
+<nav th:replace="~{layout/layout :: navbar}"></nav>
+
+<section class="h-100 bg-light">
+    <div class="bg-light py-3 py-md-5">
+        <div class="container">
+            <div class="row justify-content-md-center">
+                <div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-6">
+                    <div class="bg-white p-4 p-md-5 rounded shadow-sm">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="mb-5">
+                                    <h2 class="h3">Reglas</h2>
+                                    <h3 class="fs-6 fw-normal text-secondary m-0">Inserta los detalles para crear la regla</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <form th:action="@{/regla/reglas}" th:object="${regla}" method="post">
+                            <div class="row gy-3 gy-md-4 overflow-hidden justify-content-center">
+
+                                <input type="hidden" th:field="*{id}"/>
+
+                                <div class="col-12">
+                                    <label for="nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="nombre" id="nombre" placeholder="Nombre"  th:field="*{nombre}">
+                                </div>
+                                <div class="col-12">
+                                    <label for="descripcion" class="form-label">Descripción</label>
+                                    <textarea class="form-control" name="descripcion" id="descripcion" aria-label="descripcion" placeholder="Descripción" th:field="*{descripcion}"></textarea>
+                                </div>
+                                <div class="row justify-content-between m-2">
+                                <div class="col-6">
+                                    <label for="fecha_inicio" class="form-label">Fecha de inicio</label>
+                                    <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" th:field="*{fecha_inicio}">
+                                </div>
+                                    <div class="col-6">
+                                        <label for="fecha_fin" class="form-label">Fecha de finalización</label>
+                                        <input type="date" class="form-control" id="fecha_fin" name="fecha_fin"  th:field="*{fecha_fin}">
+                                    </div>
+                                </div>
+                                    <div class="col-12">
+                                        <label for="regla" class="form-label mb-2">Script</label>
+                                        <textarea class="form-control" id="regla" aria-label="regla"  th:field="*{script}"></textarea>
+                                    </div>
+
+                                <div class="col-6">
+                                    <div class="d-grid">
+                                        <button class="btn btn-primary" type="submit">Enviar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</section>
+
+<script th:src="@{/js/codemirror.min.js}"></script>
+
+<script type="text/javascript" th:src="@{/js/custom_crear_editar.js}"></script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+:root{
+    --primary: #007bff;
+    --secondary: #6c757d;
+    --success: #28a745;
+    --info: #17a2b8;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --light: #f8f9fa;
+    --dark: #343a40;
+}
+
+#btn-delete {
+    font-size: 1.1em;
+
+    :hover {
+    background-color: var(--danger);
+}
+}
+
+#btn-edit {
+    font-size: 1.1em;
+
+    :hover {
+        background-color: var(--warning);
+    }
+}
+
+#btn-info {
+    font-size: 1.1em;
+
+    :hover {
+        background-color: var(--info);
+    }
+}
+
+    .active-link {
+        position: relative;
+    }
+
+    .active-link::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -2px; /* Ajusta este valor según tu preferencia para el grosor del borde */
+        width: 100%;
+        height: 1px; /* Grosor del borde */
+        background-color: var(--dark); /* Color del borde */
+    }
+
