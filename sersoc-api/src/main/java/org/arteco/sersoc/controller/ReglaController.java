@@ -1,18 +1,13 @@
 package org.arteco.sersoc.controller;
 
 import org.arteco.sersoc.base.AbstractCrudController;
-import org.arteco.sersoc.model.base.ReglasTipoPrestacionId;
 import org.arteco.sersoc.model.entities.ReglaEntity;
-import org.arteco.sersoc.model.entities.ReglaTipoPrestacionEntity;
 import org.arteco.sersoc.repository.ReglaRepository;
 import org.arteco.sersoc.service.ReglaService;
-import org.arteco.sersoc.service.TipoPrestacionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-
-import java.util.List;
 
 
 @Controller

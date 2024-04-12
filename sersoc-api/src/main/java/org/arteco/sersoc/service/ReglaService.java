@@ -2,13 +2,8 @@ package org.arteco.sersoc.service;
 
 import org.arteco.sersoc.base.AbstractCrudService;
 import org.arteco.sersoc.model.entities.ReglaEntity;
-import org.arteco.sersoc.model.entities.TipoPrestacionEntity;
 import org.arteco.sersoc.repository.ReglaRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class ReglaService extends AbstractCrudService<ReglaEntity, Long, ReglaRepository> {
