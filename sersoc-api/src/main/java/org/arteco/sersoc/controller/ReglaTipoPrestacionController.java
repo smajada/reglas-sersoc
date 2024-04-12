@@ -7,6 +7,7 @@ import org.arteco.sersoc.repository.ReglaTipoPrestacionRepository;
 import org.arteco.sersoc.service.ReglaTipoPrestacionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,15 +32,18 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
             Model model,
             @RequestParam("page") Optional<Integer> page,
             @RequestParam("size") Optional<Integer> size)
+
     {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(5);
+        String keyword = "Paco";
 
         // Se obtiene la lista de reglas de tipo prestación paginada
-        Page<ReglaTipoPrestacionEntity> reglasTipoPrestacionPage = service.findPaginated(PageRequest.of(currentPage - 1, pageSize));
+        Page<ReglaTipoPrestacionEntity> reglasTipoPrestacionPage = service.findPaginated(PageRequest.of(currentPage - 1, pageSize), keyword);
 
         // Se añaden los datos a la vista
         model.addAttribute("reglasTipoPrestacionPage", reglasTipoPrestacionPage);
+        model.addAttribute("keyword", keyword);
 
         int totalPages = reglasTipoPrestacionPage.getTotalPages();
         // Si el total de páginas es mayor a 0, se crea una lista con los números de las páginas

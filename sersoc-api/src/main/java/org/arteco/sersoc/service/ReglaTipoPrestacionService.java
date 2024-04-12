@@ -21,11 +21,15 @@ public class ReglaTipoPrestacionService extends AbstractCrudService<ReglaTipoPre
         super(reglaTipoPrestacionRepository);
     }
 
-    public Page<ReglaTipoPrestacionEntity> findPaginated(Pageable pageable){
+    public Page<ReglaTipoPrestacionEntity> findPaginated(Pageable pageable, String keyword){
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
         int startItem = currentPage * pageSize;
         List<ReglaTipoPrestacionEntity> list = repo.findAll();
+
+        if(keyword != null){
+            list = repo.search(keyword);
+        }
 
         if (list.size() < startItem) {
             list = Collections.emptyList();
