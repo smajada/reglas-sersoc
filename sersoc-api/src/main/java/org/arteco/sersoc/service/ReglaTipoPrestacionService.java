@@ -4,15 +4,36 @@ import org.arteco.sersoc.base.AbstractCrudService;
 import org.arteco.sersoc.model.base.ReglasTipoPrestacionId;
 import org.arteco.sersoc.model.entities.ReglaTipoPrestacionEntity;
 import org.arteco.sersoc.repository.ReglaTipoPrestacionRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
 public class ReglaTipoPrestacionService extends AbstractCrudService<ReglaTipoPrestacionEntity, ReglasTipoPrestacionId, ReglaTipoPrestacionRepository> {
 
+
     public ReglaTipoPrestacionService(ReglaTipoPrestacionRepository reglaTipoPrestacionRepository) {
         super(reglaTipoPrestacionRepository);
+    }
+
+    public Page<ReglaTipoPrestacionEntity> findPaginated(Pageable pageable){
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+        List<ReglaTipoPrestacionEntity> list = repo.findAll();
+
+        if (list.size() < startItem) {
+            list = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + pageSize, list.size());
+            list = list.subList(startItem, toIndex);
+        }
+        return new PageImpl<ReglaTipoPrestacionEntity>(list, PageRequest.of(currentPage, pageSize), list.size());
     }
 
     @Override

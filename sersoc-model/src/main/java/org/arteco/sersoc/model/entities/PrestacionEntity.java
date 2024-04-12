@@ -2,13 +2,11 @@ package org.arteco.sersoc.model.entities;
 
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @NoArgsConstructor
-@Setter
-@Getter
+@Data
 @Entity
 @Table(name = "prestaciones")
 public class PrestacionEntity {

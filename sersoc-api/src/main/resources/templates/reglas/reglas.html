@@ -21,11 +21,10 @@
         </thead>
         <tbody>
         <!-- Itera sobre la lista de reglas -->
-        <tr th:each="regla : ${reglasTipoPrestacion}">
+        <tr th:each="regla : ${reglasTipoPrestacionPage}" th:if="${regla.reglaEntity.active}">
             <td th:text="${regla.reglaEntity.nombre}"></td>
             <td th:text="${#dates.format(regla.reglaEntity.fecha_inicio,'dd/MM/yyyy' )}"></td>
             <td th:text="${#dates.format(regla.reglaEntity.fecha_fin,'dd/MM/yyyy' )}"></td>
-            <p th:text="${regla}"></p>
             <td class="d-flex justify-content-evenly">
                 <a type="button" class="btn btn-outline-info" id="btn-info" data-bs-toggle="modal" th:data-bs-target="'#modal-' + ${regla.reglaEntity.id}">
                     +
@@ -53,7 +52,7 @@
                             <p th:text="${regla.TipoPrestacionEntity.descripcion}"></p>
                             <h4>Prestaciones</h4>
                             <ul>
-                                <li th:each="prestacion : ${regla.TipoPrestacionEntity.prestaciones}" th:text="${prestacion}"></li>
+                                <li th:each="prestacion : ${regla.TipoPrestacionEntity.prestaciones}" th:text="${prestacion.nombre_prestacion}"></li>
                             </ul>
 
                             <h3>Script</h3>
@@ -68,7 +67,35 @@
         </tr>
 
         </tbody>
+
     </table>
+
+    <!-- Paginación -->
+    <nav aria-label="Navegación de la página" th:if="${reglasTipoPrestacionPage.totalPages > 0}">
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <a class="page-link"
+                   th:if="${reglasTipoPrestacionPage.hasPrevious}"
+                   th:classappend="${!reglasTipoPrestacionPage.hasPrevious} ? disabled"
+                   th:href="@{/regla-tipo-prestacion/list(size=${reglasTipoPrestacionPage.size}, page=${reglasTipoPrestacionPage.previousPageable().pageNumber})}">Previous</a>
+            </li>
+
+            <li class="page-item" th:if="${reglasTipoPrestacionPage.totalPages > 0}" th:each="pageNumber : ${pageNumbers}">
+                <a th:href="@{/regla-tipo-prestacion/list(size=${reglasTipoPrestacionPage.size}, page=${pageNumber - 1})}"
+                   th:text="${pageNumber + 1}"
+                   th:classappend="${pageNumber == reglasTipoPrestacionPage.number} ? active"
+                   class="page-link"></a>
+            </li>
+
+            <li class="page-item">
+                <a class="page-link"
+                   th:if="${reglasTipoPrestacionPage.hasNext}"
+                   th:classappend="${!reglasTipoPrestacionPage.hasNext} ? disabled"
+                   th:href="@{/regla-tipo-prestacion/list(size=${reglasTipoPrestacionPage.size}, page=${reglasTipoPrestacionPage.nextPageable().pageNumber + 2})}">Next</a>
+            </li>
+        </ul>
+    </nav>
+
     </section>
 
 
