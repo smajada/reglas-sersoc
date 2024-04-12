@@ -30,20 +30,18 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
     @GetMapping("/list")
     public String listAllReglasTipoPrestacion(
             Model model,
+            @Param("keyword") String keyword,
             @RequestParam("page") Optional<Integer> page,
             @RequestParam("size") Optional<Integer> size)
 
     {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(5);
-        String keyword = "Paco";
 
-        // Se obtiene la lista de reglas de tipo prestación paginada
+        // Se obtiene la lista de reglas de tipo prestación paginada y filtrada por nombre
         Page<ReglaTipoPrestacionEntity> reglasTipoPrestacionPage = service.findPaginated(PageRequest.of(currentPage - 1, pageSize), keyword);
 
-        // Se añaden los datos a la vista
-        model.addAttribute("reglasTipoPrestacionPage", reglasTipoPrestacionPage);
-        model.addAttribute("keyword", keyword);
+
 
         int totalPages = reglasTipoPrestacionPage.getTotalPages();
         // Si el total de páginas es mayor a 0, se crea una lista con los números de las páginas
@@ -54,6 +52,9 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
             model.addAttribute("pageNumbers", pageNumbers);
         }
 
+        // Se añaden los datos a la vista
+        model.addAttribute("reglasTipoPrestacionPage", reglasTipoPrestacionPage);
+        model.addAttribute("keyword", keyword);
         return  "reglas/reglas";
     }
 
