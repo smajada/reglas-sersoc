@@ -60,7 +60,7 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
     @GetMapping("/list")
     public String listAllReglasTipoPrestacion(Model model, @RequestParam(name = "page", defaultValue = "0") int page){
         Pageable pageRequest = PageRequest.of(page, 5);
-        PageDto<ReglaTipoPrestacionEntity> reglasTipoPrestacionPage = (PageDto<ReglaTipoPrestacionEntity>) super.service.page(pageRequest);
+        PageDto<ReglaTipoPrestacionEntity> reglasTipoPrestacionPage = super.page(pageRequest);
         model.addAttribute("totalPages", reglasTipoPrestacionPage.getTotalPages());
         model.addAttribute("reglasTipoPrestacion", reglasTipoPrestacionPage.getContent());
         model.addAttribute("currentPage", page);

@@ -10,7 +10,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 
-public abstract class AbstractCrudService<ENTITY, ID, REPO extends JpaRepository<ENTITY, ID>> {
+public abstract class AbstractCrudService<
+        ENTITY,
+        ID,
+        REPO extends JpaRepository<ENTITY, ID>> extends AbstractSecureController {
 
     protected final REPO repo;
 

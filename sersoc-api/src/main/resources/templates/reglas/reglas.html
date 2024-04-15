@@ -21,7 +21,7 @@
         </div>
     </form>
 
-    <p th:text="${reglasTipoPrestacion}"></p>
+<!--    <p th:text="${reglasTipoPrestacion}"></p>-->
 
     <table class="table table-striped table-bordered table-hover">
         <thead>
@@ -34,7 +34,7 @@
         </thead>
         <tbody>
         <!-- Itera sobre la lista de reglas -->
-        <tr th:each="regla : ${reglasTipoPrestacionPage}" th:if="${regla.reglaEntity.active}">
+        <tr th:each="regla : ${reglasTipoPrestacion}" th:if="${regla.reglaEntity.active}">
             <td th:text="${regla.reglaEntity.nombre}"></td>
             <td th:text="${#dates.format(regla.reglaEntity.fecha_inicio,'dd/MM/yyyy' )}"></td>
             <td th:text="${#dates.format(regla.reglaEntity.fecha_fin,'dd/MM/yyyy' )}"></td>
@@ -48,7 +48,7 @@
                 </a>
             </td>
 
-            <!-- Modal -->
+<!--             Modal -->
             <div class="modal fade" th:id="'modal-' + ${regla.reglaEntity.id}" tabindex="-1" th:aria-labelledby="'masInfo-' + ${regla.reglaEntity.id}" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg">
                     <div class="modal-content">
@@ -61,12 +61,11 @@
                             <p th:text="${regla.reglaEntity.descripcion}"></p>
 
                             <h3>Tipo de prestacion</h3>
-                            <h4>Descripción</h4>
-                            <p th:text="${regla.TipoPrestacionEntity.descripcion}"></p>
-                            <h4>Prestaciones</h4>
-                            <ul>
-                                <li th:each="prestacion : ${regla.TipoPrestacionEntity.prestaciones}" th:text="${prestacion.nombre_prestacion}"></li>
-                            </ul>
+                            <h5>Prestaciones</h5>
+                            <p th:each="prestacion : ${regla.tipoPrestacionEntity.prestaciones}" th:text="${prestacion.descripcion}"></p>
+
+                            <h5>Descripción</h5>
+                            <p th:text="${regla.tipoPrestacionEntity.descripcion}"></p>
 
                             <h3>Script</h3>
                             <textarea class="form-control" th:id="'regla-'+${regla.reglaEntity.id}" aria-label="regla"  th:text="${regla.reglaEntity.script}"></textarea>
@@ -87,34 +86,30 @@
     <p th:if="${totalPages == 0}">No hay reglas</p>
 
     <nav aria-label="Navegación de la página" th:if="${totalPages > 0}">
-        <ul class="pagination  justify-content-center" >
+        <ul class="pagination justify-content-center">
             <li class="page-item">
-                <a
-                class="page-link"
-                th:if="${currentPage > 0}"
-                th:classappend="${currentPage < totalPages} ? disabled"
-                th:href="@{/regla-tipo-prestacion/list(page=${currentPage - 1})}"
+                <a class="page-link"
+                   th:if="${currentPage > 0}"
+                   th:href="@{/regla-tipo-prestacion/list(page=${currentPage - 1})}"
                 >Previous</a></li>
 
-            <li class="page-item" th:if="${totalPages > 0}" th:each="page : ${#numbers.sequence(0, totalPages - 1)}">
-                <a
-                th:href="@{/regla-tipo-prestacion/list(page=${page})}"
-                th:text="${page + 1}"
-                th:classappend="${currentPage==page + 1} ? active"
-                class="page-link"
-                ></a>
+            <li class="page-item" th:each="page : ${#numbers.sequence(0, totalPages - 1)}">
+                <a th:href="@{/regla-tipo-prestacion/list(page=${page})}"
+                   th:text="${page + 1}"
+                   th:classappend="${currentPage==page} ? active"
+                   class="page-link"></a>
             </li>
 
             <li class="page-item">
-                <a
-                class="page-link"
-                th:if="${currentPage < totalPages}"
-                th:classappend="${currentPage == totalPages} ? disabled"
-                th:href="@{/regla-tipo-prestacion/list(page=${currentPage + 1})}"
+                <a class="page-link"
+                   th:if="${currentPage < totalPages}"
+                   th:classappend="${currentPage == totalPages} ? disabled"
+                   th:href="@{/regla-tipo-prestacion/list(page=${currentPage + 1})}"
                 >Next</a></li>
         </ul>
     </nav>
-    </section>
+
+</section>
 
 
 
