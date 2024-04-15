@@ -21,7 +21,7 @@
                                 </div>
                             </div>
                         </div>
-                        <form th:action="@{/regla/reglas}" th:object="${reglaTipoPrestacion}" th:method="post">
+                        <form th:action="@{/regla-tipo-prestacion/save}" th:object="${reglaTipoPrestacion}" th:method="post">
                             <div class="row gy-3 gy-md-4 overflow-hidden justify-content-center">
                                 <div class="col-12">
                                     <label for="nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
@@ -45,9 +45,9 @@
                                 <div class="col-12">
                                     <label for="tipo_prestacion" class="form-label
                                     ">Tipo de prestación</label>
-                                    <select class="form-select" id="tipo_prestacion" name="tipo_prestacion" th:field="*{tipoPrestacionEntity}">
+                                    <select class="form-select" id="tipo_prestacion" name="tipo_prestacion" th:field="*{tipoPrestacionEntity.descripcion}">
                                         <option value="">Selecciona un tipo de prestación</option>
-                                        <option th:each="tipoPrestacion : ${tipoPrestacionList}" th:value="${tipoPrestacion.id}" th:text="${tipoPrestacion.descripcion}"></option>
+                                        <option th:each="tipoPrestacion : ${tipoPrestacionList}" th:value="${tipoPrestacion.descripcion}" th:text="${tipoPrestacion.descripcion}"></option>
                                     </select>
                                 </div>
 

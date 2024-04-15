@@ -33,13 +33,4 @@ public class ReglaEntity {
     private String script;
 
     private boolean active = true;
-
-    public ReglaEntity(String nombre, String descripcion, Date fecha_inicio, Date fecha_fin, String script, boolean active) {
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.fecha_inicio = fecha_inicio;
-        this.fecha_fin = fecha_fin;
-        this.script = script;
-        this.active = active;
-    }
 }
