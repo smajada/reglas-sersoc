@@ -24,12 +24,8 @@ public abstract class AbstractCrudController<ENTITY, ID, REPO extends JpaReposit
             throw new IllegalArgumentException("Id cannot be null");
         }
         service.update(entity, id);
-        return "redirect:/" + entity.getClass().getSimpleName().toLowerCase();
+        return "redirect:/list";
     }
 
-    @DeleteMapping("/{id}")
-    public String delete(@PathVariable ID id) {
-        service.findById(id).ifPresent(service::delete);
-        return "redirect:";
-    }
+
 }

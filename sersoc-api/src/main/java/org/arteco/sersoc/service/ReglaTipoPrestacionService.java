@@ -42,9 +42,9 @@ public class ReglaTipoPrestacionService extends AbstractCrudService<ReglaTipoPre
 
     @Override
     public void delete(ReglaTipoPrestacionEntity bean) {
-        repo.delete(bean);
+        bean.getReglaEntity().setActive(false);
+        repo.save(bean);
     }
-
 
 
 

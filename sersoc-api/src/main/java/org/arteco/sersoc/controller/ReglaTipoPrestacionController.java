@@ -12,10 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -59,6 +56,7 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
         // Se añaden los datos a la vista
         model.addAttribute("reglasTipoPrestacionPage", reglasTipoPrestacionPage);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("titlePage", "Reglas ");
         return  "reglas/reglas";
     }
 
@@ -69,23 +67,42 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
         List<TipoPrestacionEntity> tipoPrestacionList = (List<TipoPrestacionEntity>) tipoPrestacionService.findAll();
         model.addAttribute("tipoPrestacionList", tipoPrestacionList);
 
-        model.addAttribute("titlePage", "Nueva regla tipo prestacion");
+        model.addAttribute("titlePage", "Crear regla");
         return "reglas/crear_regla";
     }
 
-//    @GetMapping("/editar/{reglaId}/{tipoPrestacionId}")
-//    public String editarReglasTipoPrestacion(Model model, @PathVariable(value = "reglaId") Long reglaId, @PathVariable(value = "tipoPrestacionId") Long tipoPrestacionId){
-//        ReglasTipoPrestacionId id = new ReglasTipoPrestacionId();
-//        id.setReglaId(reglaId);
-//        id.setTipoPrestacionId(tipoPrestacionId);
-//
-//        ReglaTipoPrestacionEntity reglaTipoPrestacion = service.findById(id).get();
-//        List<TipoPrestacionEntity> tipoPrestacionList = (List<TipoPrestacionEntity>) tipoPrestacionService.findAll();
-//        model.addAttribute("reglaTipoPrestacion", reglaTipoPrestacion);
-//        model.addAttribute("tipoPrestacionList", tipoPrestacionList);
-//        model.addAttribute("titlePage", "Editar regla tipo prestacion");
-//        return "reglas/crear_regla";
-//    }
+    @GetMapping("/editar/{reglaId}/{tipoPrestacionId}")
+    public String editarReglasTipoPrestacion(@PathVariable("reglaId") Long reglaId, @PathVariable("tipoPrestacionId") Long tipoPrestacionId, Model model){
+        ReglasTipoPrestacionId id = buildId(reglaId, tipoPrestacionId);
+
+        ReglaTipoPrestacionEntity reglaTipoPrestacion = service.findById(id).get();
+        model.addAttribute("reglaTipoPrestacion", reglaTipoPrestacion);
+
+        List<TipoPrestacionEntity> tipoPrestacionList = (List<TipoPrestacionEntity>) tipoPrestacionService.findAll();
+        model.addAttribute("tipoPrestacionList", tipoPrestacionList);
+
+        model.addAttribute("titlePage", "Editar regla");
+        return "reglas/editar_regla";
+    }
+
+
+    @GetMapping("/delete/{reglaId}/{tipoPrestacionId}")
+    public String delete(@PathVariable("reglaId") Long reglaId, @PathVariable("tipoPrestacionId") Long tipoPrestacionId) {
+        ReglasTipoPrestacionId id = buildId(reglaId, tipoPrestacionId);
+
+        ReglaTipoPrestacionEntity reglaTipoPrestacion = service.findById(id).get();
+
+        service.delete(reglaTipoPrestacion);
+        System.out.println(reglaTipoPrestacion.getReglaEntity().isActive());
+        return "redirect:/regla-tipo-prestacion/list";
+    }
+
+    private ReglasTipoPrestacionId buildId(Long reglaId, Long tipoPrestacionId) {
+        ReglasTipoPrestacionId id = new ReglasTipoPrestacionId();
+        id.setReglaId(reglaId);
+        id.setTipoPrestacionId(tipoPrestacionId);
+        return id;
+    }
 
 
 }

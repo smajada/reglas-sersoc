@@ -40,8 +40,8 @@
                 <a type="button" class="btn btn-outline-info" id="btn-info" data-bs-toggle="modal" th:data-bs-target="'#modal-' + ${regla.reglaEntity.id}">
                     +
                 </a>
-                <a th:href="@{/editar/{id}(id=${regla.reglaEntity.id})}" class="btn btn-outline-warning" id="btn-edit">✎</a>
-                <a th:href="@{/{id}(id=${regla.reglaEntity.id})}" class="btn btn-outline-danger" id="btn-delete">
+                <a th:href="@{/regla-tipo-prestacion/editar/{reglaId}/{tipoPrestacionId}(reglaId=${regla.reglaEntity.id}, tipoPrestacionId=${regla.tipoPrestacionEntity.id})}" class="btn btn-outline-warning" id="btn-edit">✎</a>
+                <a th:href="@{/regla-tipo-prestacion/delete/{reglaId}/{tipoPrestacionId}(reglaId=${regla.reglaEntity.id}, tipoPrestacionId=${regla.tipoPrestacionEntity.id})}" class="btn btn-outline-danger" id="btn-delete">
                     ✕
                 </a>
             </td>
