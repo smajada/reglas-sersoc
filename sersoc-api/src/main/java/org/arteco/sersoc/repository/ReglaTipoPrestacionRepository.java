@@ -3,6 +3,8 @@ package org.arteco.sersoc.repository;
 import org.arteco.sersoc.model.base.ReglasTipoPrestacionId;
 import org.arteco.sersoc.model.entities.ReglaTipoPrestacionEntity;
 import org.arteco.sersoc.service.ReglaTipoPrestacionService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -21,5 +23,5 @@ public interface ReglaTipoPrestacionRepository extends JpaRepository<ReglaTipoPr
             + " OR r.tipoPrestacionEntity.descripcion LIKE %?1%"
             + " OR r.reglaEntity.descripcion LIKE %?1%")
     List<ReglaTipoPrestacionEntity> search(String keyword);
-;
+
 }

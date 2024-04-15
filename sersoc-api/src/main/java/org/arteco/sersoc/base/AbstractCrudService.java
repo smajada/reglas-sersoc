@@ -1,5 +1,10 @@
 package org.arteco.sersoc.base;
 
+import org.arteco.sersoc.dto.PageDto;
+import org.arteco.sersoc.model.entities.ReglaTipoPrestacionEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
@@ -33,6 +38,12 @@ public abstract class AbstractCrudService<ENTITY, ID, REPO extends JpaRepository
         }
     }
 
-    public abstract void delete(ENTITY bean);
 
+
+    public Page<ENTITY> page(final Pageable page) {
+       return this.repo.findAll(page);
+    }
+
+
+    public abstract void delete(ENTITY bean);
 }
