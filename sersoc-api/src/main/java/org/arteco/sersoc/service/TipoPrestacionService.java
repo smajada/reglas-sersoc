@@ -5,6 +5,8 @@ import org.arteco.sersoc.model.entities.TipoPrestacionEntity;
 import org.arteco.sersoc.repository.TipoPrestacionRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class TipoPrestacionService extends AbstractCrudService<TipoPrestacionEntity, Long, TipoPrestacionRepository> {

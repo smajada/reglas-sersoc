@@ -20,20 +20,6 @@ public abstract class AbstractCrudController<
         this.service = service;
     }
 
-    @PostMapping("/save")
-    public String save(@RequestBody final ENTITY entity) {
-        service.save(entity);
-        return "redirect:/" + entity.getClass().getSimpleName().toLowerCase();
-    }
-
-    @PutMapping("/{id}")
-    public String update(@PathVariable ID id, @RequestBody ENTITY entity) {
-        if (id == null) {
-            throw new IllegalArgumentException("Id cannot be null");
-        }
-        service.update(entity, id);
-        return "redirect:/list";
-    }
 
     @GetMapping("/page")
     public PageDto<ENTITY> page(@Parameter(hidden = true) final Pageable page) {

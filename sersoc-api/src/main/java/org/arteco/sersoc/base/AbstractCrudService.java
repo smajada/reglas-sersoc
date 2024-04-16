@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -41,12 +42,13 @@ public abstract class AbstractCrudService<
         }
     }
 
-
+    public List<ENTITY> findAllById(List<ID> ids) {
+        return this.repo.findAllById(ids);
+    }
 
     public Page<ENTITY> page(final Pageable page) {
        return this.repo.findAll(page);
     }
-
 
     public abstract void delete(ENTITY bean);
 }

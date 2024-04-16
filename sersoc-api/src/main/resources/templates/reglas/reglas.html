@@ -26,6 +26,7 @@
     <table class="table table-striped table-bordered table-hover">
         <thead>
         <tr>
+            <th scope="col">Id</th>
             <th scope="col">Nombre</th>
             <th scope="col">Fecha de inicio</th>
             <th scope="col">Fecha de fin</th>
@@ -33,13 +34,16 @@
         </tr>
         </thead>
         <tbody>
+
         <!-- Itera sobre la lista de reglas -->
         <tr th:each="regla : ${reglasTipoPrestacion}" th:if="${regla.reglaEntity.active}">
+            <td th:text="${regla.reglaEntity.id}"></td>
             <td th:text="${regla.reglaEntity.nombre}"></td>
+
             <td th:text="${#dates.format(regla.reglaEntity.fecha_inicio,'dd/MM/yyyy' )}"></td>
             <td th:text="${#dates.format(regla.reglaEntity.fecha_fin,'dd/MM/yyyy' )}"></td>
             <td class="d-flex justify-content-evenly">
-                <a type="button" class="btn btn-outline-info" id="btn-info" data-bs-toggle="modal" th:data-bs-target="'#modal-' + ${regla.reglaEntity.id}">
+                <a type="button" class="btn btn-outline-info" id="btn-info" data-bs-toggle="modal" th:data-bs-target="'#modal-' + ${regla.tipoPrestacionEntity.id}">
                     +
                 </a>
                 <a th:href="@{/regla-tipo-prestacion/editar/{reglaId}/{tipoPrestacionId}(reglaId=${regla.reglaEntity.id}, tipoPrestacionId=${regla.tipoPrestacionEntity.id})}" class="btn btn-outline-warning" id="btn-edit">✎</a>
@@ -49,19 +53,23 @@
             </td>
 
 <!--             Modal -->
-            <div class="modal fade" th:id="'modal-' + ${regla.reglaEntity.id}" tabindex="-1" th:aria-labelledby="'masInfo-' + ${regla.reglaEntity.id}" aria-hidden="true">
+            <div class="modal fade" th:id="'modal-' + ${regla.tipoPrestacionEntity.id}" tabindex="-1" th:aria-labelledby="'masInfo-' + ${regla.tipoPrestacionEntity.id}" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" th:id="'masInfo-' + ${regla.reglaEntity.id}">Más información</h1>
+                            <h1 class="modal-title fs-5" th:id="'masInfo-' + ${regla.tipoPrestacionEntity.id}">Más información</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
+                            <h3>Id</h3>
+                            <p th:text="${regla.tipoPrestacionEntity.id}"></p>
+
                             <h3>Descripción</h3>
                             <p th:text="${regla.reglaEntity.descripcion}"></p>
 
                             <h3>Tipo de prestacion</h3>
                             <h5>Prestaciones</h5>
+                            <p th:if="${regla.tipoPrestacionEntity.prestaciones.size() == 0}">No hay prestaciones</p>
                             <p th:each="prestacion : ${regla.tipoPrestacionEntity.prestaciones}" th:text="${prestacion.descripcion}"></p>
 
                             <h5>Descripción</h5>
@@ -89,7 +97,7 @@
         <ul class="pagination justify-content-center">
             <li class="page-item">
                 <a class="page-link"
-                   th:if="${currentPage > 0}"
+                   th:classappend="${currentPage == 0} ? disabled"
                    th:href="@{/regla-tipo-prestacion/list(page=${currentPage - 1})}"
                 >Previous</a></li>
 
@@ -102,8 +110,7 @@
 
             <li class="page-item">
                 <a class="page-link"
-                   th:if="${currentPage < totalPages}"
-                   th:classappend="${currentPage == totalPages} ? disabled"
+                   th:classappend="${currentPage == totalPages - 1} ? disabled"
                    th:href="@{/regla-tipo-prestacion/list(page=${currentPage + 1})}"
                 >Next</a></li>
         </ul>
