@@ -5,14 +5,14 @@ import org.arteco.sersoc.model.entities.ReglaEntity;
 import org.arteco.sersoc.repository.ReglaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ReglaService extends AbstractCrudService<ReglaEntity, Long, ReglaRepository> {
 
-    private final TipoPrestacionService tipoPrestacionService;
 
     public ReglaService(ReglaRepository reglaRepository, TipoPrestacionService tipoPrestacionService) {
         super(reglaRepository);
-        this.tipoPrestacionService = tipoPrestacionService;
     }
 
     @Override
@@ -20,5 +20,7 @@ public class ReglaService extends AbstractCrudService<ReglaEntity, Long, ReglaRe
         bean.setActive(false);
     }
 
-
+    public List<ReglaEntity> findByIdPrestacion(Long idPrestacion){
+        return repo.findByIdPrestacion(idPrestacion);
+    }
 }

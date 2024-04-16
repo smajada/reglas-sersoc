@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/regla-tipo-prestacion")
@@ -43,7 +43,6 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
     }
 
 
-
     @GetMapping("/editar/{reglaId}/{tipoPrestacionId}")
     public String editarReglasTipoPrestacion(@PathVariable("reglaId") Long reglaId, @PathVariable("tipoPrestacionId") Long tipoPrestacionId, Model model) {
         ReglasTipoPrestacionId id = buildId(reglaId, tipoPrestacionId);
@@ -53,7 +52,7 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
 
         List<TipoPrestacionEntity> tipoPrestacionList = (List<TipoPrestacionEntity>) tipoPrestacionService.findAll();
         model.addAttribute("tipoPrestacionList", tipoPrestacionList);
-
+        model.addAttribute("id", id);
         model.addAttribute("titlePage", "Editar regla");
         return "reglas/editar_regla";
     }
@@ -65,7 +64,6 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
         ReglaTipoPrestacionEntity reglaTipoPrestacion = service.findById(id).get();
 
         service.delete(reglaTipoPrestacion);
-        System.out.println(reglaTipoPrestacion.getReglaEntity().isActive());
         return "redirect:/regla-tipo-prestacion/list";
     }
 
@@ -88,9 +86,21 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
     @PostMapping("/save")
     public String saveReglaTipoPrestacion(@ModelAttribute ReglaEntity regla, @RequestParam("tipoPrestacion") List<Long> tipoPrestacionIds) {
         List<TipoPrestacionEntity> tipoPrestaciones = tipoPrestacionService.findAllById(tipoPrestacionIds);
-
         super.service.saveReglaWithTipoPrestacion(regla, tipoPrestaciones);
 
+        return "redirect:/regla-tipo-prestacion/list";
+    }
+
+
+    @PostMapping("/update/{reglaId}/{tipoPrestacionId}")
+    public String updateReglaTipoPrestacion(@PathVariable("reglaId") Long reglaId, @PathVariable("tipoPrestacionId") Long tipoPrestacionId, @ModelAttribute ReglaTipoPrestacionEntity updatedReglaTipoPrestacion) {
+        ReglasTipoPrestacionId id = buildId(reglaId, tipoPrestacionId);
+        ReglaTipoPrestacionEntity existingReglaTipoPrestacion = this.service.findById(id).get();
+
+        existingReglaTipoPrestacion.setReglaEntity(updatedReglaTipoPrestacion.getReglaEntity());
+        existingReglaTipoPrestacion.setTipoPrestacionEntity(updatedReglaTipoPrestacion.getTipoPrestacionEntity());
+
+        service.save(existingReglaTipoPrestacion);
         return "redirect:/regla-tipo-prestacion/list";
     }
 
