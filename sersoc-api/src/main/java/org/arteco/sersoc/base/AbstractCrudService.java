@@ -42,7 +42,6 @@ public abstract class AbstractCrudService<
     }
 
 
-
     public Page<ENTITY> page(final Pageable page) {
        return this.repo.findAll(page);
     }

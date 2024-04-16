@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/regla-tipo-prestacion")
@@ -27,40 +28,11 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
         this.tipoPrestacionService = tipoPrestacionService;
     }
 
-//    @GetMapping("/list")
-//    public String listAllReglasTipoPrestacion(
-//            Model model,
-//            @Param("keyword") String keyword,
-//            @RequestParam("page") Optional<Integer> page,
-//            @RequestParam("size") Optional<Integer> size)
-//
-//    {
-//        int currentPage = page.orElse(1);
-//        int pageSize = size.orElse(5);
-//
-//        // Se obtiene la lista de reglas de tipo prestación paginada y filtrada por nombre
-//        Page<ReglaTipoPrestacionEntity> reglasTipoPrestacionPage = service.findPaginated(PageRequest.of(currentPage - 1, pageSize), keyword);
-//
-//        int totalPages = reglasTipoPrestacionPage.getTotalPages();
-//        // Si el total de páginas es mayor a 0, se crea una lista con los números de las páginas
-//        if(totalPages > 0) {
-//            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-//                    .boxed()
-//                    .collect(Collectors.toList());
-//            model.addAttribute("pageNumbers", pageNumbers);
-//        }
-//
-//        // Se añaden los datos a la vista
-//        model.addAttribute("reglasTipoPrestacionPage", reglasTipoPrestacionPage);
-//        model.addAttribute("keyword", keyword);
-//        model.addAttribute("titlePage", "Reglas ");
-//        return  "reglas/reglas";
-//    }
-
     @GetMapping("/list")
     public String listAllReglasTipoPrestacion(Model model, @RequestParam(name = "page", defaultValue = "0") int page){
         Pageable pageRequest = PageRequest.of(page, 5);
         PageDto<ReglaTipoPrestacionEntity> reglasTipoPrestacionPage = super.page(pageRequest);
+
         model.addAttribute("totalPages", reglasTipoPrestacionPage.getTotalPages());
         model.addAttribute("reglasTipoPrestacion", reglasTipoPrestacionPage.getContent());
         model.addAttribute("currentPage", page);
@@ -71,10 +43,10 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
     @GetMapping("/crear")
     public String crearReglasTipoPrestacion(Model model){
         ReglaTipoPrestacionEntity reglaTipoPrestacion = new ReglaTipoPrestacionEntity();
-        model.addAttribute("reglaTipoPrestacion", reglaTipoPrestacion);
         List<TipoPrestacionEntity> tipoPrestacionList = (List<TipoPrestacionEntity>) tipoPrestacionService.findAll();
-        model.addAttribute("tipoPrestacionList", tipoPrestacionList);
 
+        model.addAttribute("reglaTipoPrestacion", reglaTipoPrestacion);
+        model.addAttribute("tipoPrestacionList", tipoPrestacionList);
         model.addAttribute("titlePage", "Crear regla");
         return "reglas/crear_regla";
     }
