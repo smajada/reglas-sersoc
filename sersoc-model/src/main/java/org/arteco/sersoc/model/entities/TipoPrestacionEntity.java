@@ -17,7 +17,7 @@ public class TipoPrestacionEntity {
 
     private String descripcion;
 
-    @OneToMany(mappedBy = "tipoPrestacion", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tipoPrestacion", cascade = CascadeType.ALL)
     private List<PrestacionEntity> prestaciones;
 
     public TipoPrestacionEntity(String descripcion) {

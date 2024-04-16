@@ -14,7 +14,7 @@ import org.arteco.sersoc.model.base.ReglasTipoPrestacionId;
 public class ReglaTipoPrestacionEntity {
 
     @EmbeddedId
-    private ReglasTipoPrestacionId id;
+    private ReglasTipoPrestacionId id = new ReglasTipoPrestacionId();
 
     @ManyToOne
     @MapsId("reglaId")
