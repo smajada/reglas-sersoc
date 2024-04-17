@@ -37,29 +37,29 @@
         <tbody>
 
         <!-- Itera sobre la lista de reglas -->
-        <tr th:each="regla : ${reglasTipoPrestacion}" th:if="${regla.reglaEntity.active}">
-            <td th:text="${regla.reglaEntity.id}"></td>
-            <td th:text="${regla.reglaEntity.nombre}"></td>
+        <tr th:each="regla : ${reglasTipoPrestacion}" th:if="${regla.getNoutRegles.active}">
+            <td th:text="${regla.getNoutRegles.con}"></td>
+            <td th:text="${regla.getNoutRegles.dec}"></td>
 
-            <td th:text="${#dates.format(regla.reglaEntity.fecha_inicio,'dd/MM/yyyy' )}"></td>
-            <td th:text="${#dates.format(regla.reglaEntity.fecha_fin,'dd/MM/yyyy' )}"></td>
+            <td th:text="${#dates.format(regla.getNoutRegles.datIni,'dd/MM/yyyy' )}"></td>
+            <td th:text="${#dates.format(regla.getNoutRegles.datFin,'dd/MM/yyyy' )}"></td>
             <td th:text="${regla.noutTipprs.dec}"></td>
             <td class="d-flex justify-content-evenly">
-                <a type="button" class="btn btn-outline-info" id="btn-info" data-bs-toggle="modal" th:data-bs-target="'#modal-' + ${regla.reglaEntity.id}">
+                <a type="button" class="btn btn-outline-info" id="btn-info" data-bs-toggle="modal" th:data-bs-target="'#modal-' + ${regla.getNoutRegles.con}">
                     +
                 </a>
-                <a th:href="@{/regla-tipo-prestacion/editar/{reglaId}/{tipoPrestacionId}(reglaId=${regla.reglaEntity.id}, tipoPrestacionId=${regla.noutTipprs.coa})}" class="btn btn-outline-warning" id="btn-edit">✎</a>
-                <a th:href="@{/regla-tipo-prestacion/delete/{reglaId}/{tipoPrestacionId}(reglaId=${regla.reglaEntity.id}, tipoPrestacionId=${regla.noutTipprs.coa})}" class="btn btn-outline-danger" id="btn-delete">
+                <a th:href="@{/regla-tipo-prestacion/editar/{reglaId}/{tipoPrestacionId}(reglaId=${regla.getNoutRegles.con}, tipoPrestacionId=${regla.noutTipprs.coa})}" class="btn btn-outline-warning" id="btn-edit">✎</a>
+                <a th:href="@{/regla-tipo-prestacion/delete/{reglaId}/{tipoPrestacionId}(reglaId=${regla.getNoutRegles.con}, tipoPrestacionId=${regla.noutTipprs.coa})}" class="btn btn-outline-danger" id="btn-delete">
                     ✕
                 </a>
             </td>
 
 <!--             Modal -->
-            <div class="modal fade" th:id="'modal-' + ${regla.reglaEntity.id}" tabindex="-1" th:aria-labelledby="'masInfo-' + ${regla.reglaEntity.id}" aria-hidden="true">
+            <div class="modal fade" th:id="'modal-' + ${regla.getNoutRegles.con}" tabindex="-1" th:aria-labelledby="'masInfo-' + ${regla.getNoutRegles.con}" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" th:id="'masInfo-' + ${regla.reglaEntity.id}">Más información</h1>
+                            <h1 class="modal-title fs-5" th:id="'masInfo-' + ${regla.getNoutRegles.con}">Más información</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -67,18 +67,18 @@
                             <p th:text="${regla.noutTipprs.coa}"></p>
 
                             <h3>Descripción</h3>
-                            <p th:text="${regla.reglaEntity.descripcion}"></p>
+                            <p th:text="${regla.getNoutRegles.dec}"></p>
 
                             <h3>Tipo de prestacion</h3>
                             <h5>Prestaciones</h5>
                             <p th:if="${regla.noutTipprs.getPrestacions().size() == 0}">No hay prestaciones</p>
-                            <p th:each="prestacion : ${regla.noutTipprs.getPrestacions}" th:text="${prestacion.descripcion}"></p>
+                            <p th:each="prestacion : ${regla.noutTipprs.getPrestacions}" th:text="${prestacion.toString()}"></p>
 
                             <h5>Descripción</h5>
                             <p th:text="${regla.noutTipprs.dec}"></p>
 
                             <h3>Script</h3>
-                            <textarea class="form-control" th:id="'regla-'+${regla.reglaEntity.id}" aria-label="regla"  th:text="${regla.reglaEntity.script}"></textarea>
+                            <textarea class="form-control" th:id="'regla-'+${regla.getNoutRegles.con}" aria-label="regla" th:text="${regla.getNoutRegles.script}"></textarea>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

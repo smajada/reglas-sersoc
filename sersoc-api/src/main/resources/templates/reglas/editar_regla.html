@@ -21,42 +21,37 @@
                                 </div>
                             </div>
                         </div>
-                        <form th:action="@{/regla-tipo-prestacion/update/{reglaId}/{tipoPrestacionId}(reglaId=${reglaTipoPrestacion.reglaEntity.id}, tipoPrestacionId=${reglaTipoPrestacion.tipoPrestacionEntity.id})}"
+                        <form th:action="@{/regla-tipo-prestacion/update/{reglaId}/{tipoPrestacionId}(reglaId=${reglaTipoPrestacion.getNoutRegles.con}, tipoPrestacionId=${reglaTipoPrestacion.noutTipprs.coa})}"
                               th:object="${reglaTipoPrestacion}" method="post">
                             <div class="row gy-3 gy-md-4 overflow-hidden justify-content-center">
-
-                                <div class="col-12">
-                                    <label for="nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="nombre" id="nombre" placeholder="Nombre"  th:field="*{reglaEntity.nombre}">
-                                </div>
                                 <div class="col-12">
                                     <label for="descripcion" class="form-label">Descripción</label>
-                                    <textarea class="form-control" name="descripcion" id="descripcion" aria-label="descripcion" placeholder="Descripción" th:field="*{reglaEntity.descripcion}"></textarea>
+                                    <input type="text" class="form-control" name="descripcion" id="descripcion" aria-label="descripcion" placeholder="Descripción" th:field="*{noutRegles.dec}">
                                 </div>
                                 <div class="row justify-content-between m-2">
                                 <div class="col-6">
                                     <label for="fecha_inicio" class="form-label">Fecha de inicio</label>
-                                    <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" th:field="*{reglaEntity.fecha_inicio}">
+                                    <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" th:field="*{noutRegles.datIni}">
                                 </div>
                                     <div class="col-6">
                                         <label for="fecha_fin" class="form-label">Fecha de finalización</label>
-                                        <input type="date" class="form-control" id="fecha_fin" name="fecha_fin"  th:field="*{reglaEntity.fecha_fin}">
+                                        <input type="date" class="form-control" id="fecha_fin" name="fecha_fin"  th:field="*{noutRegles.datFin}">
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <label for="tipo_prestacion" class="form-label
                                     ">Tipo de prestación</label>
-                                    <select class="form-select" disabled id="tipo_prestacion" name="tipoPrestacion" th:field="*{tipoPrestacionEntity.id}">
+                                    <select class="form-select" disabled id="tipo_prestacion" name="tipoPrestacion" th:field="*{noutTipprs.coa}">
                                         <option th:each="tipoPrestacion : ${tipoPrestacionList}"
-                                                th:value="${tipoPrestacion.id}"
-                                                th:text="${tipoPrestacion.descripcion}"
+                                                th:value="${tipoPrestacion.coa}"
+                                                th:text="${tipoPrestacion.dec}"
                                                 th:selected="${tipoPrestacionList.contains(tipoPrestacion)}"
                                         ></option>
                                     </select>
                                 </div>
                                     <div class="col-12">
                                         <label for="regla" class="form-label mb-2">Script</label>
-                                        <textarea class="form-control" id="regla" aria-label="regla"  th:field="*{reglaEntity.script}"></textarea>
+                                        <textarea class="form-control" id="regla" aria-label="regla"  th:field="*{noutRegles.script}"></textarea>
                                     </div>
 
                                 <div class="col-6">
