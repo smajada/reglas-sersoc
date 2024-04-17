@@ -20,7 +20,7 @@ public class NoutTipprs {
     @Column(name = "DEC")
     private String dec;
 
-    //Tipo de prestación
+    //Descripción media
     @Column(name = "DEM")
     private String dem;
 

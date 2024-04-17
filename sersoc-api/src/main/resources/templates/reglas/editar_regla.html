@@ -21,8 +21,13 @@
                                 </div>
                             </div>
                         </div>
-                        <form th:action="@{/regla-tipo-prestacion/update/{reglaId}/{tipoPrestacionId}(reglaId=${reglaTipoPrestacion.getNoutRegles.con}, tipoPrestacionId=${reglaTipoPrestacion.noutTipprs.coa})}"
-                              th:object="${reglaTipoPrestacion}" method="post">
+                        <form
+                                th:action="
+                                @{/regla-tipo-prestacion/update/{reglaId}/{tipoPrestacionId}
+                                (reglaId=${reglaTipoPrestacion.getNoutRegles.con}, tipoPrestacionId=${reglaTipoPrestacion.noutTipprs.coa})
+                                }"
+                              th:object="${reglaTipoPrestacion}"
+                                method="post">
                             <div class="row gy-3 gy-md-4 overflow-hidden justify-content-center">
                                 <div class="col-12">
                                     <label for="descripcion" class="form-label">Descripción</label>
@@ -41,7 +46,7 @@
                                 <div class="col-12">
                                     <label for="tipo_prestacion" class="form-label
                                     ">Tipo de prestación</label>
-                                    <select class="form-select" disabled id="tipo_prestacion" name="tipoPrestacion" th:field="*{noutTipprs.coa}">
+                                    <select class="form-select" id="tipo_prestacion" name="tipoPrestacion" th:field="*{noutTipprs.coa}">
                                         <option th:each="tipoPrestacion : ${tipoPrestacionList}"
                                                 th:value="${tipoPrestacion.coa}"
                                                 th:text="${tipoPrestacion.dec}"

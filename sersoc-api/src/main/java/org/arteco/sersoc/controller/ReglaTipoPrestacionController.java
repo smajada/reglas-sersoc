@@ -19,17 +19,20 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @Controller
 @RequestMapping("/regla-tipo-prestacion")
 public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaTipoPrestacionEntity, ReglasTipoPrestacionId, ReglaTipoPrestacionRepository, ReglaTipoPrestacionService> {
 
     private final NoutTipprsService noutTipprsService;
     private final NoutReglesService noutReglesService;
+    private final ReglaTipoPrestacionService reglaTipoPrestacionService;
 
-    protected ReglaTipoPrestacionController(ReglaTipoPrestacionService service, NoutTipprsService noutTipprsService, NoutReglesService noutReglesService) {
+    protected ReglaTipoPrestacionController(ReglaTipoPrestacionService service, NoutTipprsService noutTipprsService, NoutReglesService noutReglesService, ReglaTipoPrestacionService reglaTipoPrestacionService) {
         super(service);
         this.noutTipprsService = noutTipprsService;
         this.noutReglesService = noutReglesService;
+        this.reglaTipoPrestacionService = reglaTipoPrestacionService;
     }
 
     @GetMapping("/list")
@@ -69,7 +72,6 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
         return "redirect:/regla-tipo-prestacion/list";
     }
 
-
     @GetMapping("/crear")
     public String crearReglasTipoPrestacion(Model model) {
         NoutRegles regla = new NoutRegles();
@@ -99,17 +101,27 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
     public String updateReglaTipoPrestacion(@PathVariable Long reglaId, @PathVariable String tipoPrestacionId, @ModelAttribute("reglaTipoPrestacion") ReglaTipoPrestacionEntity updatedReglaTipoPrestacion) {
         ReglasTipoPrestacionId id = buildId(reglaId, tipoPrestacionId);
         // Obtener la entidad existente de la base de datos
-        ReglaTipoPrestacionEntity existingReglaTipoPrestacion = service.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("No se ha encontrado la regla con id " + id));
 
-        // Actualizar los campos relevantes
-        existingReglaTipoPrestacion.getNoutRegles().setDec(updatedReglaTipoPrestacion.getNoutRegles().getDec());
-        existingReglaTipoPrestacion.getNoutRegles().setDatIni(updatedReglaTipoPrestacion.getNoutRegles().getDatIni());
-        existingReglaTipoPrestacion.getNoutRegles().setDatFin(updatedReglaTipoPrestacion.getNoutRegles().getDatFin());
-        existingReglaTipoPrestacion.getNoutRegles().setScript(updatedReglaTipoPrestacion.getNoutRegles().getScript());
+        ReglasTipoPrestacionId updatedId = buildId(reglaId, updatedReglaTipoPrestacion.getNoutTipprs().getCoa());
 
-        // Guardar los cambios
-        service.save(existingReglaTipoPrestacion);
+        if (service.findById(updatedId).isPresent()) {
+            ReglaTipoPrestacionEntity existingReglaTipoPrestacion = service.findById(id).get();
+
+            // Actualizar los campos relevantes
+            existingReglaTipoPrestacion.getNoutRegles().setDec(updatedReglaTipoPrestacion.getNoutRegles().getDec());
+            existingReglaTipoPrestacion.getNoutRegles().setDatIni(updatedReglaTipoPrestacion.getNoutRegles().getDatIni());
+            existingReglaTipoPrestacion.getNoutRegles().setDatFin(updatedReglaTipoPrestacion.getNoutRegles().getDatFin());
+            existingReglaTipoPrestacion.getNoutRegles().setScript(updatedReglaTipoPrestacion.getNoutRegles().getScript());
+
+            // Guardar los cambios
+            service.save(existingReglaTipoPrestacion);
+        } else {
+            service.findById(id).ifPresent(reglaTipoPrestacion ->
+                reglaTipoPrestacion.getNoutRegles().setActive(false)
+            );
+
+            this.reglaTipoPrestacionService.saveSingleReglaWithTipoPrestacion(updatedReglaTipoPrestacion);
+        }
 
         return "redirect:/regla-tipo-prestacion/list";
     }

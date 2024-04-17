@@ -48,6 +48,19 @@ public class NoutPrestacions {
     @JoinColumn(name = "nout_tipprs_id")
     private NoutTipprs tipoPrestacion;
 
+    //Forma de pago
+    @ManyToOne
+    @JoinColumn(name = "nout_forpag_coa")
+    private NoutForpag forpag;
+
+    @ManyToOne
+    @JoinColumn(name = "nout_tipcot_coa")
+    private NoutTipcot tipcot;
+
+    @ManyToOne
+    @JoinColumn(name = "nout_tiprcp_coa")
+    private NoutTiprcp tiprcp;
+
     @OneToMany(mappedBy = "noutPrestacions")
     private List<NoutTramitacio> noutTramitacions;
 

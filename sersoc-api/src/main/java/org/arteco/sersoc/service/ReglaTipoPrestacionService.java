@@ -25,6 +25,17 @@ public class ReglaTipoPrestacionService extends AbstractCrudService<ReglaTipoPre
         this.noutTipprsRepository = noutTipprsRepository;
     }
 
+    public void saveSingleReglaWithTipoPrestacion(ReglaTipoPrestacionEntity newReglaTipoPrestacion){
+        NoutRegles savedRegla = noutReglesRepository.save(newReglaTipoPrestacion.getNoutRegles());
+        NoutTipprs savedTipoPrestacion = noutTipprsRepository.findById(newReglaTipoPrestacion.getNoutTipprs().getCoa()).orElseThrow();
+
+        ReglaTipoPrestacionEntity reglaTipoPrestacion = new ReglaTipoPrestacionEntity();
+        reglaTipoPrestacion.setNoutRegles(savedRegla);
+        reglaTipoPrestacion.setNoutTipprs(savedTipoPrestacion);
+
+        this.repo.save(reglaTipoPrestacion);
+    }
+
     public void saveReglaWithTipoPrestacion(NoutRegles regla, List<NoutTipprs> tipoPrestacion){
         NoutRegles savedRegla = noutReglesRepository.save(regla);
 
@@ -32,6 +43,12 @@ public class ReglaTipoPrestacionService extends AbstractCrudService<ReglaTipoPre
             ReglaTipoPrestacionEntity reglaTipoPrestacion = new ReglaTipoPrestacionEntity();
             reglaTipoPrestacion.setNoutRegles(savedRegla);
             reglaTipoPrestacion.setNoutTipprs(noutTipprs);
+
+            // Check if the ReglaTipoPrestacion already exists
+            if (repo.findById(new ReglasTipoPrestacionId(savedRegla.getCon(), noutTipprs.getCoa())).isPresent()){
+                continue;
+            }
+
             this.repo.save(reglaTipoPrestacion);
         }
     }

@@ -29,7 +29,7 @@ public class NoutTramitacio {
     private Integer impFin;
 
     //Data baixa prestació
-    @Column(name = "DATBAI")
+    @Column(name = "DAT_BAI")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date datBai;
 
