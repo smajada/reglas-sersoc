@@ -15,7 +15,7 @@ public interface ReglaRepository extends JpaRepository<ReglaEntity, Long> {
             "FROM ReglaEntity r " +
             "JOIN ReglaTipoPrestacionEntity rtp " +
             "ON r.Id = rtp.reglaEntity.Id " +
-            "WHERE rtp.tipoPrestacionEntity.Id = :idPrestacion ")
+            "WHERE rtp.noutTipprs.coa = :idPrestacion ")
     List<ReglaEntity> findByIdPrestacion(Long idPrestacion);
 
 

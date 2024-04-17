@@ -11,7 +11,7 @@ import java.util.List;
 public class ReglaService extends AbstractCrudService<ReglaEntity, Long, ReglaRepository> {
 
 
-    public ReglaService(ReglaRepository reglaRepository, TipoPrestacionService tipoPrestacionService) {
+    public ReglaService(ReglaRepository reglaRepository, NoutTipprsService noutTipprsService) {
         super(reglaRepository);
     }
 

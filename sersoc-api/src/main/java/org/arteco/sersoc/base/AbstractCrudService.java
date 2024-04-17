@@ -1,9 +1,6 @@
 package org.arteco.sersoc.base;
 
-import org.arteco.sersoc.dto.PageDto;
-import org.arteco.sersoc.model.entities.ReglaTipoPrestacionEntity;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 

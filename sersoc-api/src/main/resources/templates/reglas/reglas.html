@@ -43,13 +43,13 @@
 
             <td th:text="${#dates.format(regla.reglaEntity.fecha_inicio,'dd/MM/yyyy' )}"></td>
             <td th:text="${#dates.format(regla.reglaEntity.fecha_fin,'dd/MM/yyyy' )}"></td>
-            <td th:text="${regla.tipoPrestacionEntity.descripcion}"></td>
+            <td th:text="${regla.noutTipprs.dec}"></td>
             <td class="d-flex justify-content-evenly">
                 <a type="button" class="btn btn-outline-info" id="btn-info" data-bs-toggle="modal" th:data-bs-target="'#modal-' + ${regla.reglaEntity.id}">
                     +
                 </a>
-                <a th:href="@{/regla-tipo-prestacion/editar/{reglaId}/{tipoPrestacionId}(reglaId=${regla.reglaEntity.id}, tipoPrestacionId=${regla.tipoPrestacionEntity.id})}" class="btn btn-outline-warning" id="btn-edit">✎</a>
-                <a th:href="@{/regla-tipo-prestacion/delete/{reglaId}/{tipoPrestacionId}(reglaId=${regla.reglaEntity.id}, tipoPrestacionId=${regla.tipoPrestacionEntity.id})}" class="btn btn-outline-danger" id="btn-delete">
+                <a th:href="@{/regla-tipo-prestacion/editar/{reglaId}/{tipoPrestacionId}(reglaId=${regla.reglaEntity.id}, tipoPrestacionId=${regla.noutTipprs.coa})}" class="btn btn-outline-warning" id="btn-edit">✎</a>
+                <a th:href="@{/regla-tipo-prestacion/delete/{reglaId}/{tipoPrestacionId}(reglaId=${regla.reglaEntity.id}, tipoPrestacionId=${regla.noutTipprs.coa})}" class="btn btn-outline-danger" id="btn-delete">
                     ✕
                 </a>
             </td>
@@ -64,18 +64,18 @@
                         </div>
                         <div class="modal-body">
                             <h3>Id</h3>
-                            <p th:text="${regla.tipoPrestacionEntity.id}"></p>
+                            <p th:text="${regla.noutTipprs.coa}"></p>
 
                             <h3>Descripción</h3>
                             <p th:text="${regla.reglaEntity.descripcion}"></p>
 
                             <h3>Tipo de prestacion</h3>
                             <h5>Prestaciones</h5>
-                            <p th:if="${regla.tipoPrestacionEntity.prestaciones.size() == 0}">No hay prestaciones</p>
-                            <p th:each="prestacion : ${regla.tipoPrestacionEntity.prestaciones}" th:text="${prestacion.descripcion}"></p>
+                            <p th:if="${regla.noutTipprs.getPrestacions().size() == 0}">No hay prestaciones</p>
+                            <p th:each="prestacion : ${regla.noutTipprs.getPrestacions}" th:text="${prestacion.descripcion}"></p>
 
                             <h5>Descripción</h5>
-                            <p th:text="${regla.tipoPrestacionEntity.descripcion}"></p>
+                            <p th:text="${regla.noutTipprs.dec}"></p>
 
                             <h3>Script</h3>
                             <textarea class="form-control" th:id="'regla-'+${regla.reglaEntity.id}" aria-label="regla"  th:text="${regla.reglaEntity.script}"></textarea>

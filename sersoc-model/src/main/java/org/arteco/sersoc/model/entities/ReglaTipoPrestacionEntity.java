@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.arteco.sersoc.model.base.ReglasTipoPrestacionId;
-import org.hibernate.annotations.Mutability;
 
 @Entity
 @Data
@@ -23,5 +22,5 @@ public class ReglaTipoPrestacionEntity {
 
     @ManyToOne
     @MapsId("tipoPrestacionId")
-    private TipoPrestacionEntity tipoPrestacionEntity;
+    private NoutTipprs noutTipprs;
 }

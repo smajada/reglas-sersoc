@@ -14,5 +14,5 @@ import java.io.Serializable;
 public class ReglasTipoPrestacionId implements Serializable {
 
     private Long reglaId;
-    private Long tipoPrestacionId;
+    private String tipoPrestacionId;
 }
