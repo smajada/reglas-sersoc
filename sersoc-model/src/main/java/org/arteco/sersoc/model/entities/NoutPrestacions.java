@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.util.List;
 
 @NoArgsConstructor
 @Data
@@ -46,6 +47,9 @@ public class NoutPrestacions {
     @ManyToOne
     @JoinColumn(name = "nout_tipprs_id")
     private NoutTipprs tipoPrestacion;
+
+    @OneToMany(mappedBy = "noutPrestacions")
+    private List<NoutTramitacio> noutTramitacions;
 
     public NoutPrestacions(Integer expCon, Date datIni, Date datFin, Double imp, NoutTipprs tipoPrestacion) {
         this.expCon = expCon;
