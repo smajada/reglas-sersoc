@@ -5,10 +5,10 @@ import org.arteco.sersoc.base.AbstractCrudController;
 import org.arteco.sersoc.dto.PageDto;
 import org.arteco.sersoc.model.base.ReglasTipoPrestacionId;
 import org.arteco.sersoc.model.entities.NoutTipprs;
-import org.arteco.sersoc.model.entities.ReglaEntity;
+import org.arteco.sersoc.model.entities.NoutRegles;
 import org.arteco.sersoc.model.entities.ReglaTipoPrestacionEntity;
 import org.arteco.sersoc.repository.ReglaTipoPrestacionRepository;
-import org.arteco.sersoc.service.ReglaService;
+import org.arteco.sersoc.service.NoutReglesService;
 import org.arteco.sersoc.service.ReglaTipoPrestacionService;
 import org.arteco.sersoc.service.NoutTipprsService;
 import org.springframework.data.domain.PageRequest;
@@ -24,12 +24,12 @@ import java.util.List;
 public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaTipoPrestacionEntity, ReglasTipoPrestacionId, ReglaTipoPrestacionRepository, ReglaTipoPrestacionService> {
 
     private final NoutTipprsService noutTipprsService;
-    private final ReglaService reglaService;
+    private final NoutReglesService noutReglesService;
 
-    protected ReglaTipoPrestacionController(ReglaTipoPrestacionService service, NoutTipprsService noutTipprsService, ReglaService reglaService) {
+    protected ReglaTipoPrestacionController(ReglaTipoPrestacionService service, NoutTipprsService noutTipprsService, NoutReglesService noutReglesService) {
         super(service);
         this.noutTipprsService = noutTipprsService;
-        this.reglaService = reglaService;
+        this.noutReglesService = noutReglesService;
     }
 
     @GetMapping("/list")
@@ -72,7 +72,7 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
 
     @GetMapping("/crear")
     public String crearReglasTipoPrestacion(Model model) {
-        ReglaEntity regla = new ReglaEntity();
+        NoutRegles regla = new NoutRegles();
         model.addAttribute("regla", regla);
 
         List<NoutTipprs> tipoPrestaciones = new ArrayList<>();
@@ -86,7 +86,7 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
     }
 
     @PostMapping("/save")
-    public String saveReglaTipoPrestacion(@ModelAttribute ReglaEntity regla,
+    public String saveReglaTipoPrestacion(@ModelAttribute NoutRegles regla,
                                           @RequestParam("tipoPrestacion") List<String> tipoPrestacionIds) {
         List<NoutTipprs> tipoPrestaciones = noutTipprsService.findAllById(tipoPrestacionIds);
         super.service.saveReglaWithTipoPrestacion(regla, tipoPrestaciones);
@@ -103,11 +103,11 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
                 .orElseThrow(() -> new EntityNotFoundException("No se ha encontrado la regla con id " + id));
 
         // Actualizar los campos relevantes
-        existingReglaTipoPrestacion.getReglaEntity().setNombre(updatedReglaTipoPrestacion.getReglaEntity().getNombre());
-        existingReglaTipoPrestacion.getReglaEntity().setDescripcion(updatedReglaTipoPrestacion.getReglaEntity().getDescripcion());
-        existingReglaTipoPrestacion.getReglaEntity().setFecha_inicio(updatedReglaTipoPrestacion.getReglaEntity().getFecha_inicio());
-        existingReglaTipoPrestacion.getReglaEntity().setFecha_fin(updatedReglaTipoPrestacion.getReglaEntity().getFecha_fin());
-        existingReglaTipoPrestacion.getReglaEntity().setScript(updatedReglaTipoPrestacion.getReglaEntity().getScript());
+        existingReglaTipoPrestacion.getNoutRegles().setDec(updatedReglaTipoPrestacion.getNoutRegles().getDec());
+        existingReglaTipoPrestacion.getNoutRegles().setDatIni(updatedReglaTipoPrestacion.getNoutRegles().getDatIni());
+        existingReglaTipoPrestacion.getNoutRegles().setDatFin(updatedReglaTipoPrestacion.getNoutRegles().getDatFin());
+        existingReglaTipoPrestacion.getNoutRegles().setScript(updatedReglaTipoPrestacion.getNoutRegles().getScript());
+
         // Guardar los cambios
         service.save(existingReglaTipoPrestacion);
 

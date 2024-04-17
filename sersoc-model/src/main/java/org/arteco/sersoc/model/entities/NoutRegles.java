@@ -5,31 +5,34 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-
 import java.util.Date;
 
 
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "reglas")
-public class ReglaEntity {
+@Table(name = "NOUT_REGLES")
+public class NoutRegles {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    @Column(name = "CON")
+    private Long con;
 
-    private String nombre;
+    @Column(name = "DEC")
+    private String dec;
 
-    private String descripcion;
-
+    //Fecha de inicio de la regla
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date fecha_inicio;
+    @Column(name = "DATINI")
+    private Date datIni;
 
+    //Fecha de fin de la regla
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date fecha_fin;
+    @Column(name = "DATFIN")
+    private Date datFin;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", name = "SCR")
     private String script;
 
     private boolean active = true;

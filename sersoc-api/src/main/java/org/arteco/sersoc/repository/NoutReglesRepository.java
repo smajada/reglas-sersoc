@@ -1,6 +1,6 @@
 package org.arteco.sersoc.repository;
 
-import org.arteco.sersoc.model.entities.ReglaEntity;
+import org.arteco.sersoc.model.entities.NoutRegles;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -8,15 +8,15 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ReglaRepository extends JpaRepository<ReglaEntity, Long> {
+public interface NoutReglesRepository extends JpaRepository<NoutRegles, Long> {
 
 
     @Query("SELECT r " +
-            "FROM ReglaEntity r " +
+            "FROM NoutRegles r " +
             "JOIN ReglaTipoPrestacionEntity rtp " +
-            "ON r.Id = rtp.reglaEntity.Id " +
+            "ON r.con = rtp.noutRegles.con " +
             "WHERE rtp.noutTipprs.coa = :idPrestacion ")
-    List<ReglaEntity> findByIdPrestacion(Long idPrestacion);
+    List<NoutRegles> findByIdPrestacion(Long idPrestacion);
 
 
 }

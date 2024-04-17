@@ -19,9 +19,8 @@ public interface ReglaTipoPrestacionRepository extends JpaRepository<ReglaTipoPr
      * @param keyword nombre de la regla de tipo prestación
      * @return lista de reglas de tipo prestación que coinciden con el nombre
      */
-    @Query("SELECT r FROM ReglaTipoPrestacionEntity r WHERE r.reglaEntity.nombre LIKE %?1%"
-            + " OR r.noutTipprs.dec LIKE %?1%"
-            + " OR r.reglaEntity.descripcion LIKE %?1%")
+    @Query("SELECT r FROM ReglaTipoPrestacionEntity r WHERE r.noutRegles.dec LIKE %?1%"
+            + " OR r.noutTipprs.dec LIKE %?1%")
     List<ReglaTipoPrestacionEntity> search(String keyword);
 
 }

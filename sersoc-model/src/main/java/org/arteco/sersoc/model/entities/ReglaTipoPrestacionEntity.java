@@ -18,7 +18,7 @@ public class ReglaTipoPrestacionEntity {
 
     @ManyToOne
     @MapsId("reglaId")
-    private ReglaEntity reglaEntity;
+    private NoutRegles noutRegles;
 
     @ManyToOne
     @MapsId("tipoPrestacionId")
