@@ -116,11 +116,9 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
             // Guardar los cambios
             service.save(existingReglaTipoPrestacion);
         } else {
-            service.findById(id).ifPresent(reglaTipoPrestacion ->
-                reglaTipoPrestacion.getNoutRegles().setActive(false)
-            );
+            reglaTipoPrestacionService.findById(id).ifPresent(reglaTipoPrestacionService::delete);
 
-            this.reglaTipoPrestacionService.saveSingleReglaWithTipoPrestacion(updatedReglaTipoPrestacion);
+            this.reglaTipoPrestacionService.saveSingleReglaWithTipoPrestacion(updatedReglaTipoPrestacion.getNoutTipprs().getCoa(), reglaId);
         }
 
         return "redirect:/regla-tipo-prestacion/list";

@@ -25,13 +25,10 @@ public class ReglaTipoPrestacionService extends AbstractCrudService<ReglaTipoPre
         this.noutTipprsRepository = noutTipprsRepository;
     }
 
-    public void saveSingleReglaWithTipoPrestacion(ReglaTipoPrestacionEntity newReglaTipoPrestacion){
-        NoutRegles savedRegla = noutReglesRepository.save(newReglaTipoPrestacion.getNoutRegles());
-        NoutTipprs savedTipoPrestacion = noutTipprsRepository.findById(newReglaTipoPrestacion.getNoutTipprs().getCoa()).orElseThrow();
-
+    public void saveSingleReglaWithTipoPrestacion(String tipoPrestacionId, Long reglaId){
         ReglaTipoPrestacionEntity reglaTipoPrestacion = new ReglaTipoPrestacionEntity();
-        reglaTipoPrestacion.setNoutRegles(savedRegla);
-        reglaTipoPrestacion.setNoutTipprs(savedTipoPrestacion);
+        reglaTipoPrestacion.setNoutRegles(noutReglesRepository.findById(reglaId).get());
+        reglaTipoPrestacion.setNoutTipprs(noutTipprsRepository.findById(tipoPrestacionId).get());
 
         this.repo.save(reglaTipoPrestacion);
     }
@@ -54,9 +51,8 @@ public class ReglaTipoPrestacionService extends AbstractCrudService<ReglaTipoPre
     }
 
     @Override
-    public void delete(ReglaTipoPrestacionEntity bean) {
-        bean.getNoutRegles().setActive(false);
-        repo.save(bean);
+    public void delete(ReglaTipoPrestacionEntity reglaTipoPrestacion) {
+        repo.deleteById(reglaTipoPrestacion.getId());
     }
 
 }
