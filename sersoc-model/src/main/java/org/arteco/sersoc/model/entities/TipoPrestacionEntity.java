@@ -6,6 +6,7 @@ import lombok.*;
 import java.util.List;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Data
 @Table(name = "tipo_prestaciones")

@@ -41,5 +41,6 @@ public class ReglaTipoPrestacionService extends AbstractCrudService<ReglaTipoPre
         bean.getReglaEntity().setActive(false);
         repo.save(bean);
     }
+
 }
 

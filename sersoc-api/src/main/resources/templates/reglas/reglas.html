@@ -30,6 +30,7 @@
             <th scope="col">Nombre</th>
             <th scope="col">Fecha de inicio</th>
             <th scope="col">Fecha de fin</th>
+            <th scope="col">Tipo de prestación</th>
             <th scope="col">Acciones</th>
         </tr>
         </thead>
@@ -42,8 +43,9 @@
 
             <td th:text="${#dates.format(regla.reglaEntity.fecha_inicio,'dd/MM/yyyy' )}"></td>
             <td th:text="${#dates.format(regla.reglaEntity.fecha_fin,'dd/MM/yyyy' )}"></td>
+            <td th:text="${regla.tipoPrestacionEntity.descripcion}"></td>
             <td class="d-flex justify-content-evenly">
-                <a type="button" class="btn btn-outline-info" id="btn-info" data-bs-toggle="modal" th:data-bs-target="'#modal-' + ${regla.tipoPrestacionEntity.id}">
+                <a type="button" class="btn btn-outline-info" id="btn-info" data-bs-toggle="modal" th:data-bs-target="'#modal-' + ${regla.reglaEntity.id}">
                     +
                 </a>
                 <a th:href="@{/regla-tipo-prestacion/editar/{reglaId}/{tipoPrestacionId}(reglaId=${regla.reglaEntity.id}, tipoPrestacionId=${regla.tipoPrestacionEntity.id})}" class="btn btn-outline-warning" id="btn-edit">✎</a>
@@ -53,11 +55,11 @@
             </td>
 
 <!--             Modal -->
-            <div class="modal fade" th:id="'modal-' + ${regla.tipoPrestacionEntity.id}" tabindex="-1" th:aria-labelledby="'masInfo-' + ${regla.tipoPrestacionEntity.id}" aria-hidden="true">
+            <div class="modal fade" th:id="'modal-' + ${regla.reglaEntity.id}" tabindex="-1" th:aria-labelledby="'masInfo-' + ${regla.reglaEntity.id}" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" th:id="'masInfo-' + ${regla.tipoPrestacionEntity.id}">Más información</h1>
+                            <h1 class="modal-title fs-5" th:id="'masInfo-' + ${regla.reglaEntity.id}">Más información</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">

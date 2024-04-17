@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.arteco.sersoc.model.base.ReglasTipoPrestacionId;
+import org.hibernate.annotations.Mutability;
 
 @Entity
 @Data

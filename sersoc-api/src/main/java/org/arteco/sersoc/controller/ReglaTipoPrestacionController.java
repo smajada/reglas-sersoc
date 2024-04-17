@@ -1,5 +1,6 @@
 package org.arteco.sersoc.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.arteco.sersoc.base.AbstractCrudController;
 import org.arteco.sersoc.dto.PageDto;
 import org.arteco.sersoc.model.base.ReglasTipoPrestacionId;
@@ -7,6 +8,7 @@ import org.arteco.sersoc.model.entities.ReglaEntity;
 import org.arteco.sersoc.model.entities.ReglaTipoPrestacionEntity;
 import org.arteco.sersoc.model.entities.TipoPrestacionEntity;
 import org.arteco.sersoc.repository.ReglaTipoPrestacionRepository;
+import org.arteco.sersoc.service.ReglaService;
 import org.arteco.sersoc.service.ReglaTipoPrestacionService;
 import org.arteco.sersoc.service.TipoPrestacionService;
 import org.springframework.data.domain.PageRequest;
@@ -24,10 +26,12 @@ import java.util.Optional;
 public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaTipoPrestacionEntity, ReglasTipoPrestacionId, ReglaTipoPrestacionRepository, ReglaTipoPrestacionService> {
 
     private final TipoPrestacionService tipoPrestacionService;
+    private final ReglaService reglaService;
 
-    protected ReglaTipoPrestacionController(ReglaTipoPrestacionService service, TipoPrestacionService tipoPrestacionService) {
+    protected ReglaTipoPrestacionController(ReglaTipoPrestacionService service, TipoPrestacionService tipoPrestacionService, ReglaService reglaService) {
         super(service);
         this.tipoPrestacionService = tipoPrestacionService;
+        this.reglaService = reglaService;
     }
 
     @GetMapping("/list")
@@ -52,13 +56,13 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
 
         List<TipoPrestacionEntity> tipoPrestacionList = (List<TipoPrestacionEntity>) tipoPrestacionService.findAll();
         model.addAttribute("tipoPrestacionList", tipoPrestacionList);
-        model.addAttribute("id", id);
         model.addAttribute("titlePage", "Editar regla");
         return "reglas/editar_regla";
     }
 
     @GetMapping("/delete/{reglaId}/{tipoPrestacionId}")
-    public String delete(@PathVariable("reglaId") Long reglaId, @PathVariable("tipoPrestacionId") Long tipoPrestacionId) {
+    public String delete(@PathVariable("reglaId") Long reglaId,
+                         @PathVariable("tipoPrestacionId") Long tipoPrestacionId) {
         ReglasTipoPrestacionId id = buildId(reglaId, tipoPrestacionId);
 
         ReglaTipoPrestacionEntity reglaTipoPrestacion = service.findById(id).get();
@@ -84,7 +88,8 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
     }
 
     @PostMapping("/save")
-    public String saveReglaTipoPrestacion(@ModelAttribute ReglaEntity regla, @RequestParam("tipoPrestacion") List<Long> tipoPrestacionIds) {
+    public String saveReglaTipoPrestacion(@ModelAttribute ReglaEntity regla,
+                                          @RequestParam("tipoPrestacion") List<Long> tipoPrestacionIds) {
         List<TipoPrestacionEntity> tipoPrestaciones = tipoPrestacionService.findAllById(tipoPrestacionIds);
         super.service.saveReglaWithTipoPrestacion(regla, tipoPrestaciones);
 
@@ -93,16 +98,24 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
 
 
     @PostMapping("/update/{reglaId}/{tipoPrestacionId}")
-    public String updateReglaTipoPrestacion(@PathVariable("reglaId") Long reglaId, @PathVariable("tipoPrestacionId") Long tipoPrestacionId, @ModelAttribute ReglaTipoPrestacionEntity updatedReglaTipoPrestacion) {
+    public String updateReglaTipoPrestacion(@PathVariable Long reglaId, @PathVariable Long tipoPrestacionId, @ModelAttribute("reglaTipoPrestacion") ReglaTipoPrestacionEntity updatedReglaTipoPrestacion) {
         ReglasTipoPrestacionId id = buildId(reglaId, tipoPrestacionId);
-        ReglaTipoPrestacionEntity existingReglaTipoPrestacion = this.service.findById(id).get();
+        // Obtener la entidad existente de la base de datos
+        ReglaTipoPrestacionEntity existingReglaTipoPrestacion = service.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No se ha encontrado la regla con id " + id));
 
-        existingReglaTipoPrestacion.setReglaEntity(updatedReglaTipoPrestacion.getReglaEntity());
-        existingReglaTipoPrestacion.setTipoPrestacionEntity(updatedReglaTipoPrestacion.getTipoPrestacionEntity());
-
+        // Actualizar los campos relevantes
+        existingReglaTipoPrestacion.getReglaEntity().setNombre(updatedReglaTipoPrestacion.getReglaEntity().getNombre());
+        existingReglaTipoPrestacion.getReglaEntity().setDescripcion(updatedReglaTipoPrestacion.getReglaEntity().getDescripcion());
+        existingReglaTipoPrestacion.getReglaEntity().setFecha_inicio(updatedReglaTipoPrestacion.getReglaEntity().getFecha_inicio());
+        existingReglaTipoPrestacion.getReglaEntity().setFecha_fin(updatedReglaTipoPrestacion.getReglaEntity().getFecha_fin());
+        existingReglaTipoPrestacion.getReglaEntity().setScript(updatedReglaTipoPrestacion.getReglaEntity().getScript());
+        // Guardar los cambios
         service.save(existingReglaTipoPrestacion);
+
         return "redirect:/regla-tipo-prestacion/list";
     }
+
 
 
     private ReglasTipoPrestacionId buildId(Long reglaId, Long tipoPrestacionId) {
