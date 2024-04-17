@@ -63,13 +63,10 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <h3>Id</h3>
-                            <p th:text="${regla.noutTipprs.coa}"></p>
-
                             <h3>Descripción</h3>
                             <p th:text="${regla.getNoutRegles.dec}"></p>
 
-                            <h3>Tipo de prestacion</h3>
+                            <h3>Tipo de prestación</h3>
                             <h5>Prestaciones</h5>
                             <p th:if="${regla.noutTipprs.getPrestacions().size() == 0}">No hay prestaciones</p>
                             <p th:each="prestacion : ${regla.noutTipprs.getPrestacions}" th:text="${prestacion.toString()}"></p>
