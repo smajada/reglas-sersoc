@@ -14,6 +14,12 @@ public class NoutPrestacionsService extends AbstractCrudService<NoutPrestacions,
     }
 
     @Override
+    public void update(NoutPrestacions bean, Long aLong) {
+        bean.setCon(aLong);
+        repo.save(bean);
+    }
+
+    @Override
     public void delete(NoutPrestacions noutPrestacions) {
         repo.delete(noutPrestacions);
     }

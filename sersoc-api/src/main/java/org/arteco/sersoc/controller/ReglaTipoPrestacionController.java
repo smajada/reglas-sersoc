@@ -54,15 +54,16 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
 
     @GetMapping("/editar/{reglaId}")
     public String editarReglasTipoPrestacion(@PathVariable("reglaId") Long reglaId, Model model) {
-        System.out.println("Entra en editar");
         NoutRegles regla = this.noutReglesService.findById(reglaId).orElseThrow(EntityNotFoundException::new);
 
-        List<ReglaTipoPrestacionEntity> reglasTipoPrestacion = (List<ReglaTipoPrestacionEntity>) super.service.findAll();
+        List<NoutTipprs> allTipoPrestacion = (List<NoutTipprs>) noutTipprsService.findAll();
 
-        List<ReglasTipoPrestacionId> reglasTipoPrestacionList = new ArrayList<>();
-        for (ReglaTipoPrestacionEntity reglaTipoPrestacion : reglasTipoPrestacion) {
+        List<ReglaTipoPrestacionEntity> allReglasTipoPrestacion = (List<ReglaTipoPrestacionEntity>) super.service.findAll();
+
+        List<String> reglasTipoPrestacionList = new ArrayList<>();
+        for (ReglaTipoPrestacionEntity reglaTipoPrestacion : allReglasTipoPrestacion) {
             if (reglaTipoPrestacion.getNoutRegles().getCon().equals(regla.getCon())) {
-                reglasTipoPrestacionList.add(reglaTipoPrestacion.getId());
+                reglasTipoPrestacionList.add(reglaTipoPrestacion.getNoutTipprs().getCoa());
             }
         }
 
@@ -70,7 +71,7 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
 
         model.addAttribute("reglaTipoPrestacion", reglaTipoPrestacion);
         model.addAttribute("regla", regla);
-        model.addAttribute("allReglasTipoPrestacion", reglasTipoPrestacion);
+        model.addAttribute("allTipoPrestacion", allTipoPrestacion);
         model.addAttribute("reglasTipoPrestacionId", reglasTipoPrestacionList);
         model.addAttribute("titlePage", "Editar regla");
         return "reglas/editar_regla";
@@ -108,33 +109,16 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
         return "redirect:/regla-tipo-prestacion/list";
     }
 
+    @PostMapping("/save/{reglaId}")
+    public String updateReglaTipoPrestacion(@PathVariable Long reglaId,
+                                            @ModelAttribute NoutRegles regla,
+                                            @RequestParam("tipoPrestacion") List<String> tipoPrestacionIds) {
 
-//    @PostMapping("/update/{reglaId}")
-//    public String updateReglaTipoPrestacion(@PathVariable Long reglaId,  @ModelAttribute("reglaTipoPrestacion") ReglaTipoPrestacionEntity updatedReglaTipoPrestacion) {
-//        ReglasTipoPrestacionId id = buildId(reglaId, tipoPrestacionId);
-//        // Obtener la entidad existente de la base de datos
-//
-//        ReglasTipoPrestacionId updatedId = buildId(reglaId, updatedReglaTipoPrestacion.getNoutTipprs().getCoa());
-//
-//        if (service.findById(updatedId).isPresent()) {
-//            ReglaTipoPrestacionEntity existingReglaTipoPrestacion = service.findById(id).get();
-//
-//            // Actualizar los campos relevantes
-//            existingReglaTipoPrestacion.getNoutRegles().setDec(updatedReglaTipoPrestacion.getNoutRegles().getDec());
-//            existingReglaTipoPrestacion.getNoutRegles().setDatIni(updatedReglaTipoPrestacion.getNoutRegles().getDatIni());
-//            existingReglaTipoPrestacion.getNoutRegles().setDatFin(updatedReglaTipoPrestacion.getNoutRegles().getDatFin());
-//            existingReglaTipoPrestacion.getNoutRegles().setScript(updatedReglaTipoPrestacion.getNoutRegles().getScript());
-//
-//            // Guardar los cambios
-//            service.save(existingReglaTipoPrestacion);
-//        } else {
-//            reglaTipoPrestacionService.findById(id).ifPresent(reglaTipoPrestacionService::delete);
-//
-//            this.reglaTipoPrestacionService.saveSingleReglaWithTipoPrestacion(updatedReglaTipoPrestacion.getNoutTipprs().getCoa(), reglaId);
-//        }
-//
-//        return "redirect:/regla-tipo-prestacion/list";
-//    }
+        List<NoutTipprs> tipoPrestaciones = noutTipprsService.findAllById(tipoPrestacionIds);
+        super.service.updateReglaWithTipoPrestacion(reglaId, regla, tipoPrestaciones);
+
+        return "redirect:/regla-tipo-prestacion/list";
+    }
 
     private ReglasTipoPrestacionId buildId(Long reglaId, String tipoPrestacionId) {
         ReglasTipoPrestacionId id = new ReglasTipoPrestacionId();

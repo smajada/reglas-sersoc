@@ -17,23 +17,17 @@ public class ReglaTipoPrestacionService extends AbstractCrudService<ReglaTipoPre
 
     private final NoutReglesRepository noutReglesRepository;
     private final NoutTipprsRepository noutTipprsRepository;
+    private final NoutReglesService noutReglesService;
 
 
     public ReglaTipoPrestacionService(ReglaTipoPrestacionRepository reglaTipoPrestacionRepository, NoutReglesRepository noutReglesRepository, NoutTipprsRepository noutTipprsRepository) {
         super(reglaTipoPrestacionRepository);
         this.noutReglesRepository = noutReglesRepository;
         this.noutTipprsRepository = noutTipprsRepository;
+        this.noutReglesService = new NoutReglesService(noutReglesRepository);
     }
 
-    public void saveSingleReglaWithTipoPrestacion(String tipoPrestacionId, Long reglaId){
-        ReglaTipoPrestacionEntity reglaTipoPrestacion = new ReglaTipoPrestacionEntity();
-        reglaTipoPrestacion.setNoutRegles(noutReglesRepository.findById(reglaId).get());
-        reglaTipoPrestacion.setNoutTipprs(noutTipprsRepository.findById(tipoPrestacionId).get());
-
-        this.repo.save(reglaTipoPrestacion);
-    }
-
-    public void saveReglaWithTipoPrestacion(NoutRegles regla, List<NoutTipprs> tipoPrestacion){
+    public void saveReglaWithTipoPrestacion(NoutRegles regla, List<NoutTipprs> tipoPrestacion) {
         NoutRegles savedRegla = noutReglesRepository.save(regla);
 
         for (NoutTipprs noutTipprs : tipoPrestacion) {
@@ -42,11 +36,48 @@ public class ReglaTipoPrestacionService extends AbstractCrudService<ReglaTipoPre
             reglaTipoPrestacion.setNoutTipprs(noutTipprs);
 
             // Check if the ReglaTipoPrestacion already exists
-            if (repo.findById(new ReglasTipoPrestacionId(savedRegla.getCon(), noutTipprs.getCoa())).isPresent()){
+            if (repo.findById(new ReglasTipoPrestacionId(savedRegla.getCon(), noutTipprs.getCoa())).isPresent()) {
                 continue;
             }
 
             this.repo.save(reglaTipoPrestacion);
+        }
+    }
+
+    public void updateReglaWithTipoPrestacion(Long reglaId, NoutRegles regla, List<NoutTipprs> tiposPrestacion) {
+        // Actualiza la regla
+        noutReglesService.update(regla, reglaId);
+
+        // Obtiene todas las reglasTipoPrestacion
+        List<ReglaTipoPrestacionEntity> reglasTipoPrestacion = repo.findAll();
+
+        // Recorre todas las reglasTipoPrestacion
+        for (ReglaTipoPrestacionEntity reglaTipoPrestacion : reglasTipoPrestacion) {
+
+            // Comprueba si la reglaTipoPrestacion coincide con la regla
+            if (reglaTipoPrestacion.getNoutRegles().getCon().equals(regla.getCon())) {
+
+                // Recorre todos los tiposPrestacion
+                for (NoutTipprs noutTipprs : tiposPrestacion) {
+
+                    // Comprueba si ya existe la reglaTipoPrestacion
+                    if (repo.findById(new ReglasTipoPrestacionId(regla.getCon(), noutTipprs.getCoa())).isPresent()) {
+                        continue;
+                    }
+
+                    // Comprueba que no exista la reglaTipoPrestacion, si no existe la crea
+                    if (repo.findById(new ReglasTipoPrestacionId(regla.getCon(), noutTipprs.getCoa())).isEmpty()) {
+                        ReglaTipoPrestacionEntity reglaTipoPrestacionEntity = new ReglaTipoPrestacionEntity();
+                        reglaTipoPrestacionEntity.setNoutRegles(regla);
+                        reglaTipoPrestacionEntity.setNoutTipprs(noutTipprs);
+                        repo.save(reglaTipoPrestacionEntity);
+                        continue;
+                    }
+
+                    // Si no se cumple ninguna de las condiciones anteriores, se elimina la reglaTipoPrestacion
+                    repo.delete(reglaTipoPrestacion);
+                }
+            }
         }
     }
 
@@ -55,5 +86,12 @@ public class ReglaTipoPrestacionService extends AbstractCrudService<ReglaTipoPre
         repo.deleteById(reglaTipoPrestacion.getId());
     }
 
+    @Override
+    public void update(ReglaTipoPrestacionEntity bean, ReglasTipoPrestacionId reglasTipoPrestacionId) {
+        ReglaTipoPrestacionEntity reglaTipoPrestacion = repo.findById(reglasTipoPrestacionId).orElseThrow();
+        reglaTipoPrestacion.setNoutRegles(bean.getNoutRegles());
+        reglaTipoPrestacion.setNoutTipprs(bean.getNoutTipprs());
+        repo.save(reglaTipoPrestacion);
+    }
 }
 

@@ -22,23 +22,20 @@
                             </div>
                         </div>
                         <form
-                                th:action="#"
-                                th:object="${reglaTipoPrestacion}"
+                                th:action="@{/regla-tipo-prestacion/save/{reglaId}(reglaId=${regla.con})}"
                                 method="post">
 
                             <div class="row gy-3 gy-md-4 overflow-hidden justify-content-center">
                                 <div class="col-12">
                                     <label for="descripcion" class="form-label">Descripción</label>
                                     <input type="text" class="form-control" name="descripcion" id="descripcion" aria-label="descripcion" placeholder="Descripción"
-                                           th:field="*{reglaTipoPrestacion.getNoutRegles.dec}"
-                                           th:text="*{regla.dec}">
+                                           th:field="*{regla.dec}">
                                 </div>
                                 <div class="row justify-content-between m-2">
                                 <div class="col-6">
                                     <label for="fecha_inicio" class="form-label">Fecha de inicio</label>
                                     <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio"
-                                           th:field="*{reglaTipoPrestacion.getNoutRegles.datIni}"
-                                           th:text="${regla.datIni}">
+                                           th:field="*{regla.datIni}">
                                 </div>
                                     <div class="col-6">
                                         <label for="fecha_fin" class="form-label">Fecha de finalización</label>
@@ -49,10 +46,10 @@
                                     <label for="tipo_prestacion" class="form-label
                                     ">Tipo de prestación</label>
                                     <select class="form-select" multiple id="tipo_prestacion" name="tipoPrestacion">
-                                        <option th:each="tipoPrestacion : ${allReglasTipoPrestacion}"
-                                                th:value="${tipoPrestacion.noutTipprs.coa}"
-                                                th:text="${tipoPrestacion.noutTipprs.dec}"
-                                                th:selected="${#lists.contains(reglasTipoPrestacionId, tipoPrestacion.id)}"
+                                        <option th:each="tipoPrestacion : ${allTipoPrestacion}"
+                                                th:value="${tipoPrestacion.coa}"
+                                                th:text="${tipoPrestacion.dec}"
+                                                th:selected="${#lists.contains(reglasTipoPrestacionId, tipoPrestacion.coa)}"
                                         ></option>
                                     </select>
                                 </div>

@@ -14,6 +14,12 @@ public class NoutTipprsService extends AbstractCrudService<NoutTipprs, String, N
     }
 
     @Override
+    public void update(NoutTipprs bean, String s) {
+        bean.setCoa(s);
+        repo.save(bean);
+    }
+
+    @Override
     public void delete(NoutTipprs bean) {
         repo.delete(bean);
     }
