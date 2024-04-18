@@ -18,6 +18,7 @@ public class NoutReglesService extends AbstractCrudService<NoutRegles, Long, Nou
     @Override
     public void delete(NoutRegles bean) {
         bean.setActive(false);
+        repo.save(bean);
     }
 
     public List<NoutRegles> findByIdPrestacion(Long idPrestacion){

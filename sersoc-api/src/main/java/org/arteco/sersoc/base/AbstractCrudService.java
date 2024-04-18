@@ -1,5 +1,7 @@
 package org.arteco.sersoc.base;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import org.arteco.sersoc.dto.PageDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -23,4 +23,5 @@ public interface ReglaTipoPrestacionRepository extends JpaRepository<ReglaTipoPr
             + " OR r.noutTipprs.dec LIKE %?1%")
     List<ReglaTipoPrestacionEntity> search(String keyword);
 
+
 }
