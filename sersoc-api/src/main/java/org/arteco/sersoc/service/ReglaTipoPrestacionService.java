@@ -61,10 +61,6 @@ public class ReglaTipoPrestacionService extends AbstractCrudService<ReglaTipoPre
                 for (NoutTipprs noutTipprs : tiposPrestacion) {
                     ReglasTipoPrestacionId reglasTipoPrestacionId = new ReglasTipoPrestacionId(regla.getCon(), noutTipprs.getCoa());
 
-                    if (!tiposPrestacion.contains(reglaTipoPrestacion.getNoutTipprs())) {
-                        this.delete(reglaTipoPrestacion);
-                        continue;
-                    }
 
                     // Comprueba si ya existe la reglaTipoPrestacion
                     if (repo.findById(reglasTipoPrestacionId).isPresent()) {
@@ -75,10 +71,12 @@ public class ReglaTipoPrestacionService extends AbstractCrudService<ReglaTipoPre
                             repo.save(reglaTipoPrestacion);
                             continue;
                         }
-                    }
 
-                    // Comprueba que no exista la reglaTipoPrestacion, si no existe la crea
-                    if (repo.findById(reglasTipoPrestacionId).isEmpty()) {
+                        if (!tiposPrestacion.contains(reglaTipoPrestacion.getNoutTipprs())) {
+                            this.delete(reglaTipoPrestacion);
+                        }
+
+                    } else {
                         ReglaTipoPrestacionEntity reglaTipoPrestacionEntity = new ReglaTipoPrestacionEntity();
                         reglaTipoPrestacionEntity.setNoutRegles(regla);
                         reglaTipoPrestacionEntity.setNoutTipprs(noutTipprs);
