@@ -1,3 +1,22 @@
+const search = document.querySelector('#search');
+const table = document.getElementById('table');
+const tr = table.getElementsByTagName('tr');
+
+search.addEventListener('keyup', function() {
+    const filter = search.value.toUpperCase(); // Move inside event listener
+    for (let i = 0; i < tr.length; i++) {
+        let td = tr[i].getElementsByTagName('td')[0];
+        if (td) {
+            let textValue = td.textContent || td.innerText;
+            if (textValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = '';
+            } else {
+                tr[i].style.display = 'none';
+            }
+        }
+    }
+});
+
 document.addEventListener("DOMContentLoaded", function() {
     // Objeto para almacenar editores de CodeMirror ya inicializados
     var initializedEditors = {};
@@ -35,3 +54,4 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
+
