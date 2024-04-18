@@ -75,7 +75,7 @@
 
                             >
                                 <li
-                                        th:if="${reglaTipoPrestacion.noutRegles.con == regla.con}"
+                                        th:if="${reglaTipoPrestacion.noutRegles.con == regla.con && reglaTipoPrestacion.getActive() == true}"
                                         th:text="${reglaTipoPrestacion.noutTipprs.dec}"
                                 ></li>
                             </ul>

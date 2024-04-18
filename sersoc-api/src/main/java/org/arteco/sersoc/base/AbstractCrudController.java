@@ -21,8 +21,7 @@ public abstract class AbstractCrudController<
     }
 
 
-    @GetMapping("/page")
-    public PageDto<ENTITY> page(@Parameter(hidden = true) final Pageable page) {
+    public PageDto<ENTITY> page( final Pageable page) {
         return new PageDto<>(this.service.page(page));
     }
 }

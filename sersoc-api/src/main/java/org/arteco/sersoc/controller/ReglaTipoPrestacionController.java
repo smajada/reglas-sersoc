@@ -62,7 +62,7 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
 
         List<String> reglasTipoPrestacionList = new ArrayList<>();
         for (ReglaTipoPrestacionEntity reglaTipoPrestacion : allReglasTipoPrestacion) {
-            if (reglaTipoPrestacion.getNoutRegles().getCon().equals(regla.getCon())) {
+            if (reglaTipoPrestacion.getNoutRegles().getCon().equals(regla.getCon()) && reglaTipoPrestacion.getActive()) {
                 reglasTipoPrestacionList.add(reglaTipoPrestacion.getNoutTipprs().getCoa());
             }
         }

@@ -59,23 +59,33 @@ public class ReglaTipoPrestacionService extends AbstractCrudService<ReglaTipoPre
 
                 // Recorre todos los tiposPrestacion
                 for (NoutTipprs noutTipprs : tiposPrestacion) {
+                    ReglasTipoPrestacionId reglasTipoPrestacionId = new ReglasTipoPrestacionId(regla.getCon(), noutTipprs.getCoa());
 
-                    // Comprueba si ya existe la reglaTipoPrestacion
-                    if (repo.findById(new ReglasTipoPrestacionId(regla.getCon(), noutTipprs.getCoa())).isPresent()) {
+                    if (!tiposPrestacion.contains(reglaTipoPrestacion.getNoutTipprs())) {
+                        this.delete(reglaTipoPrestacion);
                         continue;
                     }
 
+                    // Comprueba si ya existe la reglaTipoPrestacion
+                    if (repo.findById(reglasTipoPrestacionId).isPresent()) {
+
+                        // Si ya existe, y su valor es false, lo activa
+                        if(reglaTipoPrestacion.getActive().equals(false)){
+                            reglaTipoPrestacion.setActive(true);
+                            repo.save(reglaTipoPrestacion);
+                            continue;
+                        }
+                    }
+
                     // Comprueba que no exista la reglaTipoPrestacion, si no existe la crea
-                    if (repo.findById(new ReglasTipoPrestacionId(regla.getCon(), noutTipprs.getCoa())).isEmpty()) {
+                    if (repo.findById(reglasTipoPrestacionId).isEmpty()) {
                         ReglaTipoPrestacionEntity reglaTipoPrestacionEntity = new ReglaTipoPrestacionEntity();
                         reglaTipoPrestacionEntity.setNoutRegles(regla);
                         reglaTipoPrestacionEntity.setNoutTipprs(noutTipprs);
                         repo.save(reglaTipoPrestacionEntity);
-                        continue;
                     }
 
-                    // Si no se cumple ninguna de las condiciones anteriores, se elimina la reglaTipoPrestacion
-                    repo.delete(reglaTipoPrestacion);
+
                 }
             }
         }
@@ -83,7 +93,8 @@ public class ReglaTipoPrestacionService extends AbstractCrudService<ReglaTipoPre
 
     @Override
     public void delete(ReglaTipoPrestacionEntity reglaTipoPrestacion) {
-        repo.deleteById(reglaTipoPrestacion.getId());
+        reglaTipoPrestacion.setActive(false);
+        repo.save(reglaTipoPrestacion);
     }
 
     @Override
