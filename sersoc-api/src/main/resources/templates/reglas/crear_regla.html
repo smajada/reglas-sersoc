@@ -24,21 +24,17 @@
                         <form th:action="@{/regla-tipo-prestacion/save}" th:method="post">
                             <div class="row gy-3 gy-md-4 overflow-hidden justify-content-center">
                                 <div class="col-12">
-                                    <label for="nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="nombre" id="nombre" placeholder="Nombre"  th:field="*{regla.nombre}">
-                                </div>
-                                <div class="col-12">
                                     <label for="descripcion" class="form-label">Descripción</label>
-                                    <textarea class="form-control" name="descripcion" id="descripcion" aria-label="descripcion" placeholder="Descripción" th:field="*{regla.descripcion}"></textarea>
+                                    <input type="text" class="form-control" name="descripcion" id="descripcion" aria-label="descripcion" placeholder="Descripción" th:field="*{regla.dec}">
                                 </div>
                                 <div class="row justify-content-between m-2">
                                     <div class="col-6">
                                         <label for="fecha_inicio" class="form-label">Fecha de inicio</label>
-                                        <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" th:field="*{regla.fecha_inicio}">
+                                        <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" th:field="*{regla.datIni}">
                                     </div>
                                     <div class="col-6">
                                         <label for="fecha_fin" class="form-label">Fecha de finalización</label>
-                                        <input type="date" class="form-control" id="fecha_fin" name="fecha_fin"  th:field="*{regla.fecha_fin}">
+                                        <input type="date" class="form-control" id="fecha_fin" name="fecha_fin"  th:field="*{regla.datFin}">
                                     </div>
                                 </div>
 
@@ -46,8 +42,8 @@
                                     <label for="tipo_prestacion" class="form-label
                                     ">Tipo de prestación</label>
                                     <select class="form-select" multiple id="tipo_prestacion" name="tipoPrestacion" >
-                                        <option th:each="tipoPrestacion : ${tipoPrestacionList}" th:value="${tipoPrestacion.id}"
-                                                th:text="${tipoPrestacion.descripcion}" th:selected="${tipoPrestacionList.contains(tipoPrestacion)}"></option>
+                                        <option th:each="tipoPrestacion : ${tipoPrestacionList}" th:value="${tipoPrestacion.coa}"
+                                                th:text="${tipoPrestacion.dec}"></option>
                                     </select>
                                 </div>
 

@@ -11,8 +11,8 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReglasTipoPrestacionId implements Serializable {
+public class PerPrsId implements Serializable {
 
-    private Long reglaId;
-    private String tipoPrestacionId;
+    private Long perId;
+    private Long prsId;
 }

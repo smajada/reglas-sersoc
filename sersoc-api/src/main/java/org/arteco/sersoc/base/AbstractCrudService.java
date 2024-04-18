@@ -1,9 +1,10 @@
 package org.arteco.sersoc.base;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityNotFoundException;
 import org.arteco.sersoc.dto.PageDto;
-import org.arteco.sersoc.model.entities.ReglaTipoPrestacionEntity;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -34,13 +35,7 @@ public abstract class AbstractCrudService<
         this.repo.save(bean);
     }
 
-    public void update(ENTITY bean, ID id) {
-        if (this.repo.existsById(id)) {
-            this.repo.save(bean);
-        } else {
-            throw new IllegalArgumentException("No existe el registro con id: " + id);
-        }
-    }
+    public abstract void update(ENTITY bean, ID id);
 
     public List<ENTITY> findAllById(List<ID> ids) {
         return this.repo.findAllById(ids);

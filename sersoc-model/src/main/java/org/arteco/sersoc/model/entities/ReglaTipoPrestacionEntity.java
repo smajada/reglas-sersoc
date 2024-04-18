@@ -5,13 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.arteco.sersoc.model.base.ReglasTipoPrestacionId;
-import org.hibernate.annotations.Mutability;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "reglas_tipo_prestaciones")
+
 public class ReglaTipoPrestacionEntity {
 
     @EmbeddedId
@@ -19,9 +19,12 @@ public class ReglaTipoPrestacionEntity {
 
     @ManyToOne
     @MapsId("reglaId")
-    private ReglaEntity reglaEntity;
+    private NoutRegles noutRegles;
 
     @ManyToOne
     @MapsId("tipoPrestacionId")
-    private TipoPrestacionEntity tipoPrestacionEntity;
+    private NoutTipprs noutTipprs;
+
+    @Column(name = "active")
+    private Boolean active = true;
 }

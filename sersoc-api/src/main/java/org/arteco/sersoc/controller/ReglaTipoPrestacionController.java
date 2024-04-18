@@ -4,13 +4,13 @@ import jakarta.persistence.EntityNotFoundException;
 import org.arteco.sersoc.base.AbstractCrudController;
 import org.arteco.sersoc.dto.PageDto;
 import org.arteco.sersoc.model.base.ReglasTipoPrestacionId;
-import org.arteco.sersoc.model.entities.ReglaEntity;
+import org.arteco.sersoc.model.entities.NoutTipprs;
+import org.arteco.sersoc.model.entities.NoutRegles;
 import org.arteco.sersoc.model.entities.ReglaTipoPrestacionEntity;
-import org.arteco.sersoc.model.entities.TipoPrestacionEntity;
 import org.arteco.sersoc.repository.ReglaTipoPrestacionRepository;
-import org.arteco.sersoc.service.ReglaService;
+import org.arteco.sersoc.service.NoutReglesService;
 import org.arteco.sersoc.service.ReglaTipoPrestacionService;
-import org.arteco.sersoc.service.TipoPrestacionService;
+import org.arteco.sersoc.service.NoutTipprsService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -19,68 +19,81 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/regla-tipo-prestacion")
 public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaTipoPrestacionEntity, ReglasTipoPrestacionId, ReglaTipoPrestacionRepository, ReglaTipoPrestacionService> {
 
-    private final TipoPrestacionService tipoPrestacionService;
-    private final ReglaService reglaService;
+    private final NoutTipprsService noutTipprsService;
+    private final NoutReglesService noutReglesService;
+    private final ReglaTipoPrestacionService reglaTipoPrestacionService;
+    private final NoutReglesController noutReglesController;
 
-    protected ReglaTipoPrestacionController(ReglaTipoPrestacionService service, TipoPrestacionService tipoPrestacionService, ReglaService reglaService) {
+    protected ReglaTipoPrestacionController(ReglaTipoPrestacionService service, NoutTipprsService noutTipprsService, NoutReglesService noutReglesService, ReglaTipoPrestacionService reglaTipoPrestacionService) {
         super(service);
-        this.tipoPrestacionService = tipoPrestacionService;
-        this.reglaService = reglaService;
+        this.noutTipprsService = noutTipprsService;
+        this.noutReglesService = noutReglesService;
+        this.reglaTipoPrestacionService = reglaTipoPrestacionService;
+        this.noutReglesController = new NoutReglesController(noutReglesService);
     }
 
     @GetMapping("/list")
     public String listAllReglasTipoPrestacion(Model model, @RequestParam(name = "page", defaultValue = "0") int page) {
-        Pageable pageRequest = PageRequest.of(page, 5);
+        Pageable pageRequest = PageRequest.of(page, 20);
         PageDto<ReglaTipoPrestacionEntity> reglasTipoPrestacionPage = super.page(pageRequest);
-//        System.out.println(reglasTipoPrestacionPage.getContent());
-        model.addAttribute("totalPages", reglasTipoPrestacionPage.getTotalPages());
+        PageDto<NoutRegles> reglesPage = this.noutReglesController.page(pageRequest);
+
+        model.addAttribute("totalPages", reglesPage.getTotalPages());
         model.addAttribute("reglasTipoPrestacion", reglasTipoPrestacionPage.getContent());
+        model.addAttribute("reglas", reglesPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("titlePage", "Reglas ");
         return "reglas/reglas";
     }
 
 
-    @GetMapping("/editar/{reglaId}/{tipoPrestacionId}")
-    public String editarReglasTipoPrestacion(@PathVariable("reglaId") Long reglaId, @PathVariable("tipoPrestacionId") Long tipoPrestacionId, Model model) {
-        ReglasTipoPrestacionId id = buildId(reglaId, tipoPrestacionId);
+    @GetMapping("/editar/{reglaId}")
+    public String editarReglasTipoPrestacion(@PathVariable("reglaId") Long reglaId, Model model) {
+        NoutRegles regla = this.noutReglesService.findById(reglaId).orElseThrow(EntityNotFoundException::new);
 
-        ReglaTipoPrestacionEntity reglaTipoPrestacion = service.findById(id).get();
+        List<NoutTipprs> allTipoPrestacion = (List<NoutTipprs>) noutTipprsService.findAll();
+
+        List<ReglaTipoPrestacionEntity> allReglasTipoPrestacion = (List<ReglaTipoPrestacionEntity>) super.service.findAll();
+
+        List<String> reglasTipoPrestacionList = new ArrayList<>();
+        for (ReglaTipoPrestacionEntity reglaTipoPrestacion : allReglasTipoPrestacion) {
+            if (reglaTipoPrestacion.getNoutRegles().getCon().equals(regla.getCon()) && reglaTipoPrestacion.getActive()) {
+                reglasTipoPrestacionList.add(reglaTipoPrestacion.getNoutTipprs().getCoa());
+            }
+        }
+
+        ReglaTipoPrestacionEntity reglaTipoPrestacion = new ReglaTipoPrestacionEntity();
+
         model.addAttribute("reglaTipoPrestacion", reglaTipoPrestacion);
-
-        List<TipoPrestacionEntity> tipoPrestacionList = (List<TipoPrestacionEntity>) tipoPrestacionService.findAll();
-        model.addAttribute("tipoPrestacionList", tipoPrestacionList);
+        model.addAttribute("regla", regla);
+        model.addAttribute("allTipoPrestacion", allTipoPrestacion);
+        model.addAttribute("reglasTipoPrestacionId", reglasTipoPrestacionList);
         model.addAttribute("titlePage", "Editar regla");
         return "reglas/editar_regla";
     }
 
-    @GetMapping("/delete/{reglaId}/{tipoPrestacionId}")
-    public String delete(@PathVariable("reglaId") Long reglaId,
-                         @PathVariable("tipoPrestacionId") Long tipoPrestacionId) {
-        ReglasTipoPrestacionId id = buildId(reglaId, tipoPrestacionId);
+    @GetMapping("/delete/{reglaId}")
+    public String delete(@PathVariable("reglaId") Long reglaId) {
+        NoutRegles regla = this.noutReglesService.findById(reglaId).orElseThrow(EntityNotFoundException::new);
 
-        ReglaTipoPrestacionEntity reglaTipoPrestacion = service.findById(id).get();
-
-        service.delete(reglaTipoPrestacion);
+        this.noutReglesService.delete(regla);
         return "redirect:/regla-tipo-prestacion/list";
     }
 
-
     @GetMapping("/crear")
     public String crearReglasTipoPrestacion(Model model) {
-        ReglaEntity regla = new ReglaEntity();
+        NoutRegles regla = new NoutRegles();
         model.addAttribute("regla", regla);
 
-        List<TipoPrestacionEntity> tipoPrestaciones = new ArrayList<>();
+        List<NoutTipprs> tipoPrestaciones = new ArrayList<>();
         model.addAttribute("tipoPrestaciones", tipoPrestaciones);
 
-        List<TipoPrestacionEntity> tipoPrestacionList = (List<TipoPrestacionEntity>) tipoPrestacionService.findAll();
+        List<NoutTipprs> tipoPrestacionList = (List<NoutTipprs>) noutTipprsService.findAll();
         model.addAttribute("tipoPrestacionList", tipoPrestacionList);
 
         model.addAttribute("titlePage", "Crear regla");
@@ -88,37 +101,26 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
     }
 
     @PostMapping("/save")
-    public String saveReglaTipoPrestacion(@ModelAttribute ReglaEntity regla,
-                                          @RequestParam("tipoPrestacion") List<Long> tipoPrestacionIds) {
-        List<TipoPrestacionEntity> tipoPrestaciones = tipoPrestacionService.findAllById(tipoPrestacionIds);
+    public String saveReglaTipoPrestacion(@ModelAttribute NoutRegles regla,
+                                          @RequestParam("tipoPrestacion") List<String> tipoPrestacionIds) {
+        List<NoutTipprs> tipoPrestaciones = noutTipprsService.findAllById(tipoPrestacionIds);
         super.service.saveReglaWithTipoPrestacion(regla, tipoPrestaciones);
 
         return "redirect:/regla-tipo-prestacion/list";
     }
 
+    @PostMapping("/save/{reglaId}")
+    public String updateReglaTipoPrestacion(@PathVariable Long reglaId,
+                                            @ModelAttribute NoutRegles regla,
+                                            @RequestParam("tipoPrestacion") List<String> tipoPrestacionIds) {
 
-    @PostMapping("/update/{reglaId}/{tipoPrestacionId}")
-    public String updateReglaTipoPrestacion(@PathVariable Long reglaId, @PathVariable Long tipoPrestacionId, @ModelAttribute("reglaTipoPrestacion") ReglaTipoPrestacionEntity updatedReglaTipoPrestacion) {
-        ReglasTipoPrestacionId id = buildId(reglaId, tipoPrestacionId);
-        // Obtener la entidad existente de la base de datos
-        ReglaTipoPrestacionEntity existingReglaTipoPrestacion = service.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("No se ha encontrado la regla con id " + id));
-
-        // Actualizar los campos relevantes
-        existingReglaTipoPrestacion.getReglaEntity().setNombre(updatedReglaTipoPrestacion.getReglaEntity().getNombre());
-        existingReglaTipoPrestacion.getReglaEntity().setDescripcion(updatedReglaTipoPrestacion.getReglaEntity().getDescripcion());
-        existingReglaTipoPrestacion.getReglaEntity().setFecha_inicio(updatedReglaTipoPrestacion.getReglaEntity().getFecha_inicio());
-        existingReglaTipoPrestacion.getReglaEntity().setFecha_fin(updatedReglaTipoPrestacion.getReglaEntity().getFecha_fin());
-        existingReglaTipoPrestacion.getReglaEntity().setScript(updatedReglaTipoPrestacion.getReglaEntity().getScript());
-        // Guardar los cambios
-        service.save(existingReglaTipoPrestacion);
+        List<NoutTipprs> tipoPrestaciones = noutTipprsService.findAllById(tipoPrestacionIds);
+        super.service.updateReglaWithTipoPrestacion(reglaId, regla, tipoPrestaciones);
 
         return "redirect:/regla-tipo-prestacion/list";
     }
 
-
-
-    private ReglasTipoPrestacionId buildId(Long reglaId, Long tipoPrestacionId) {
+    private ReglasTipoPrestacionId buildId(Long reglaId, String tipoPrestacionId) {
         ReglasTipoPrestacionId id = new ReglasTipoPrestacionId();
         id.setReglaId(reglaId);
         id.setTipoPrestacionId(tipoPrestacionId);
