@@ -83,7 +83,6 @@ public class ReglaTipoPrestacionService extends AbstractCrudService<ReglaTipoPre
                         repo.save(reglaTipoPrestacionEntity);
                     }
 
-
                 }
             }
         }
