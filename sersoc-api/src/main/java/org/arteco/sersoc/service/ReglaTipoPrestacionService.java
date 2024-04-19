@@ -7,93 +7,72 @@ import org.arteco.sersoc.model.entities.ReglaTipoPrestacionEntity;
 import org.arteco.sersoc.model.entities.NoutTipprs;
 import org.arteco.sersoc.repository.NoutReglesRepository;
 import org.arteco.sersoc.repository.ReglaTipoPrestacionRepository;
-import org.arteco.sersoc.repository.NoutTipprsRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 public class ReglaTipoPrestacionService extends AbstractCrudService<ReglaTipoPrestacionEntity, ReglasTipoPrestacionId, ReglaTipoPrestacionRepository> {
 
-    private final NoutReglesRepository noutReglesRepository;
-    private final NoutTipprsRepository noutTipprsRepository;
     private final NoutReglesService noutReglesService;
 
-
-    public ReglaTipoPrestacionService(ReglaTipoPrestacionRepository reglaTipoPrestacionRepository, NoutReglesRepository noutReglesRepository, NoutTipprsRepository noutTipprsRepository) {
+    public ReglaTipoPrestacionService(ReglaTipoPrestacionRepository reglaTipoPrestacionRepository, NoutReglesRepository noutReglesRepository) {
         super(reglaTipoPrestacionRepository);
-        this.noutReglesRepository = noutReglesRepository;
-        this.noutTipprsRepository = noutTipprsRepository;
         this.noutReglesService = new NoutReglesService(noutReglesRepository);
     }
 
-    public void saveReglaWithTipoPrestacion(NoutRegles regla, List<NoutTipprs> tipoPrestacion) {
-        NoutRegles savedRegla = noutReglesRepository.save(regla);
+    @Transactional
+    public void save(NoutRegles regla, List<NoutTipprs> tipoPrestacion) {
+        NoutRegles savedRegla = noutReglesService.save(regla);
 
         for (NoutTipprs noutTipprs : tipoPrestacion) {
             ReglaTipoPrestacionEntity reglaTipoPrestacion = new ReglaTipoPrestacionEntity();
             reglaTipoPrestacion.setNoutRegles(savedRegla);
             reglaTipoPrestacion.setNoutTipprs(noutTipprs);
 
-            // Check if the ReglaTipoPrestacion already exists
-            if (repo.findById(new ReglasTipoPrestacionId(savedRegla.getCon(), noutTipprs.getCoa())).isPresent()) {
-                continue;
+            if (!repo.existsById(new ReglasTipoPrestacionId(savedRegla.getCon(), noutTipprs.getCoa()))) {
+                repo.save(reglaTipoPrestacion);
             }
-
-            this.repo.save(reglaTipoPrestacion);
         }
     }
 
-    public void updateReglaWithTipoPrestacion(Long reglaId, NoutRegles regla, List<NoutTipprs> tiposPrestacion) {
-        // Actualiza la regla
+    @Transactional
+    public void updateAll(Long reglaId, NoutRegles regla, List<NoutTipprs> tiposPrestacion) {
         noutReglesService.update(regla, reglaId);
 
-        // Obtiene todas las reglasTipoPrestacion
-        List<ReglaTipoPrestacionEntity> reglasTipoPrestacion = repo.findAll();
+        List<ReglaTipoPrestacionEntity> reglasTipoPrestacion = repo.findByNoutRegles_Con(reglaId);
 
-        // Recorre todas las reglasTipoPrestacion
         for (ReglaTipoPrestacionEntity reglaTipoPrestacion : reglasTipoPrestacion) {
+            if (tiposPrestacion.stream().noneMatch(tipo -> tipo.getCoa().equals(reglaTipoPrestacion.getNoutTipprs().getCoa()))) {
+                delete(reglaTipoPrestacion);
+            }
+        }
 
-            // Comprueba si la reglaTipoPrestacion coincide con la regla
-            if (reglaTipoPrestacion.getNoutRegles().getCon().equals(regla.getCon())) {
-
-                // Recorre todos los tiposPrestacion
-                for (NoutTipprs noutTipprs : tiposPrestacion) {
-                    ReglasTipoPrestacionId reglasTipoPrestacionId = new ReglasTipoPrestacionId(regla.getCon(), noutTipprs.getCoa());
-
-
-                    // Comprueba si ya existe la reglaTipoPrestacion
-                    if (repo.findById(reglasTipoPrestacionId).isPresent()) {
-
-                        // Si ya existe, y su valor es false, lo activa
-                        if(reglaTipoPrestacion.getActive().equals(false)){
-                            reglaTipoPrestacion.setActive(true);
-                            repo.save(reglaTipoPrestacion);
-                            continue;
-                        }
-
-                        if (!tiposPrestacion.contains(reglaTipoPrestacion.getNoutTipprs())) {
-                            this.delete(reglaTipoPrestacion);
-                        }
-
-                    } else {
-                        ReglaTipoPrestacionEntity reglaTipoPrestacionEntity = new ReglaTipoPrestacionEntity();
-                        reglaTipoPrestacionEntity.setNoutRegles(regla);
-                        reglaTipoPrestacionEntity.setNoutTipprs(noutTipprs);
-                        repo.save(reglaTipoPrestacionEntity);
-                    }
-
-                }
+        for (NoutTipprs noutTipprs : tiposPrestacion) {
+            ReglaTipoPrestacionEntity existingEntity = repo
+                    .findById(new ReglasTipoPrestacionId(reglaId, noutTipprs.getCoa()))
+                    .orElse(null);
+            if (existingEntity != null) {
+                existingEntity.setActive(true);
+                repo.save(existingEntity);
+            } else {
+                ReglaTipoPrestacionEntity newEntity = new ReglaTipoPrestacionEntity();
+                newEntity.setNoutRegles(regla);
+                newEntity.setNoutTipprs(noutTipprs);
+                repo.save(newEntity);
             }
         }
     }
 
+    @Transactional
     @Override
     public void delete(ReglaTipoPrestacionEntity reglaTipoPrestacion) {
         reglaTipoPrestacion.setActive(false);
         repo.save(reglaTipoPrestacion);
     }
 
+    @Transactional
     @Override
     public void update(ReglaTipoPrestacionEntity bean, ReglasTipoPrestacionId reglasTipoPrestacionId) {
         ReglaTipoPrestacionEntity reglaTipoPrestacion = repo.findById(reglasTipoPrestacionId).orElseThrow();
@@ -102,4 +81,3 @@ public class ReglaTipoPrestacionService extends AbstractCrudService<ReglaTipoPre
         repo.save(reglaTipoPrestacion);
     }
 }
-
