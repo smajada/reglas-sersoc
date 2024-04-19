@@ -1,9 +1,6 @@
 package org.arteco.sersoc.base;
 
-import io.swagger.v3.oas.annotations.Parameter;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityNotFoundException;
-import org.arteco.sersoc.dto.PageDto;
+import org.arteco.sersoc.model.entities.NoutRegles;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,8 +28,8 @@ public abstract class AbstractCrudService<
         return this.repo.findById(id);
     }
 
-    public void save(ENTITY bean) {
-        this.repo.save(bean);
+    public ENTITY save(ENTITY bean) {
+        return this.repo.save(bean);
     }
 
     public abstract void update(ENTITY bean, ID id);
