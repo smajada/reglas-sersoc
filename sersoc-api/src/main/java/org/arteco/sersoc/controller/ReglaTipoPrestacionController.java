@@ -26,22 +26,22 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
 
     private final NoutTipprsService noutTipprsService;
     private final NoutReglesService noutReglesService;
-    private final ReglaTipoPrestacionService reglaTipoPrestacionService;
     private final NoutReglesController noutReglesController;
 
-    protected ReglaTipoPrestacionController(ReglaTipoPrestacionService service, NoutTipprsService noutTipprsService, NoutReglesService noutReglesService, ReglaTipoPrestacionService reglaTipoPrestacionService) {
+    public ReglaTipoPrestacionController(ReglaTipoPrestacionService service,
+                                         NoutTipprsService noutTipprsService,
+                                         NoutReglesService noutReglesService, NoutReglesController noutReglesController) {
         super(service);
         this.noutTipprsService = noutTipprsService;
         this.noutReglesService = noutReglesService;
-        this.reglaTipoPrestacionService = reglaTipoPrestacionService;
-        this.noutReglesController = new NoutReglesController(noutReglesService);
+        this.noutReglesController = noutReglesController;
     }
 
     @GetMapping("/list")
-    public String listAllReglasTipoPrestacion(Model model, @RequestParam(name = "page", defaultValue = "0") int page) {
+    public String listAll(Model model, @RequestParam(name = "page", defaultValue = "0") int page) {
         Pageable pageRequest = PageRequest.of(page, 20);
         PageDto<ReglaTipoPrestacionEntity> reglasTipoPrestacionPage = super.page(pageRequest);
-        PageDto<NoutRegles> reglesPage = this.noutReglesController.page(pageRequest);
+        PageDto<NoutRegles> reglesPage = noutReglesController.page(pageRequest);
 
         model.addAttribute("totalPages", reglesPage.getTotalPages());
         model.addAttribute("reglasTipoPrestacion", reglasTipoPrestacionPage.getContent());
@@ -51,9 +51,8 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
         return "reglas/reglas";
     }
 
-
     @GetMapping("/editar/{reglaId}")
-    public String editarReglasTipoPrestacion(@PathVariable("reglaId") Long reglaId, Model model) {
+    public String edit(@PathVariable("reglaId") Long reglaId, Model model) {
         NoutRegles regla = this.noutReglesService.findById(reglaId).orElseThrow(EntityNotFoundException::new);
 
         List<NoutTipprs> allTipoPrestacion = (List<NoutTipprs>) noutTipprsService.findAll();
@@ -86,7 +85,7 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
     }
 
     @GetMapping("/crear")
-    public String crearReglasTipoPrestacion(Model model) {
+    public String createView(Model model) {
         NoutRegles regla = new NoutRegles();
         model.addAttribute("regla", regla);
 
@@ -101,30 +100,23 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
     }
 
     @PostMapping("/save")
-    public String saveReglaTipoPrestacion(@ModelAttribute NoutRegles regla,
-                                          @RequestParam("tipoPrestacion") List<String> tipoPrestacionIds) {
+    public String save(@ModelAttribute NoutRegles regla,
+                       @RequestParam("tipoPrestacion") List<String> tipoPrestacionIds) {
         List<NoutTipprs> tipoPrestaciones = noutTipprsService.findAllById(tipoPrestacionIds);
-        super.service.saveReglaWithTipoPrestacion(regla, tipoPrestaciones);
+        super.service.save(regla, tipoPrestaciones);
 
         return "redirect:/regla-tipo-prestacion/list";
     }
 
     @PostMapping("/save/{reglaId}")
-    public String updateReglaTipoPrestacion(@PathVariable Long reglaId,
-                                            @ModelAttribute NoutRegles regla,
-                                            @RequestParam("tipoPrestacion") List<String> tipoPrestacionIds) {
+    public String update(@PathVariable Long reglaId,
+                         @ModelAttribute NoutRegles regla,
+                         @RequestParam("tipoPrestacion") List<String> tipoPrestacionIds) {
 
         List<NoutTipprs> tipoPrestaciones = noutTipprsService.findAllById(tipoPrestacionIds);
-        super.service.updateReglaWithTipoPrestacion(reglaId, regla, tipoPrestaciones);
+        super.service.updateAll(reglaId, regla, tipoPrestaciones);
 
         return "redirect:/regla-tipo-prestacion/list";
-    }
-
-    private ReglasTipoPrestacionId buildId(Long reglaId, String tipoPrestacionId) {
-        ReglasTipoPrestacionId id = new ReglasTipoPrestacionId();
-        id.setReglaId(reglaId);
-        id.setTipoPrestacionId(tipoPrestacionId);
-        return id;
     }
 
 

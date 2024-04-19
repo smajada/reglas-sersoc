@@ -19,11 +19,11 @@ public class ReglaTipoPrestacionEntity {
 
     @ManyToOne
     @MapsId("reglaId")
-    private NoutRegles noutRegles;
+    private NoutRegles noutRegles = new NoutRegles();
 
     @ManyToOne
     @MapsId("tipoPrestacionId")
-    private NoutTipprs noutTipprs;
+    private NoutTipprs noutTipprs = new NoutTipprs();
 
     @Column(name = "active")
     private Boolean active = true;
