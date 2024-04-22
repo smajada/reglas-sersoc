@@ -1,5 +1,6 @@
 package org.arteco.sersoc.service;
 
+import org.arteco.sersoc.model.base.ReglasTipoPrestacionId;
 import org.arteco.sersoc.model.entities.NoutRegles;
 import org.arteco.sersoc.model.entities.NoutTipprs;
 import org.arteco.sersoc.model.entities.ReglaTipoPrestacionEntity;
@@ -75,6 +76,18 @@ class ReglaTipoPrestacionServiceTest {
         reglaTipoPrestacionService.delete(reglaTipoPrestacion);
 
         assertFalse(reglaTipoPrestacion.getActive());
+    }
+
+    @Test
+    public void ReglaTipoPrestacionService_update_ReturnRTP(){
+        ReglaTipoPrestacionEntity reglaTipoPrestacion = new ReglaTipoPrestacionEntity();
+        ReglasTipoPrestacionId reglasTipoPrestacionId = new ReglasTipoPrestacionId(1L, "1");
+
+        when(reglaTipoPrestacionRepository.findById(any())).thenReturn(java.util.Optional.of(reglaTipoPrestacion));
+
+        reglaTipoPrestacionService.update(reglaTipoPrestacion, reglasTipoPrestacionId);
+
+        verify(reglaTipoPrestacionRepository, times(1)).save(any());
     }
 
 
