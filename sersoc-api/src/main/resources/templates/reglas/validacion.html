@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head th:replace="~{layout/layout :: head}"></head>
+<body>
+<nav class="nav" th:replace="~{layout/layout :: navbar}"></nav>
+
+<section class="container mt-4 p-5">
+    <div class="row mb-3">
+        <h1>Validación</h1>
+    </div>
+
+    <table class="table table-hover" id="table">
+        <thead>
+        <tr>
+            <th scope="col">Resultado</th>
+            <th scope="col">Id</th>
+            <th scope="col">Descripción</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <!-- Itera sobre la lista de reglas -->
+        <tr th:each="regla : ${reglas}"
+        >
+            <td class="col-1 py-3" th:switch="${regla.dec}"
+            >
+                <span class="badge bg-success" th:case="Prueba">
+                    <svg class="bi bi-check-lg" fill="currentColor" height="20" viewBox="0 0 16 16"
+                         width="20" xmlns="http://www.w3.org/2000/svg">
+  <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>
+</svg>
+                </span>
+                <span class="badge bg-danger" th:case="Paco">
+                    <svg class="bi bi-ban" fill="currentColor"
+                         height="20" viewBox="0 0 16 16" width="20"
+                         xmlns="http://www.w3.org/2000/svg">
+  <path d="M15 8a6.97 6.97 0 0 0-1.71-4.584l-9.874 9.875A7 7 0 0 0 15 8M2.71 12.584l9.874-9.875a7 7 0 0 0-9.874 9.874ZM16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0"/>
+</svg></span>
+                <span class="badge bg-warning" th:case="*">
+                    <svg class="bi bi-exclamation-triangle" fill="currentColor"
+                         height="20" viewBox="0 0 16 16"
+                         width="20" xmlns="http://www.w3.org/2000/svg">
+  <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z"/>
+  <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+</svg></span>
+            </td>
+            <td class="col-1 py-3" th:text="${regla.con}"></td>
+            <td class="py-3" th:text="${regla.dec}"></td>
+
+        </tr>
+
+        </tbody>
+
+    </table>
+
+</section>
+
+
+<script th:src="@{/js/custom_index.js}"></script>
+<script th:src="@{/js/codemirror.min.js}"></script>
+</body>
+</html>

@@ -119,5 +119,17 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
         return "redirect:/regla-tipo-prestacion/list";
     }
 
+    @GetMapping("/validation")
+    public String validate(Model model, @RequestParam(name = "page", defaultValue = "0") int page) {
+        Pageable pageRequest = PageRequest.of(page, 20);
+        PageDto<ReglaTipoPrestacionEntity> reglasTipoPrestacionPage = super.page(pageRequest);
+        Iterable<NoutRegles> reglesPage = noutReglesService.findAll();
+
+        model.addAttribute("reglasTipoPrestacion", reglasTipoPrestacionPage.getContent());
+        model.addAttribute("reglas", reglesPage);
+        model.addAttribute("titlePage", "Reglas ");
+        return "reglas/validacion";
+    }
+
 
 }
