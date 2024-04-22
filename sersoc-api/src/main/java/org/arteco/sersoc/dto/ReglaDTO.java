@@ -2,19 +2,19 @@ package org.arteco.sersoc.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.arteco.sersoc.model.base.ReglasTipoPrestacionId;
+import lombok.NoArgsConstructor;
 import org.arteco.sersoc.model.entities.NoutRegles;
 import org.arteco.sersoc.model.entities.NoutTipprs;
 
-import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
-public class RequestPrestacionsDTO {
+public class ReglaDTO {
 
-    private final NoutRegles noutRegles;
-
-    private final List<NoutTipprs> tiposPrestacion;
+    private NoutRegles regla;
+    private List<NoutTipprs> allTipoPrestacion;
+    private List<String> reglasTipoPrestacionList;
 
 }

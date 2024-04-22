@@ -3,6 +3,7 @@ package org.arteco.sersoc.controller;
 import jakarta.persistence.EntityNotFoundException;
 import org.arteco.sersoc.base.AbstractCrudController;
 import org.arteco.sersoc.dto.PageDto;
+import org.arteco.sersoc.dto.ReglaDTO;
 import org.arteco.sersoc.model.base.ReglasTipoPrestacionId;
 import org.arteco.sersoc.model.entities.NoutTipprs;
 import org.arteco.sersoc.model.entities.NoutRegles;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/regla-tipo-prestacion")
@@ -39,13 +41,12 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
 
     @GetMapping("/list")
     public String listAll(Model model, @RequestParam(name = "page", defaultValue = "0") int page) {
-        Pageable pageRequest = PageRequest.of(page, 20);
-        PageDto<ReglaTipoPrestacionEntity> reglasTipoPrestacionPage = super.page(pageRequest);
+        Pageable pageRequest = PageRequest.of(page, 30);
+        Iterable<ReglaTipoPrestacionEntity> reglasTipoPrestacionPage = super.service.findAll();
         PageDto<NoutRegles> reglesPage = noutReglesController.page(pageRequest);
 
-        model.addAttribute("totalPages", reglesPage.getTotalPages());
-        model.addAttribute("reglasTipoPrestacion", reglasTipoPrestacionPage.getContent());
-        model.addAttribute("reglas", reglesPage.getContent());
+        model.addAttribute("reglas", reglesPage);
+        model.addAttribute("reglasTipoPrestacion", reglasTipoPrestacionPage);
         model.addAttribute("currentPage", page);
         model.addAttribute("titlePage", "Reglas ");
         return "reglas/reglas";
@@ -59,19 +60,21 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
 
         List<ReglaTipoPrestacionEntity> allReglasTipoPrestacion = (List<ReglaTipoPrestacionEntity>) super.service.findAll();
 
-        List<String> reglasTipoPrestacionList = new ArrayList<>();
-        for (ReglaTipoPrestacionEntity reglaTipoPrestacion : allReglasTipoPrestacion) {
-            if (reglaTipoPrestacion.getNoutRegles().getCon().equals(regla.getCon()) && reglaTipoPrestacion.getActive()) {
-                reglasTipoPrestacionList.add(reglaTipoPrestacion.getNoutTipprs().getCoa());
-            }
-        }
+        List<String> reglasTipoPrestacionList = allReglasTipoPrestacion
+                .stream()
+                .filter(reglaTipoPrestacion ->
+                        reglaTipoPrestacion.getNoutRegles().getCon().equals(regla.getCon())
+                        && reglaTipoPrestacion.getActive())
+                .map(reglaTipoPrestacion ->
+                        reglaTipoPrestacion.getNoutTipprs().getCoa())
+                .collect(Collectors.toList());
 
-        ReglaTipoPrestacionEntity reglaTipoPrestacion = new ReglaTipoPrestacionEntity();
+        ReglaDTO reglaDTO = new ReglaDTO();
+        reglaDTO.setRegla(regla);
+        reglaDTO.setAllTipoPrestacion(allTipoPrestacion);
+        reglaDTO.setReglasTipoPrestacionList(reglasTipoPrestacionList);
 
-        model.addAttribute("reglaTipoPrestacion", reglaTipoPrestacion);
-        model.addAttribute("regla", regla);
-        model.addAttribute("allTipoPrestacion", allTipoPrestacion);
-        model.addAttribute("reglasTipoPrestacionId", reglasTipoPrestacionList);
+        model.addAttribute("reglaDTO", reglaDTO);
         model.addAttribute("titlePage", "Editar regla");
         return "reglas/editar_regla";
     }
@@ -86,38 +89,42 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
 
     @GetMapping("/crear")
     public String createView(Model model) {
-        NoutRegles regla = new NoutRegles();
-        model.addAttribute("regla", regla);
+        ReglaDTO reglaDTO = new ReglaDTO();
+        reglaDTO.setRegla(new NoutRegles());
+        reglaDTO.setAllTipoPrestacion(new ArrayList<>());
+        reglaDTO.setReglasTipoPrestacionList(new ArrayList<>());
 
-        List<NoutTipprs> tipoPrestaciones = new ArrayList<>();
-        model.addAttribute("tipoPrestaciones", tipoPrestaciones);
+        Iterable<NoutTipprs> tipoPrestacionList = noutTipprsService.findAll();
 
-        List<NoutTipprs> tipoPrestacionList = (List<NoutTipprs>) noutTipprsService.findAll();
+        model.addAttribute("reglaDTO", reglaDTO);
         model.addAttribute("tipoPrestacionList", tipoPrestacionList);
-
         model.addAttribute("titlePage", "Crear regla");
+
         return "reglas/crear_regla";
     }
 
+
     @PostMapping("/save")
-    public String save(@ModelAttribute NoutRegles regla,
+    public String save(@ModelAttribute("reglaDTO") ReglaDTO reglaDTO,
                        @RequestParam("tipoPrestacion") List<String> tipoPrestacionIds) {
         List<NoutTipprs> tipoPrestaciones = noutTipprsService.findAllById(tipoPrestacionIds);
-        super.service.save(regla, tipoPrestaciones);
+
+        super.service.save(reglaDTO.getRegla(), tipoPrestaciones);
 
         return "redirect:/regla-tipo-prestacion/list";
     }
 
     @PostMapping("/save/{reglaId}")
     public String update(@PathVariable Long reglaId,
-                         @ModelAttribute NoutRegles regla,
+                         @ModelAttribute("reglaDTO") ReglaDTO reglaDTO,
                          @RequestParam("tipoPrestacion") List<String> tipoPrestacionIds) {
 
         List<NoutTipprs> tipoPrestaciones = noutTipprsService.findAllById(tipoPrestacionIds);
-        super.service.updateAll(reglaId, regla, tipoPrestaciones);
+        super.service.updateAll(reglaId, reglaDTO.getRegla(), tipoPrestaciones);
 
         return "redirect:/regla-tipo-prestacion/list";
     }
+
 
     @GetMapping("/validation")
     public String validate(Model model, @RequestParam(name = "page", defaultValue = "0") int page) {

@@ -31,7 +31,7 @@
         <tbody>
 
         <!-- Itera sobre la lista de reglas -->
-        <tr th:each="regla : ${reglas}"
+        <tr th:each="regla : ${reglas.getContent()}"
             th:if="${regla.isActive()}"
         >
             <td th:text="${regla.con}"></td>
@@ -91,7 +91,7 @@
     </table>
 
     <!-- Paginación -->
-    <p th:if="${totalPages == 0}">No hay reglas</p>
+    <p th:if="${reglas.getTotalPages() == 0}">No hay reglas</p>
 
     <nav aria-label="Navegación de la página" th:if="${totalPages > 0}">
         <ul class="pagination justify-content-center">

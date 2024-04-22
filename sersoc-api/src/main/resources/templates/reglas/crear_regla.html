@@ -21,7 +21,7 @@
                                 </div>
                             </div>
                         </div>
-                        <form th:action="@{/regla-tipo-prestacion/save}" th:method="post">
+                        <form th:action="@{/regla-tipo-prestacion/save}" th:method="post" th:object="${reglaDTO}">
                             <div class="row gy-3 gy-md-4 overflow-hidden justify-content-center">
                                 <div class="col-12">
                                     <label for="descripcion" class="form-label">Descripción</label>
@@ -41,7 +41,7 @@
                                 <div class="col-12">
                                     <label for="tipo_prestacion" class="form-label
                                     ">Tipo de prestación</label>
-                                    <select class="form-select" multiple id="tipo_prestacion" name="tipoPrestacion" >
+                                    <select class="form-select" multiple id="tipo_prestacion" name="tipoPrestacion">
                                         <option th:each="tipoPrestacion : ${tipoPrestacionList}" th:value="${tipoPrestacion.coa}"
                                                 th:text="${tipoPrestacion.dec}"></option>
                                     </select>
