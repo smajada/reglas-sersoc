@@ -5,10 +5,12 @@ import org.arteco.sersoc.base.AbstractCrudController;
 import org.arteco.sersoc.dto.PageDto;
 import org.arteco.sersoc.dto.ReglaDTO;
 import org.arteco.sersoc.model.base.ReglasTipoPrestacionId;
+import org.arteco.sersoc.model.entities.NoutPrestacions;
 import org.arteco.sersoc.model.entities.NoutTipprs;
 import org.arteco.sersoc.model.entities.NoutRegles;
 import org.arteco.sersoc.model.entities.ReglaTipoPrestacionEntity;
 import org.arteco.sersoc.repository.ReglaTipoPrestacionRepository;
+import org.arteco.sersoc.service.NoutPrestacionsService;
 import org.arteco.sersoc.service.NoutReglesService;
 import org.arteco.sersoc.service.ReglaTipoPrestacionService;
 import org.arteco.sersoc.service.NoutTipprsService;
@@ -29,14 +31,16 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
     private final NoutTipprsService noutTipprsService;
     private final NoutReglesService noutReglesService;
     private final NoutReglesController noutReglesController;
+    private final NoutPrestacionsService noutPrestacionsService;
 
     public ReglaTipoPrestacionController(ReglaTipoPrestacionService service,
                                          NoutTipprsService noutTipprsService,
-                                         NoutReglesService noutReglesService, NoutReglesController noutReglesController) {
+                                         NoutReglesService noutReglesService, NoutReglesController noutReglesController, NoutPrestacionsService noutPrestacionsService) {
         super(service);
         this.noutTipprsService = noutTipprsService;
         this.noutReglesService = noutReglesService;
         this.noutReglesController = noutReglesController;
+        this.noutPrestacionsService = noutPrestacionsService;
     }
 
     @GetMapping("/list")
@@ -103,7 +107,6 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
         return "reglas/crear_regla";
     }
 
-
     @PostMapping("/save")
     public String save(@ModelAttribute("reglaDTO") ReglaDTO reglaDTO,
                        @RequestParam("tipoPrestacion") List<String> tipoPrestacionIds) {
@@ -126,6 +129,8 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
     }
 
 
+    //Otros
+
     @GetMapping("/validation")
     public String validate(Model model, @RequestParam(name = "page", defaultValue = "0") int page) {
         Pageable pageRequest = PageRequest.of(page, 20);
@@ -136,6 +141,18 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
         model.addAttribute("reglas", reglesPage);
         model.addAttribute("titlePage", "Reglas ");
         return "reglas/validacion";
+    }
+
+    @GetMapping("/prestacions/{prestacionId}")
+    public String prestacions(@PathVariable("prestacionId") Long prestacionId, Model model) {
+        NoutTipprs tipoPrestacion = this.noutPrestacionsService
+                .findById(prestacionId)
+                .orElseThrow(EntityNotFoundException::new)
+                .getTipoPrestacion();
+
+        model.addAttribute("prestacion", tipoPrestacion);
+        model.addAttribute("titlePage", "Tipus de prestació ");
+        return "reglas/prestacion";
     }
 
 

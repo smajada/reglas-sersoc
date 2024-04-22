@@ -9,6 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Data
+@ToString
 @Table(name = "NOUT_TIPPRS")
 public class NoutTipprs {
 
