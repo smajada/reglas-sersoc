@@ -1,40 +1,57 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="head">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title th:text="${titlePage}"></title>
 
-    <!--Bootstrap CSS-->
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
 
-    <!--Custom CSS-->
+    <!-- Custom CSS -->
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 
-    <link rel="stylesheet" th:href="@{/css/codemirror.min.css}">
-
-    <!--Bootstrap JS-->
+    <!-- Bootstrap JS -->
     <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
 
+    <!-- CodeMirror -->
+    <link rel="stylesheet" th:href="@{/css/dracula.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/codemirror.min.css}">
 </head>
 <body>
-<!--Navbar-->
+<!-- Navbar -->
 <nav th:fragment="navbar" class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">Reglas CRUD</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <a class="navbar-brand" href="#">SERSOC</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item active" th:classappend="${titlePage == 'Reglas' ? 'active-link' : ''}">
-                    <a class="nav-link" th:href="@{/regla-tipo-prestacion/list}">Listado</a>
+                <!-- Reglas Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="reglasDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        Reglas
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="reglasDropdown">
+                        <li><a class="dropdown-item" th:href="@{/regla-tipo-prestacion/list}">Listado reglas</a></li>
+                        <li><a class="dropdown-item" th:href="@{/regla-tipo-prestacion/crear}">Crear regla</a></li>
+                    </ul>
                 </li>
-                <li class="nav-item active" th:classappend="${titlePage == 'Crear regla' ? 'active-link' : ''}">
-                    <a class="nav-link" th:href="@{/regla-tipo-prestacion/crear}">Crear regla</a>
+
+                <!-- SQL Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="sqlDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        SQL
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="sqlDropdown">
+                        <li><a class="dropdown-item" th:href="@{/sql/list}">Listado sql</a></li>
+                        <li><a class="dropdown-item" th:href="@{/sql/crear}">Crear sentencia</a></li>
+                    </ul>
                 </li>
             </ul>
         </div>

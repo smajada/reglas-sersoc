@@ -1,0 +1,72 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head th:replace="~{layout/layout :: head}"></head>
+
+<body>
+
+<nav th:replace="~{layout/layout :: navbar}"></nav>
+
+<section class="h-100 bg-light">
+    <div class="bg-light py-3 py-md-5">
+        <div class="container">
+            <div class="row justify-content-md-center">
+                <div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-6">
+                    <div class="bg-white p-4 p-md-5 rounded shadow-sm">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="mb-5">
+                                    <h2 class="h3">Sentencias</h2>
+                                    <h3 class="fs-6 fw-normal text-secondary m-0">Inserta los detalles para crear la
+                                        sentencia SQL</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <form th:action="@{/sql/save}" th:method="post">
+                            <div class="row gy-3 gy-md-4 overflow-hidden justify-content-center">
+                                <div class="col-12">
+                                    <label for="key" class="form-label">KEY</label>
+                                    <input type="text" class="form-control" name="key" id="key" aria-label="key"
+                                           placeholder="key" th:field="*{sql.key}">
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="descripcion" class="form-label">Descripción</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           name="descripcion"
+                                           id="descripcion"
+                                           aria-label="descripcion"
+                                           placeholder="descripcion"
+                                           th:field="*{sql.description}">
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="sentence" class="form-label mb-2">Sentencia</label>
+                                    <textarea
+                                            class="form-control"
+                                            id="sentence"
+                                            aria-label="sentence"
+                                            th:field="*{sql.value}">
+                                    </textarea>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="d-grid">
+                                        <button class="btn btn-primary" type="submit">Enviar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CodeMirror JavaScript -->
+<script th:src="@{/js/pack-codemirror.js}"></script>
+
+</body>
+</html>

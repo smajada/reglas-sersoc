@@ -1,6 +1,6 @@
 const search = document.querySelector('#search');
-const table = document.getElementById('table');
-const tr = table.getElementsByTagName('tr');
+const table = document.querySelector('table');
+const tr = table.querySelectorAll('tr');
 
 search.addEventListener('keyup', function() {
     const filter = search.value.toUpperCase(); // Move inside event listener
