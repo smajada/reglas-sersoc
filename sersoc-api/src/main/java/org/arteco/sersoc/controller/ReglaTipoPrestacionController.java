@@ -2,25 +2,22 @@ package org.arteco.sersoc.controller;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.arteco.sersoc.base.AbstractCrudController;
-import org.arteco.sersoc.dto.PageDto;
-import org.arteco.sersoc.dto.ReglaDTO;
+import org.arteco.sersoc.dto.*;
 import org.arteco.sersoc.model.base.ReglasTipoPrestacionId;
-import org.arteco.sersoc.model.entities.NoutPrestacions;
-import org.arteco.sersoc.model.entities.NoutTipprs;
 import org.arteco.sersoc.model.entities.NoutRegles;
+import org.arteco.sersoc.model.entities.NoutTipprs;
 import org.arteco.sersoc.model.entities.ReglaTipoPrestacionEntity;
 import org.arteco.sersoc.repository.ReglaTipoPrestacionRepository;
-import org.arteco.sersoc.service.NoutPrestacionsService;
-import org.arteco.sersoc.service.NoutReglesService;
-import org.arteco.sersoc.service.ReglaTipoPrestacionService;
-import org.arteco.sersoc.service.NoutTipprsService;
+import org.arteco.sersoc.service.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.script.ScriptException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,15 +29,15 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
     private final NoutReglesService noutReglesService;
     private final NoutReglesController noutReglesController;
     private final NoutPrestacionsService noutPrestacionsService;
+    private final NashornService nashornService;
 
-    public ReglaTipoPrestacionController(ReglaTipoPrestacionService service,
-                                         NoutTipprsService noutTipprsService,
-                                         NoutReglesService noutReglesService, NoutReglesController noutReglesController, NoutPrestacionsService noutPrestacionsService) {
+    public ReglaTipoPrestacionController(ReglaTipoPrestacionService service, NoutTipprsService noutTipprsService, NoutReglesService noutReglesService, NoutReglesController noutReglesController, NoutPrestacionsService noutPrestacionsService, NashornService nashornService) {
         super(service);
         this.noutTipprsService = noutTipprsService;
         this.noutReglesService = noutReglesService;
         this.noutReglesController = noutReglesController;
         this.noutPrestacionsService = noutPrestacionsService;
+        this.nashornService = nashornService;
     }
 
     @GetMapping("/list")
@@ -64,14 +61,7 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
 
         List<ReglaTipoPrestacionEntity> allReglasTipoPrestacion = (List<ReglaTipoPrestacionEntity>) super.service.findAll();
 
-        List<String> reglasTipoPrestacionList = allReglasTipoPrestacion
-                .stream()
-                .filter(reglaTipoPrestacion ->
-                        reglaTipoPrestacion.getNoutRegles().getCon().equals(regla.getCon())
-                        && reglaTipoPrestacion.getActive())
-                .map(reglaTipoPrestacion ->
-                        reglaTipoPrestacion.getNoutTipprs().getCoa())
-                .collect(Collectors.toList());
+        List<String> reglasTipoPrestacionList = allReglasTipoPrestacion.stream().filter(reglaTipoPrestacion -> reglaTipoPrestacion.getNoutRegles().getCon().equals(regla.getCon()) && reglaTipoPrestacion.getActive()).map(reglaTipoPrestacion -> reglaTipoPrestacion.getNoutTipprs().getCoa()).collect(Collectors.toList());
 
         ReglaDTO reglaDTO = new ReglaDTO();
         reglaDTO.setRegla(regla);
@@ -108,8 +98,7 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
     }
 
     @PostMapping("/save")
-    public String save(@ModelAttribute("reglaDTO") ReglaDTO reglaDTO,
-                       @RequestParam("tipoPrestacion") List<String> tipoPrestacionIds) {
+    public String save(@ModelAttribute("reglaDTO") ReglaDTO reglaDTO, @RequestParam("tipoPrestacion") List<String> tipoPrestacionIds) {
         List<NoutTipprs> tipoPrestaciones = noutTipprsService.findAllById(tipoPrestacionIds);
 
         super.service.save(reglaDTO.getRegla(), tipoPrestaciones);
@@ -118,9 +107,7 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
     }
 
     @PostMapping("/save/{reglaId}")
-    public String update(@PathVariable Long reglaId,
-                         @ModelAttribute("reglaDTO") ReglaDTO reglaDTO,
-                         @RequestParam("tipoPrestacion") List<String> tipoPrestacionIds) {
+    public String update(@PathVariable Long reglaId, @ModelAttribute("reglaDTO") ReglaDTO reglaDTO, @RequestParam("tipoPrestacion") List<String> tipoPrestacionIds) {
 
         List<NoutTipprs> tipoPrestaciones = noutTipprsService.findAllById(tipoPrestacionIds);
         super.service.updateAll(reglaId, reglaDTO.getRegla(), tipoPrestaciones);
@@ -131,15 +118,19 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
 
     //Otros
 
-    @GetMapping("/validation")
-    public String validate(Model model, @RequestParam(name = "page", defaultValue = "0") int page) {
-        Pageable pageRequest = PageRequest.of(page, 20);
-        PageDto<ReglaTipoPrestacionEntity> reglasTipoPrestacionPage = super.page(pageRequest);
-        Iterable<NoutRegles> reglesPage = noutReglesService.findAll();
+    //Template resultado
+    @GetMapping("/validation/{prestacionTipID}")
+    public String validate(Model model, @PathVariable String prestacionTipID) {
+        GenericValidationDTO genericValidationDTO = validatePrestacion(prestacionTipID);
 
-        model.addAttribute("reglasTipoPrestacion", reglasTipoPrestacionPage.getContent());
-        model.addAttribute("reglas", reglesPage);
-        model.addAttribute("titlePage", "Reglas ");
+        if (genericValidationDTO.getError().isEmpty()) {
+            model.addAttribute("titlePage", "Validación correcta.");
+        } else {
+            model.addAttribute("titlePage", "Prestación no validada.");
+        }
+
+        model.addAttribute("genericValidationDTO", genericValidationDTO);
+
         return "reglas/validacion";
     }
 
@@ -155,5 +146,57 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
         return "reglas/prestacion";
     }
 
+    private GenericValidationDTO validatePrestacion(String prestacionTipID) {
 
+        List<NoutRegles> reglas = noutReglesService.findByIdPrestacion(prestacionTipID);
+
+        //Acceder a la fecha de ahora
+        Date now = new Date(System.currentTimeMillis());
+        GenericValidationDTO genericValidationDTO = new GenericValidationDTO();
+
+        for (NoutRegles regla : reglas) {
+            String script = regla.getScript();
+
+            try {
+
+                Object result = nashornService.executeScript(script);
+
+                if (Boolean.TRUE.equals(result)){
+                    if(this.numDias(now, regla.getDatFin())) {
+                        WarningDTO warningDTO = new WarningDTO();
+                        warningDTO.setReglaId(regla.getCon());
+                        warningDTO.setDescription(regla.getDec());
+                        genericValidationDTO.getWarning().add(warningDTO);
+                    } else {
+                        ValidationSuccessDTO validationSuccessDTO = new ValidationSuccessDTO();
+                        validationSuccessDTO.setReglaId(regla.getCon());
+                        validationSuccessDTO.setDescription(regla.getDec());
+                        genericValidationDTO.getSuccess().add(validationSuccessDTO);
+                    }
+
+                } else {
+                    ValidationErrorDTO validationErrorDTO = new ValidationErrorDTO();
+                    validationErrorDTO.setReglaId(regla.getCon());
+                    validationErrorDTO.setDescription(regla.getDec());
+                    genericValidationDTO.getError().add(validationErrorDTO);
+                }
+
+            } catch (ScriptException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return genericValidationDTO;
+    }
+
+    private Boolean numDias(Date date1, Date date2) {
+        // Calcular la diferencia en milisegundos
+        long diferenciaMilisegundos = Math.abs(date2.getTime() - date1.getTime());
+
+        // Convertir la diferencia de milisegundos a días
+        long diferenciaDias = diferenciaMilisegundos / (1000 * 60 * 60 * 24);
+
+        // Devolver true si la diferencia es menor que 7 días
+        return diferenciaDias < 7;
+    }
 }

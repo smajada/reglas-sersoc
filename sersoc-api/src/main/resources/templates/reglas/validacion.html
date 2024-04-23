@@ -6,38 +6,33 @@
 <body>
 <nav class="nav" th:replace="~{layout/layout :: navbar}"></nav>
 
-<section class="container mt-4 p-5">
+<section th:if="${!genericValidationDTO.getError().isEmpty()}" class="container mt-4 p-5">
     <div class="row mb-3">
-        <h1>Validación</h1>
+        <h1>Errores en la validación</h1>
+        <p class="text-muted">Corrija los errores para continuar</p>
     </div>
 
-    <table class="table table-hover" id="table">
+    <table class="table table-hover">
         <thead>
         <tr>
-            <th scope="col">Resultado</th>
+            <th scope="col"></th>
             <th scope="col">Id</th>
             <th scope="col">Descripción</th>
         </tr>
         </thead>
         <tbody>
 
-        <!-- Itera sobre la lista de reglas -->
-        <tr th:each="regla : ${reglas}"
+        <!-- Itera sobre getError() -->
+        <tr th:each="genericValidatio : ${genericValidationDTO.getError()}"
         >
-            <td class="col-1 py-3" th:switch="${regla.dec}"
-            >
-                <span class="badge bg-success" th:case="Prueba">
-                    <img th:src="@{/img/check-lg.svg}" alt="check">
+            <td class="col-1 py-3">
+                <span class="badge bg-danger" >
+                    <img th:src="@{/img/ban.svg}" alt="check">
                 </span>
-                <span class="badge bg-danger" th:case="Paco">
-                <img th:src="@{/img/ban.svg}" alt="ban">
-                </span>
-                <span class="badge bg-warning" th:case="*">
-                   <img th:src="@{/img/exclamation-triangle.svg}" alt="warning">
-                </span>
+
             </td>
-            <td class="col-1 py-3" th:text="${regla.con}"></td>
-            <td class="py-3" th:text="${regla.dec}"></td>
+            <td class="col-1 py-3" th:text="${genericValidatio.getReglaId()}"></td>
+            <td class="py-3" th:text="${genericValidatio.getMessage()}"></td>
 
         </tr>
 
@@ -47,8 +42,85 @@
 
 </section>
 
+<section th:if="${genericValidationDTO.getError().isEmpty()}" class="container mt-4 p-5">
 
-<script th:src="@{/js/custom_index.js}"></script>
-<script th:src="@{/js/codemirror.min.js}"></script>
+    <div th:if="${!genericValidationDTO.getWarning().isEmpty()}">
+        <div class="row mb-3">
+            <h1>A punto de caducar</h1>
+            <p class="text-muted">Las siguientes reglas están a punto de caducar</p>
+        </div>
+
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Id</th>
+                <th scope="col">Descripción</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <!-- Itera sobre getWarning() -->
+            <tr th:each="genericValidatio : ${genericValidationDTO.getWarning()}"
+            >
+                <td class="col-1 py-3">
+                <span class="badge bg-warning" >
+                    <img th:src="@{/img/exclamation-triangle.svg}" alt="check">
+                </span>
+
+                </td>
+                <td class="col-1 py-3" th:text="${genericValidatio.getReglaId()}"></td>
+                <td class="py-3" th:text="${genericValidatio.getMessage()}"></td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+    </div>
+
+
+
+    <div class="row mb-3">
+        <h1>Reglas validadas</h1>
+        <p class="text-muted">Las siguientes reglas han sido validadas con éxito</p>
+    </div>
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col"></th>
+            <th scope="col">Id</th>
+            <th scope="col">Descripción</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr th:each="genericValidatio : ${genericValidationDTO.getSuccess()}"
+        >
+            <td class="col-1 py-3">
+                <span class="badge bg-success" >
+                    <img th:src="@{/img/check-lg.svg}" alt="check">
+                </span>
+
+            </td>
+            <td class="col-1 py-3" th:text="${genericValidatio.getReglaId()}"></td>
+            <td class="py-3" th:text="${genericValidatio.getMessage()}"></td>
+
+        </tr>
+
+        </tbody>
+
+    </table>
+
+
+    <div class="row my-3 justify-content-center">
+        <div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-6 d-flex justify-content-center">
+            <a class="btn btn-secondary col-4" type="button" th:href="@{/regla-tipo-prestacion/list}">Finalizar validación</a>
+        </div>
+    </div>
+
+</section>
+
 </body>
 </html>

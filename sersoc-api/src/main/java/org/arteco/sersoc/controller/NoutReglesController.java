@@ -20,9 +20,9 @@ public class NoutReglesController extends AbstractCrudController<NoutRegles, Lon
             this.noutReglesService = service;
         }
 
-        @GetMapping("/prestacion/{idPrestacion}")
-        public List<NoutRegles> findByIdPrestacion(@PathVariable Long idPrestacion){
-            return noutReglesService.findByIdPrestacion(idPrestacion);
+        @GetMapping("/prestacion/{idTipPrestacion}")
+        public List<NoutRegles> findByIdPrestacion(@PathVariable String idTipPrestacion){
+            return noutReglesService.findByIdPrestacion(idTipPrestacion);
         }
 
 }

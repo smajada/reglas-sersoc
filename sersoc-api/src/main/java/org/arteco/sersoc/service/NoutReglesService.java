@@ -27,7 +27,7 @@ public class NoutReglesService extends AbstractCrudService<NoutRegles, Long, Nou
         repo.save(bean);
     }
 
-    public List<NoutRegles> findByIdPrestacion(Long idPrestacion){
-        return repo.findByIdPrestacion(idPrestacion);
+    public List<NoutRegles> findByIdPrestacion(String idTipPrestacion){
+        return repo.findByIdPrestacion(idTipPrestacion);
     }
 }
