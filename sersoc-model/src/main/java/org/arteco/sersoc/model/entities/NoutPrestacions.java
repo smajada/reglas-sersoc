@@ -64,11 +64,11 @@ public class NoutPrestacions {
     @OneToMany(mappedBy = "noutPrestacions")
     private List<NoutTramitacio> noutTramitacions;
 
-    public NoutPrestacions(Integer expCon, Date datIni, Date datFin, Double imp, NoutTipprs tipoPrestacion) {
+    public NoutPrestacions(Integer expCon, Date datIni, Date datFin, Double imp, String tipoPrestacion) {
         this.expCon = expCon;
         this.datIni = datIni;
         this.datFin = datFin;
         this.imp = imp;
-        this.tipoPrestacion = tipoPrestacion;
+//        this.tipoPrestacion = tipoPrestacion;
     }
 }

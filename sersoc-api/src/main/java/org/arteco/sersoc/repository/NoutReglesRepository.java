@@ -15,10 +15,10 @@ public interface NoutReglesRepository extends JpaRepository<NoutRegles, Long> {
             "FROM NoutRegles r " +
             "JOIN ReglaTipoPrestacionEntity rtp " +
             "ON r.con = rtp.noutRegles.con " +
-            "WHERE rtp.noutTipprs.coa = :idTipPrestacion " +
+            "WHERE rtp.noutTipprs.coa = :idTipoPrestacion " +
             "AND r.active = true " +
             "AND rtp.active = true")
-    List<NoutRegles> findByIdPrestacion(String idTipPrestacion);
+    List<NoutRegles> findByIdTipoPrestacion(String idTipoPrestacion);
 
 
 }

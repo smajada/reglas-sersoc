@@ -33,6 +33,6 @@ public class NoutTiprcp {
     @Column(name = "DEM", length = 240)
     private String dem;
 
-    @OneToMany(mappedBy = "tiprcp")
-    private List<NoutPrestacions> prestacions;
+//    @OneToMany(mappedBy = "tiprcp")
+//    private List<NoutPrestacions> prestacions;
 }

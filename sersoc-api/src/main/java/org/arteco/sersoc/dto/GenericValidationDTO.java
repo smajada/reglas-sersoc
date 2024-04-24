@@ -12,6 +12,6 @@ public class GenericValidationDTO {
 
     private List<ValidationErrorDTO> error = new ArrayList<>();
 
-    private List<WarningDTO> warning = new ArrayList<>();
+    private List<ValidationWarningDTO> warning = new ArrayList<>();
 
 }

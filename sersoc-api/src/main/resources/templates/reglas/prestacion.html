@@ -16,7 +16,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="mb-5">
-                                    <h2 th:text="${prestacion.coa}"></h2>
+                                    <h2 th:text="${tipoPrestacion.coa}"></h2>
                                 </div>
                             </div>
                         </div>
@@ -24,8 +24,8 @@
 
                             <div class="row gy-3 gy-md-4 overflow-hidden justify-content-center">
                                 <div class="col-12">
-                                    <h3 th:text="${prestacion.dec}"></h3>
-                                    <p th:text="${prestacion.dem}"></p>
+                                    <h3 th:text="${tipoPrestacion.dec}"></h3>
+                                    <p th:text="${tipoPrestacion.dem}"></p>
                                 </div>
                             </div>
                         </div>
@@ -34,7 +34,7 @@
             </div>
             <div class="row justify-content-md-center my-3">
                 <div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-6 d-flex justify-content-end">
-                    <a class="btn btn-secondary col-2" type="button" th:href="@{/regla-tipo-prestacion/validation/{prestacionTipID}(prestacionTipID=${prestacion.coa})}">Validar</a>
+                    <a class="btn btn-secondary col-2" type="button" th:href="@{/regla-tipo-prestacion/validation/{prestacionTipID}/{prestacionID}(prestacionTipID=${tipoPrestacion.coa}, prestacionID=${prestacion.con})}">Validar</a>
                 </div>
             </div>
         </div>

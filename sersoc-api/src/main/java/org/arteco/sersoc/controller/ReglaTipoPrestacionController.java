@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.arteco.sersoc.base.AbstractCrudController;
 import org.arteco.sersoc.dto.*;
 import org.arteco.sersoc.model.base.ReglasTipoPrestacionId;
+import org.arteco.sersoc.model.entities.NoutPrestacions;
 import org.arteco.sersoc.model.entities.NoutRegles;
 import org.arteco.sersoc.model.entities.NoutTipprs;
 import org.arteco.sersoc.model.entities.ReglaTipoPrestacionEntity;
@@ -118,10 +119,10 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
 
     //Otros
 
-    //Template resultado
-    @GetMapping("/validation/{prestacionTipID}")
-    public String validate(Model model, @PathVariable String prestacionTipID) {
-        GenericValidationDTO genericValidationDTO = validatePrestacion(prestacionTipID);
+    //Template resultado validación
+    @GetMapping("/validation/{prestacionTipID}/{prestacionID}")
+    public String validate(Model model, @PathVariable String prestacionTipID, @PathVariable Long prestacionID) {
+        GenericValidationDTO genericValidationDTO = validateTipoPrestacion(prestacionTipID, prestacionID);
 
         if (genericValidationDTO.getError().isEmpty()) {
             model.addAttribute("titlePage", "Validación correcta.");
@@ -134,36 +135,49 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
         return "reglas/validacion";
     }
 
+    //Template de prestación
     @GetMapping("/prestacions/{prestacionId}")
-    public String prestacions(@PathVariable("prestacionId") Long prestacionId, Model model) {
-        NoutTipprs tipoPrestacion = this.noutPrestacionsService
-                .findById(prestacionId)
-                .orElseThrow(EntityNotFoundException::new)
-                .getTipoPrestacion();
+    public String getPrestacion(@PathVariable("prestacionId") Long prestacionId, Model model) {
+        NoutPrestacions prestacion = this.noutPrestacionsService.findById(prestacionId).orElseThrow(EntityNotFoundException::new);
 
-        model.addAttribute("prestacion", tipoPrestacion);
+        NoutTipprs tipoPrestacion = prestacion.getTipoPrestacion();
+
+        model.addAttribute("tipoPrestacion", tipoPrestacion);
+        model.addAttribute("prestacion", prestacion);
         model.addAttribute("titlePage", "Tipus de prestació ");
         return "reglas/prestacion";
     }
 
-    private GenericValidationDTO validatePrestacion(String prestacionTipID) {
+    private GenericValidationDTO validateTipoPrestacion(String prestacionTipoID, Long prestacionID) {
 
-        List<NoutRegles> reglas = noutReglesService.findByIdPrestacion(prestacionTipID);
+        List<NoutRegles> reglas = noutReglesService.findByIdTipoPrestacion(prestacionTipoID);
+        NoutPrestacions prestacion = noutPrestacionsService.findById(prestacionID).orElseThrow(EntityNotFoundException::new);
 
         //Acceder a la fecha de ahora
         Date now = new Date(System.currentTimeMillis());
         GenericValidationDTO genericValidationDTO = new GenericValidationDTO();
 
+        try {
+            //Serializa el objeto prestacion a JSON con ObjectMapper
+            String prestacionJson = nashornService.serializePrestacionToJson(prestacion);
+
+            //Añadir al contexto de Nashorn el objeto json
+            nashornService.putInContext("prestacion", prestacionJson);
+            nashornService.executeScript("var prestacion = JSON.parse(prestacion);");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
         for (NoutRegles regla : reglas) {
             String script = regla.getScript();
 
             try {
-
                 Object result = nashornService.executeScript(script);
 
-                if (Boolean.TRUE.equals(result)){
-                    if(this.numDias(now, regla.getDatFin())) {
-                        WarningDTO warningDTO = new WarningDTO();
+                if (Boolean.TRUE.equals(result)) {
+                    if (this.numDias(now, regla.getDatFin())) {
+                        ValidationWarningDTO warningDTO = new ValidationWarningDTO();
                         warningDTO.setReglaId(regla.getCon());
                         warningDTO.setDescription(regla.getDec());
                         genericValidationDTO.getWarning().add(warningDTO);

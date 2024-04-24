@@ -1,5 +1,8 @@
 package org.arteco.sersoc.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.arteco.sersoc.model.entities.NoutPrestacions;
 import org.springframework.stereotype.Service;
 
 import javax.script.ScriptEngine;
@@ -29,5 +32,9 @@ public class NashornService {
     public Object executeScript(String script) throws ScriptException {
         // Ejecuta el script de JavaScript y devuelve el resultado
         return engine.eval(script);
+    }
+
+    public String serializePrestacionToJson(NoutPrestacions prestacion) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(prestacion);
     }
 }

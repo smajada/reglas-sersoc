@@ -33,14 +33,14 @@ public class NoutTipprs {
     @Column(name = "GRUPPRS_COA")
     private String gruprsCoa;
 
-    @OneToMany(mappedBy = "tipoPrestacion")
-    private List<NoutPrestacions> prestacions;
+//    @OneToMany(mappedBy = "tipoPrestacion")
+//    private List<NoutPrestacions> prestacions;
 
     public NoutTipprs(String dec, String dem, String tipprsCoa, String gruprsCoa, List<NoutPrestacions> prestacions) {
         this.dec = dec;
         this.dem = dem;
         this.tipprsCoa = tipprsCoa;
         this.gruprsCoa = gruprsCoa;
-        this.prestacions = prestacions;
+//        this.prestacions = prestacions;
     }
 }

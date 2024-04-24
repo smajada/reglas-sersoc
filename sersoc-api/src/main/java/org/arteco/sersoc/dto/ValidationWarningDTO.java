@@ -2,10 +2,8 @@ package org.arteco.sersoc.dto;
 
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
-public class WarningDTO {
+public class ValidationWarningDTO {
 
     private Long reglaId;
 

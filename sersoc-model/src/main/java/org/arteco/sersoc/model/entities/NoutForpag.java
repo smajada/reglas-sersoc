@@ -31,6 +31,6 @@ public class NoutForpag {
     @Column(name = "DEM", length = 240)
     private String dem;
 
-    @OneToMany(mappedBy = "forpag")
-    private List<NoutPrestacions> prestacions;
+//    @OneToMany(mappedBy = "forpag")
+//    private List<NoutPrestacions> prestacions;
 }

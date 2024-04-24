@@ -28,7 +28,7 @@ public class NoutTramits {
     @Column(name = "DEM")
     private String dem;
 
-    @OneToMany(mappedBy = "noutTramits")
-    private List<NoutTramitacio> noutTramitacions;
+//    @OneToMany(mappedBy = "noutTramits")
+//    private List<NoutTramitacio> noutTramitacions;
 
 }
