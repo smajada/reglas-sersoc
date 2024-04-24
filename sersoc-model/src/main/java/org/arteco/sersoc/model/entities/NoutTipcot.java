@@ -31,7 +31,4 @@ public class NoutTipcot {
     @Column(name = "DEM", length = 240)
     private String dem;
 
-    @OneToMany(mappedBy = "tipcot")
-    @JsonManagedReference
-    private List<NoutPrestacions> prestacions;
 }

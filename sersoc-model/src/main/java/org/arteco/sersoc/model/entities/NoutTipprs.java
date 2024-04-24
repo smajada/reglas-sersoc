@@ -38,16 +38,11 @@ public class NoutTipprs {
     @Column(name = "GRUPPRS_COA")
     private String gruprsCoa;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
-    @JoinColumn(name = "nout_tipprs_id")
-    private List<NoutPrestacions> prestacions;
 
-    public NoutTipprs(String dec, String dem, String tipprsCoa, String gruprsCoa, List<NoutPrestacions> prestacions) {
+    public NoutTipprs(String dec, String dem, String tipprsCoa, String gruprsCoa) {
         this.dec = dec;
         this.dem = dem;
         this.tipprsCoa = tipprsCoa;
         this.gruprsCoa = gruprsCoa;
-        this.prestacions = prestacions;
     }
 }

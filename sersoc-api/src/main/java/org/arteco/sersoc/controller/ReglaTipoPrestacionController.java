@@ -162,6 +162,7 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
             String prestacionJson = nashornService.serializePrestacionToJson(prestacion);
 
             //Añadir al contexto de Nashorn el objeto json
+            //TODO: Formato fecha
             nashornService.putInContext("prestacion", prestacionJson);
             nashornService.executeScript("var prestacion = JSON.parse(prestacion);");
         } catch (Exception e) {

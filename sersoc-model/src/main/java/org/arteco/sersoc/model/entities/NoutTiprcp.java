@@ -35,7 +35,4 @@ public class NoutTiprcp {
     @Column(name = "DEM", length = 240)
     private String dem;
 
-    @OneToMany(mappedBy = "tiprcp")
-    @JsonManagedReference
-    private List<NoutPrestacions> prestacions;
 }

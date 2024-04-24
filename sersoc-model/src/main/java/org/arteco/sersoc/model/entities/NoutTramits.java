@@ -29,8 +29,4 @@ public class NoutTramits {
     @Column(name = "DEM")
     private String dem;
 
-    @OneToMany(mappedBy = "noutTramits")
-    @JsonManagedReference
-    private List<NoutTramitacio> noutTramitacions;
-
 }
