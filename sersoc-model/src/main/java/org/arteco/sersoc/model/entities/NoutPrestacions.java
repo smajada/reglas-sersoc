@@ -1,6 +1,9 @@
 package org.arteco.sersoc.model.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -44,31 +47,36 @@ public class NoutPrestacions {
     @Column(name = "IMP")
     private Double imp;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "nout_tipprs_id")
     private NoutTipprs tipoPrestacion;
 
     //Forma de pago
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "nout_forpag_coa")
     private NoutForpag forpag;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "nout_tipcot_coa")
     private NoutTipcot tipcot;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "nout_tiprcp_coa")
     private NoutTiprcp tiprcp;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "noutPrestacions")
     private List<NoutTramitacio> noutTramitacions;
 
-    public NoutPrestacions(Integer expCon, Date datIni, Date datFin, Double imp, String tipoPrestacion) {
+    public NoutPrestacions(Integer expCon, Date datIni, Date datFin, Double imp, NoutTipprs tipoPrestacion) {
         this.expCon = expCon;
         this.datIni = datIni;
         this.datFin = datFin;
         this.imp = imp;
-//        this.tipoPrestacion = tipoPrestacion;
+        this.tipoPrestacion = tipoPrestacion;
     }
 }

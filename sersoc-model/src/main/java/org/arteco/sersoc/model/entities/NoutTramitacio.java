@@ -1,5 +1,6 @@
 package org.arteco.sersoc.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,11 +36,13 @@ public class NoutTramitacio {
 
     //Número de tràmit
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "TRA_CON")
     private NoutTramits noutTramits;
 
     //Número de prestació
     @ManyToOne
     @JoinColumn(name = "PRS_CON")
+    @JsonBackReference
     private NoutPrestacions noutPrestacions;
 }

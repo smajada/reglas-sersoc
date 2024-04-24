@@ -1,5 +1,7 @@
 package org.arteco.sersoc.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -31,6 +33,7 @@ public class NoutForpag {
     @Column(name = "DEM", length = 240)
     private String dem;
 
-//    @OneToMany(mappedBy = "forpag")
-//    private List<NoutPrestacions> prestacions;
+    @OneToMany(mappedBy = "forpag")
+    @JsonManagedReference
+    private List<NoutPrestacions> prestacions;
 }

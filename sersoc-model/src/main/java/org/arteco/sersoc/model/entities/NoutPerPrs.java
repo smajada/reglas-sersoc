@@ -1,5 +1,6 @@
 package org.arteco.sersoc.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,10 +18,12 @@ public class NoutPerPrs {
     private PerPrsId id = new PerPrsId();
 
     @ManyToOne
+    @JsonBackReference
     @MapsId("perId")
     private NoutPersona noutPersona;
 
     @ManyToOne
+    @JsonBackReference
     @MapsId("prsId")
     private NoutPrestacions noutPrestacions;
 

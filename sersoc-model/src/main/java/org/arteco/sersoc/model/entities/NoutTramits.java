@@ -1,5 +1,6 @@
 package org.arteco.sersoc.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,7 +29,8 @@ public class NoutTramits {
     @Column(name = "DEM")
     private String dem;
 
-//    @OneToMany(mappedBy = "noutTramits")
-//    private List<NoutTramitacio> noutTramitacions;
+    @OneToMany(mappedBy = "noutTramits")
+    @JsonManagedReference
+    private List<NoutTramitacio> noutTramitacions;
 
 }
