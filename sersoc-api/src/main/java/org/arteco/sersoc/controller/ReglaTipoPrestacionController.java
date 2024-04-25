@@ -165,6 +165,8 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
             //TODO: Formato fecha
             nashornService.putInContext("prestacion", prestacionJson);
             nashornService.executeScript("var prestacion = JSON.parse(prestacion);");
+            nashornService.executeScript("var datIni = new Date(prestacion.datIni);");
+            nashornService.executeScript("var datFin = new Date(prestacion.datFin);");
         } catch (Exception e) {
             e.printStackTrace();
         }
