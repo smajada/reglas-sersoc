@@ -77,7 +77,12 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
 
         List<ReglaTipoPrestacionEntity> allReglasTipoPrestacion = (List<ReglaTipoPrestacionEntity>) super.service.findAll();
 
-        List<String> reglasTipoPrestacionList = allReglasTipoPrestacion.stream().filter(reglaTipoPrestacion -> reglaTipoPrestacion.getNoutRegles().getCon().equals(regla.getCon()) && reglaTipoPrestacion.getActive()).map(reglaTipoPrestacion -> reglaTipoPrestacion.getNoutTipprs().getCoa()).collect(Collectors.toList());
+        List<String> reglasTipoPrestacionList = allReglasTipoPrestacion
+                .stream()
+                .filter(reglaTipoPrestacion
+                        -> reglaTipoPrestacion.getNoutRegles().getCon().equals(regla.getCon()) && reglaTipoPrestacion.getActive())
+                .map(reglaTipoPrestacion -> reglaTipoPrestacion.getNoutTipprs().getCoa())
+                .toList();
 
         ReglaDTO reglaDTO = new ReglaDTO();
         reglaDTO.setCon(regla.getCon());
@@ -160,7 +165,16 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
 
             List<ReglaTipoPrestacionEntity> allReglasTipoPrestacion = (List<ReglaTipoPrestacionEntity>) super.service.findAll();
 
-            List<String> reglasTipoPrestacionList = allReglasTipoPrestacion.stream().filter(reglaTipoPrestacion -> reglaTipoPrestacion.getNoutRegles().getCon().equals(reglaDTO.getCon()) && reglaTipoPrestacion.getActive()).map(reglaTipoPrestacion -> reglaTipoPrestacion.getNoutTipprs().getCoa()).collect(Collectors.toList());
+            List<ReglaTipoPrestacionEntity> filteredReglasTipoPrestacion = allReglasTipoPrestacion
+                    .stream()
+                    .filter(reglaTipoPrestacion -> reglaTipoPrestacion.getNoutRegles().getCon().equals(reglaDTO.getCon())
+                            && reglaTipoPrestacion.getActive())
+                    .toList();
+
+            List<String> reglasTipoPrestacionList = filteredReglasTipoPrestacion
+                    .stream()
+                    .map(reglaTipoPrestacion -> reglaTipoPrestacion.getNoutTipprs().getCoa())
+                    .collect(Collectors.toList());
 
             reglaDTO.setCon(reglaId);
             reglaDTO.setAllTipoPrestacion(allTipoPrestacion);
