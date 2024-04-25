@@ -15,6 +15,8 @@ import java.util.List;
 @Data
 public class ReglaDTO {
 
+    private Long con;
+
     @NotEmpty(message = "El identificador no puede ser vacío o nulo")
     private String dec;
 

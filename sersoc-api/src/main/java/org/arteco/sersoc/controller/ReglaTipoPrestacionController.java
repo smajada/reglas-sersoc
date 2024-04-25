@@ -17,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.script.ScriptException;
@@ -51,6 +50,12 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
         this.noutSQLStatementService = noutSQLStatementService;
     }
 
+    private static void checkDate(ReglaDTO reglaDTO, BindingResult bindingResult) {
+        if (reglaDTO.getDatIni().after(reglaDTO.getDatFin())) {
+            bindingResult.rejectValue("datIni", "error.reglaDTO", "La fecha de inicio debe ser anterior a la fecha de finalización");
+        }
+    }
+
     @GetMapping("/list")
     public String listAll(Model model, @RequestParam(name = "page", defaultValue = "0") int page) {
         Pageable pageRequest = PageRequest.of(page, 30);
@@ -75,6 +80,7 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
         List<String> reglasTipoPrestacionList = allReglasTipoPrestacion.stream().filter(reglaTipoPrestacion -> reglaTipoPrestacion.getNoutRegles().getCon().equals(regla.getCon()) && reglaTipoPrestacion.getActive()).map(reglaTipoPrestacion -> reglaTipoPrestacion.getNoutTipprs().getCoa()).collect(Collectors.toList());
 
         ReglaDTO reglaDTO = new ReglaDTO();
+        reglaDTO.setCon(regla.getCon());
         reglaDTO.setDec(regla.getDec());
         reglaDTO.setDatIni(regla.getDatIni());
         reglaDTO.setDatFin(regla.getDatFin());
@@ -110,14 +116,14 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
         return "reglas/crear_regla";
     }
 
-
     @PostMapping("/save")
-    public String save(@ModelAttribute("reglaDTO") @Valid ReglaDTO reglaDTO, BindingResult bindingResult, @RequestParam("tipoPrestacion") List<String> tipoPrestacionIds, Model model) {
+    public String save(@ModelAttribute("reglaDTO") @Valid ReglaDTO reglaDTO,
+                       BindingResult bindingResult,
+                       @RequestParam("tipoPrestacion") List<String> tipoPrestacionIds,
+                       Model model) {
 
         // Verificar si las fechas son válidas
-        if (reglaDTO.getDatIni().after(reglaDTO.getDatFin())) {
-            bindingResult.rejectValue("datIni", "error.reglaDTO", "La fecha de inicio debe ser anterior a la fecha de finalización");
-        }
+        checkDate(reglaDTO, bindingResult);
 
         if (bindingResult.hasErrors()) {
             Iterable<NoutTipprs> tipoPrestacionList = noutTipprsService.findAll();
@@ -140,7 +146,31 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
     }
 
     @PostMapping("/save/{reglaId}")
-    public String update(@PathVariable Long reglaId, @ModelAttribute("reglaDTO") ReglaDTO reglaDTO, @RequestParam("tipoPrestacion") List<String> tipoPrestacionIds) {
+    public String update(@PathVariable Long reglaId,
+                         @ModelAttribute("reglaDTO") @Valid ReglaDTO reglaDTO,
+                         BindingResult bindingResult,
+                         @RequestParam("tipoPrestacion") List<String> tipoPrestacionIds,
+                         Model model) {
+
+        // Verificar si las fechas son válidas
+        checkDate(reglaDTO, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            List<NoutTipprs> allTipoPrestacion = (List<NoutTipprs>) noutTipprsService.findAll();
+
+            List<ReglaTipoPrestacionEntity> allReglasTipoPrestacion = (List<ReglaTipoPrestacionEntity>) super.service.findAll();
+
+            List<String> reglasTipoPrestacionList = allReglasTipoPrestacion.stream().filter(reglaTipoPrestacion -> reglaTipoPrestacion.getNoutRegles().getCon().equals(reglaDTO.getCon()) && reglaTipoPrestacion.getActive()).map(reglaTipoPrestacion -> reglaTipoPrestacion.getNoutTipprs().getCoa()).collect(Collectors.toList());
+
+            reglaDTO.setCon(reglaId);
+            reglaDTO.setAllTipoPrestacion(allTipoPrestacion);
+            reglaDTO.setReglasTipoPrestacionList(reglasTipoPrestacionList);
+
+            model.addAttribute("reglaDTO", reglaDTO);
+            model.addAttribute("titlePage", "Editar regla");
+
+            return "reglas/editar_regla";
+        }
 
         List<NoutTipprs> tipoPrestaciones = noutTipprsService.findAllById(tipoPrestacionIds);
         NoutRegles regla = new NoutRegles();
