@@ -17,39 +17,52 @@
                             <div class="col-12">
                                 <div class="mb-5">
                                     <h2 class="h3">Reglas</h2>
-                                    <h3 class="fs-6 fw-normal text-secondary m-0">Inserta los detalles para crear la regla</h3>
+                                    <h3 class="fs-6 fw-normal text-secondary m-0">Inserta los detalles para crear la
+                                        regla</h3>
                                 </div>
                             </div>
                         </div>
                         <form th:action="@{/regla-tipo-prestacion/save}" th:method="post" th:object="${reglaDTO}">
                             <div class="row gy-3 gy-md-4 overflow-hidden justify-content-center">
                                 <div class="col-12">
-                                    <label for="descripcion" class="form-label">Descripción</label>
-                                    <input type="text" class="form-control" name="descripcion" id="descripcion" aria-label="descripcion" placeholder="Descripción" th:field="*{regla.dec}">
+                                    <label class="form-label" for="descripcion">Descripción</label>
+                                    <input aria-label="descripcion" class="form-control" id="descripcion" name="descripcion"
+                                           placeholder="Descripción" required th:field="*{dec}"
+                                           type="text">
+                                    <p class="text-danger" th:errors="*{dec}" th:if="${#fields.hasErrors('dec')}"></p>
                                 </div>
                                 <div class="row justify-content-between m-2">
                                     <div class="col-6">
-                                        <label for="fecha_inicio" class="form-label">Fecha de inicio</label>
-                                        <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" th:field="*{regla.datIni}">
+                                        <label class="form-label" for="fecha_inicio">Fecha de inicio</label>
+                                        <input class="form-control" id="fecha_inicio" name="fecha_inicio" th:field="*{datIni}"
+                                               type="date">
+                                        <p class="text-danger" th:if="${#fields.hasErrors('datIni')}" th:errors="*{datIni}"></p>
                                     </div>
                                     <div class="col-6">
-                                        <label for="fecha_fin" class="form-label">Fecha de finalización</label>
-                                        <input type="date" class="form-control" id="fecha_fin" name="fecha_fin"  th:field="*{regla.datFin}">
+                                        <label class="form-label" for="fecha_fin">Fecha de finalización</label>
+                                        <input class="form-control" id="fecha_fin" name="fecha_fin" th:field="*{datFin}"
+                                               type="date">
+                                        <p class="text-danger" th:errors="*{datFin}"
+                                           th:if="${#fields.hasErrors('datFin')}"></p>
                                     </div>
+
                                 </div>
 
                                 <div class="col-12">
-                                    <label for="tipo_prestacion" class="form-label
-                                    ">Tipo de prestación</label>
-                                    <select class="form-select" multiple id="tipo_prestacion" name="tipoPrestacion">
-                                        <option th:each="tipoPrestacion : ${tipoPrestacionList}" th:value="${tipoPrestacion.coa}"
-                                                th:text="${tipoPrestacion.dec}"></option>
+                                    <label class="form-label
+                                    " for="tipo_prestacion">Tipo de prestación</label>
+                                    <select class="form-select" id="tipo_prestacion" multiple name="tipoPrestacion" required>
+                                        <option th:each="tipoPrestacion : ${tipoPrestacionList}"
+                                                th:text="${tipoPrestacion.dec}"
+                                                th:value="${tipoPrestacion.coa}"></option>
                                     </select>
                                 </div>
 
                                 <div class="col-12">
-                                    <label for="regla" class="form-label mb-2">Script</label>
-                                    <textarea class="form-control" id="regla" aria-label="regla"  th:field="*{regla.script}"></textarea>
+                                    <p class="text-danger" th:if="${#fields.hasErrors('script')}" th:errors="*{script}"></p>
+                                    <label class="form-label mb-2" for="regla">Script</label>
+                                    <textarea aria-label="regla" class="form-control" id="regla"
+                                              th:field="*{script}"></textarea>
                                 </div>
 
                                 <div class="col-6">
@@ -66,8 +79,9 @@
     </div>
 </section>
 
+
 <script th:src="@{/js/codemirror.min.js}"></script>
 
-<script type="text/javascript" th:src="@{/js/custom_crear_editar.js}"></script>
+<script th:src="@{/js/custom_crear_editar.js}" type="text/javascript"></script>
 </body>
 </html>
