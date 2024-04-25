@@ -1,5 +1,7 @@
 package org.arteco.sersoc.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import org.arteco.sersoc.base.AbstractCrudController;
 import org.arteco.sersoc.dto.*;
@@ -20,6 +22,7 @@ import javax.script.ScriptException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -31,14 +34,18 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
     private final NoutReglesController noutReglesController;
     private final NoutPrestacionsService noutPrestacionsService;
     private final NashornService nashornService;
+    private final DataService dataService;
+    private final NoutSQLStatementService noutSQLStatementService;
 
-    public ReglaTipoPrestacionController(ReglaTipoPrestacionService service, NoutTipprsService noutTipprsService, NoutReglesService noutReglesService, NoutReglesController noutReglesController, NoutPrestacionsService noutPrestacionsService, NashornService nashornService) {
+    public ReglaTipoPrestacionController(ReglaTipoPrestacionService service, NoutTipprsService noutTipprsService, NoutReglesService noutReglesService, NoutReglesController noutReglesController, NoutPrestacionsService noutPrestacionsService, NashornService nashornService, DataService dataService, NoutSQLStatementService noutSQLStatementService) {
         super(service);
         this.noutTipprsService = noutTipprsService;
         this.noutReglesService = noutReglesService;
         this.noutReglesController = noutReglesController;
         this.noutPrestacionsService = noutPrestacionsService;
         this.nashornService = nashornService;
+        this.dataService = dataService;
+        this.noutSQLStatementService = noutSQLStatementService;
     }
 
     @GetMapping("/list")
@@ -117,7 +124,7 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
     }
 
 
-    //Otros
+    //Validación de prestación
 
     //Template resultado validación
     @GetMapping("/validation/{prestacionTipID}/{prestacionID}")
@@ -148,6 +155,8 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
         return "reglas/prestacion";
     }
 
+    //Métodos privados
+
     private GenericValidationDTO validateTipoPrestacion(String prestacionTipoID, Long prestacionID) {
 
         List<NoutRegles> reglas = noutReglesService.findByIdTipoPrestacion(prestacionTipoID);
@@ -158,15 +167,7 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
         GenericValidationDTO genericValidationDTO = new GenericValidationDTO();
 
         try {
-            //Serializa el objeto prestacion a JSON con ObjectMapper
-            String prestacionJson = nashornService.serializePrestacionToJson(prestacion);
-
-            //Añadir al contexto de Nashorn el objeto json
-            //TODO: Formato fecha
-            nashornService.putInContext("prestacion", prestacionJson);
-            nashornService.executeScript("var prestacion = JSON.parse(prestacion);");
-            nashornService.executeScript("var datIni = new Date(prestacion.datIni);");
-            nashornService.executeScript("var datFin = new Date(prestacion.datFin);");
+            nashornInitialConfig(prestacion, dataService);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -204,6 +205,32 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
         }
 
         return genericValidationDTO;
+    }
+
+    private void nashornInitialConfig(NoutPrestacions prestacion, DataService dataService) throws JsonProcessingException, ScriptException {
+
+        // Serializa el objeto prestacion a JSON con ObjectMapper
+        String prestacionJson = nashornService.serializeObjectToJson(prestacion);
+        Map<String, String> sentencias = noutSQLStatementService.getAllSqlStatementByActive();
+        ObjectMapper objectMapper = new ObjectMapper();
+        String sentenciasJson = objectMapper.writeValueAsString(sentencias);
+
+        // Add the DataService instance to the Nashorn context
+        nashornService.putInContext("DataService", dataService);
+
+        // Add the JSON objects to the Nashorn context
+        nashornService.putInContext("prestacion", prestacionJson);
+        nashornService.putInContext("sentencias", sentenciasJson);
+
+        // Script of initialization
+        String script = "var prestacion = JSON.parse(prestacion);"
+                + "var datIni = new Date(prestacion.datIni);"
+                + "var datFin = new Date(prestacion.datFin);"
+                + "var sentencias = JSON.parse(sentencias);"
+                + "var dataService = DataService;";
+
+        nashornService.executeScript(script);
+
     }
 
     private Boolean numDias(Date date1, Date date2) {

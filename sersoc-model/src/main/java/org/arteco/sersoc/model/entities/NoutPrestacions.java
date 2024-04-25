@@ -64,12 +64,4 @@ public class NoutPrestacions {
     @ManyToOne
     @JoinColumn(name = "nout_tiprcp_coa")
     private NoutTiprcp tiprcp;
-
-    public NoutPrestacions(Integer expCon, Date datIni, Date datFin, Double imp, NoutTipprs tipoPrestacion) {
-        this.expCon = expCon;
-        this.datIni = datIni;
-        this.datFin = datFin;
-        this.imp = imp;
-        this.tipoPrestacion = tipoPrestacion;
-    }
 }

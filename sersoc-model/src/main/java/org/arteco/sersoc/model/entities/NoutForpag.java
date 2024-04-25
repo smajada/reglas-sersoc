@@ -15,7 +15,6 @@ import lombok.ToString;
 
 import java.util.List;
 
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "coa")
 @Entity
 @Data
 @ToString
