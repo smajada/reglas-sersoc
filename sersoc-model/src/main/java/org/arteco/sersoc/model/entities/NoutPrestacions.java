@@ -36,10 +36,12 @@ public class NoutPrestacions {
 
     //Fecha de inicio de la prestación
     @Column(name = "DATINI")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
     private Date datIni;
 
     //Fecha de fin de la prestación
     @Column(name = "DATFIN")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
     private Date datFin;
 
     //Importe
