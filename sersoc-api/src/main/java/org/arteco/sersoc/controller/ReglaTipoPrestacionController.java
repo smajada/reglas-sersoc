@@ -50,12 +50,6 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
         this.noutSQLStatementService = noutSQLStatementService;
     }
 
-    private static void checkDate(ReglaDTO reglaDTO, BindingResult bindingResult) {
-        if (reglaDTO.getDatIni().after(reglaDTO.getDatFin())) {
-            bindingResult.rejectValue("datIni", "error.reglaDTO", "La fecha de inicio debe ser anterior a la fecha de finalización");
-        }
-    }
-
     @GetMapping("/list")
     public String listAll(Model model, @RequestParam(name = "page", defaultValue = "0") int page) {
         Pageable pageRequest = PageRequest.of(page, 30);
@@ -79,8 +73,7 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
 
         List<String> reglasTipoPrestacionList = allReglasTipoPrestacion
                 .stream()
-                .filter(reglaTipoPrestacion
-                        -> reglaTipoPrestacion.getNoutRegles().getCon().equals(regla.getCon()) && reglaTipoPrestacion.getActive())
+                .filter(reglaTipoPrestacion -> reglaTipoPrestacion.getNoutRegles().getCon().equals(regla.getCon()) && reglaTipoPrestacion.getActive())
                 .map(reglaTipoPrestacion -> reglaTipoPrestacion.getNoutTipprs().getCoa())
                 .toList();
 
@@ -92,6 +85,9 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
         reglaDTO.setScript(regla.getScript());
         reglaDTO.setAllTipoPrestacion(allTipoPrestacion);
         reglaDTO.setReglasTipoPrestacionList(reglasTipoPrestacionList);
+
+        // Establecer el valor seleccionado en el select
+        reglaDTO.setTipoPrestacionSelected(reglasTipoPrestacionList);
 
         model.addAttribute("reglaDTO", reglaDTO);
         model.addAttribute("titlePage", "Editar regla");
@@ -179,6 +175,7 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
             reglaDTO.setCon(reglaId);
             reglaDTO.setAllTipoPrestacion(allTipoPrestacion);
             reglaDTO.setReglasTipoPrestacionList(reglasTipoPrestacionList);
+            reglaDTO.setTipoPrestacionSelected(tipoPrestacionIds);
 
             model.addAttribute("reglaDTO", reglaDTO);
             model.addAttribute("titlePage", "Editar regla");
@@ -318,5 +315,11 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
 
         // Devolver true si la diferencia es menor que 7 días
         return diferenciaDias < 7;
+    }
+
+    private static void checkDate(ReglaDTO reglaDTO, BindingResult bindingResult) {
+        if (reglaDTO.getDatIni().after(reglaDTO.getDatFin())) {
+            bindingResult.rejectValue("datIni", "error.reglaDTO", "La fecha de inicio debe ser anterior a la fecha de finalización");
+        }
     }
 }

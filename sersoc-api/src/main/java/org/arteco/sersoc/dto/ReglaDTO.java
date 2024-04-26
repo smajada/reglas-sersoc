@@ -31,6 +31,8 @@ public class ReglaDTO {
 
     private List<NoutTipprs> allTipoPrestacion;
 
+    private List<String> tipoPrestacionSelected;
+
     private List<String> reglasTipoPrestacionList;
 
 }

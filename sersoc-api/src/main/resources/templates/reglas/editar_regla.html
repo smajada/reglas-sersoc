@@ -52,14 +52,12 @@
                                     <label for="tipo_prestacion" class="form-label
                                     ">Tipo de prestación</label>
                                     <select class="form-select" multiple id="tipo_prestacion" name="tipoPrestacion" required>
-                                        <th:block th:if="${reglaDTO.allTipoPrestacion != null}">
                                             <!-- Iterar sobre la lista allTipoPrestacion y generar las opciones del select -->
                                             <option th:each="tipoPrestacion : ${reglaDTO.allTipoPrestacion}"
                                                     th:value="${tipoPrestacion.coa}"
                                                     th:text="${tipoPrestacion.dec}"
-                                                    th:selected="${reglaDTO.reglasTipoPrestacionList.contains(tipoPrestacion.coa)}">
+                                                    th:selected="${reglaDTO.tipoPrestacionSelected.contains(tipoPrestacion.coa)}">
                                             </option>
-                                        </th:block>
                                     </select>
                                 </div>
                                     <div class="col-12">
