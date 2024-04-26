@@ -10,7 +10,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/sql")
@@ -40,16 +46,22 @@ public class NoutSQLStatementController extends AbstractCrudController<
 
     @GetMapping("/crear")
     public String createSqlSentence(Model model) {
-
         NoutSQLStatement sql = new NoutSQLStatement();
         model.addAttribute("sql", sql);
-
         model.addAttribute("titlePage", "Crear Sentencia");
         return "sql/crear_sentencia";
     }
 
     @PostMapping("/save")
-    public String saveSQLStatement(@ModelAttribute NoutSQLStatement sql) {
+    public String saveSQLStatement(@ModelAttribute @Valid NoutSQLStatement sql, BindingResult bindingResult, Model model) {
+
+        checkCustomErrors(sql, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("sql", sql);
+            model.addAttribute("org.springframework.validation.BindingResult.sql", bindingResult);
+            return "sql/crear_sentencia";
+        }
 
         super.service.save(sql);
         return "redirect:/sql/list";
@@ -68,12 +80,29 @@ public class NoutSQLStatementController extends AbstractCrudController<
 
     @PostMapping("/save/{con}")
     public String updateSQLStatement(@PathVariable Long con,
-                                     @ModelAttribute NoutSQLStatement sql) {
+                                     @ModelAttribute @Valid NoutSQLStatement sql,
+                                     BindingResult bindingResult,
+                                     Model model) {
+
+        if (sql.getValue().isEmpty()){
+            bindingResult.addError(new FieldError("sql", "value", "El campo no puede estar vacío"));
+        }
+
+        if (bindingResult.hasErrors()) {
+            NoutSQLStatement sqlStatement = this.service.findById(con).orElseThrow(EntityNotFoundException::new);
+
+            model.addAttribute("sql", sqlStatement);
+            model.addAttribute("org.springframework.validation.BindingResult.sql", bindingResult);
+            model.addAttribute("titlePage", "Editar Sentencia");
+            return "sql/editar_sentencia";
+        }
 
         super.service.update(sql, con);
 
         return "redirect:/sql/list";
     }
+
+
 
     @GetMapping("/delete/{con}")
     public String deleteSQLStatement(@PathVariable("con") Long con) {
@@ -83,5 +112,18 @@ public class NoutSQLStatementController extends AbstractCrudController<
         this.service.delete(sql);
 
         return "redirect:/sql/list";
+    }
+
+    private void checkCustomErrors(NoutSQLStatement sql, BindingResult result) {
+        Map<String, String> sqls = this.service.getAllSqlStatementByActive();
+        for (Map.Entry<String, String> entry : sqls.entrySet()) {
+            if (entry.getKey().equals(sql.getKey())) {
+                result.rejectValue("key", "error.key", "La clave ya existe");
+            }
+        }
+
+        if (sql.getValue().isEmpty()){
+            result.addError(new FieldError("sql", "value", "El campo no puede estar vacío"));
+        }
     }
 }

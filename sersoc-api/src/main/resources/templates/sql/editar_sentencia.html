@@ -21,32 +21,47 @@
                             </div>
                         </div>
                         <form
-                                th:action="@{/sql/save/{con}(con=${sql.con})}" method="post">
+                                method="post" th:action="@{/sql/save/{con}(con=${sql.con})}" th:object="${sql}">
 
                             <div class="row gy-3 gy-md-4 overflow-hidden justify-content-center">
                                 <div class="col-12">
-                                    <label for="key" class="form-label">KEY</label>
-                                    <input type="text" class="form-control" name="key" id="key" aria-label="key"
-                                           placeholder="key" th:field="*{sql.key}">
+                                    <label class="form-label" for="key">KEY</label>
+                                    <input aria-label="key" class="form-control" id="key" name="key" placeholder="key"
+                                           th:field="*{key}" type="text">
+                                    <span class="text-danger"
+                                          style="font-size: 80%;"
+                                          th:if="${#fields.hasErrors('key')}">
+                                        <span th:errors="*{key}"></span>
+                                    </span>
                                 </div>
 
                                 <div class="col-12">
-                                    <label for="descripcion" class="form-label">Descripción</label>
-                                    <input type="text"
+                                    <label class="form-label" for="descripcion">Descripción</label>
+                                    <input aria-label="descripcion"
                                            class="form-control"
-                                           name="descripcion"
                                            id="descripcion"
-                                           aria-label="descripcion"
-                                           placeholder="descripcion" th:field="*{sql.description}">
+                                           name="descripcion"
+                                           placeholder="descripcion"
+                                           th:field="*{description}" type="text">
+                                    <span class="text-danger"
+                                          style="font-size: 80%;"
+                                          th:if="${#fields.hasErrors('description')}">
+                                        <span th:errors="*{description}"></span>
+                                    </span>
                                 </div>
 
                                 <div class="col-12">
-                                    <label for="sentence" class="form-label mb-2">Sentencia</label>
+                                    <label class="form-label mb-2" for="sentence">Sentencia</label>
+                                    <p class="text-danger"
+                                          style="font-size: 80%;"
+                                          th:errors="*{value}"
+                                          th:if="${#fields.hasErrors('value')}"
+                                    ></p>
                                     <textarea
+                                            aria-label="sentence"
                                             class="form-control"
                                             id="sentence"
-                                            aria-label="sentence"
-                                            th:field="*{sql.value}">
+                                            th:field="*{value}">
                                     </textarea>
                                 </div>
 

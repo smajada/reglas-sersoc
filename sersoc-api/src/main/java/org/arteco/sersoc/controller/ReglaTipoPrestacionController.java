@@ -84,8 +84,6 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
         reglaDTO.setDatFin(regla.getDatFin());
         reglaDTO.setScript(regla.getScript());
         reglaDTO.setAllTipoPrestacion(allTipoPrestacion);
-        reglaDTO.setReglasTipoPrestacionList(reglasTipoPrestacionList);
-
         // Establecer el valor seleccionado en el select
         reglaDTO.setTipoPrestacionSelected(reglasTipoPrestacionList);
 
@@ -106,7 +104,6 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
     public String createView(Model model) {
         ReglaDTO reglaDTO = new ReglaDTO();
         reglaDTO.setAllTipoPrestacion(new ArrayList<>());
-        reglaDTO.setReglasTipoPrestacionList(new ArrayList<>());
 
         Iterable<NoutTipprs> tipoPrestacionList = noutTipprsService.findAll();
 
@@ -170,11 +167,10 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
             List<String> reglasTipoPrestacionList = filteredReglasTipoPrestacion
                     .stream()
                     .map(reglaTipoPrestacion -> reglaTipoPrestacion.getNoutTipprs().getCoa())
-                    .collect(Collectors.toList());
+                    .toList();
 
             reglaDTO.setCon(reglaId);
             reglaDTO.setAllTipoPrestacion(allTipoPrestacion);
-            reglaDTO.setReglasTipoPrestacionList(reglasTipoPrestacionList);
             reglaDTO.setTipoPrestacionSelected(tipoPrestacionIds);
 
             model.addAttribute("reglaDTO", reglaDTO);

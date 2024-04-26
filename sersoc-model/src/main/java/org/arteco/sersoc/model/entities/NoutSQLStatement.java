@@ -1,9 +1,12 @@
 package org.arteco.sersoc.model.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.UniqueElements;
 
 @Entity
 @Data
@@ -17,10 +20,12 @@ public class NoutSQLStatement {
     @Column(name = "CON")
     private Long con;
 
-    @Column(name = "KEY", length = 250)
+    @Column(name = "KEY", length = 250, unique = true)
+    @NotEmpty(message = "Key is required")
     private String key;
 
     @Column(name = "DESC_SQL", length = 500)
+    @NotEmpty(message = "Description is required")
     private String description;
 
     @Column(name = "VALUE", length = 65535)
