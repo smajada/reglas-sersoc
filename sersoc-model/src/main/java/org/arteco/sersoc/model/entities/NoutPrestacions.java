@@ -49,6 +49,10 @@ public class NoutPrestacions {
     private Double imp;
 
     @ManyToOne
+    @JoinColumn(name = "PER_CON")
+    private NoutPersona noutPersona;
+
+    @ManyToOne
     @JoinColumn(name = "nout_tipprs_id")
     private NoutTipprs tipoPrestacion;
 

@@ -35,11 +35,12 @@ public class NoutTipprs {
     private String tipprsCoa;
 
     //Código de grupo de prestaciones
-    @Column(name = "GRUPPRS_COA")
-    private String gruprsCoa;
+    @ManyToOne
+    @JoinColumn(name = "GRUPPRS_COA")
+    private NoutGruprs gruprsCoa;
 
 
-    public NoutTipprs(String dec, String dem, String tipprsCoa, String gruprsCoa) {
+    public NoutTipprs(String dec, String dem, String tipprsCoa, NoutGruprs gruprsCoa) {
         this.dec = dec;
         this.dem = dem;
         this.tipprsCoa = tipprsCoa;
