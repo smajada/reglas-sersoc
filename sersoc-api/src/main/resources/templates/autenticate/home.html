@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/layout :: head}">
+
+</head>
+<body>
+<nav th:replace="~{layout/layout :: navbar}"></nav>
+<div class="container mt-5">
+    <h1>Welcome Home!</h1>
+    <!-- Botón de logout -->
+    <p th:if="${authenticated}">Hello, <span th:text="${username}"></span>! </p>
+    <p th:unless="${authenticated}">Please <a th:href="@{/login}">login</a></p>
+</div>
+</body>
+</html>
+

@@ -14,4 +14,16 @@ public class GenericValidationDTO {
 
     private List<ValidationWarningDTO> warning = new ArrayList<>();
 
+    public void addSuccess(Long reglaId, String description, String message) {
+        success.add(new ValidationSuccessDTO(reglaId, description, message));
+    }
+
+    public void addError(Long reglaId, String description, String message) {
+        error.add(new ValidationErrorDTO(reglaId, description, message));
+    }
+
+    public void addWarning(Long reglaId, String description, String message) {
+        warning.add(new ValidationWarningDTO(reglaId, description, message));
+    }
+
 }
