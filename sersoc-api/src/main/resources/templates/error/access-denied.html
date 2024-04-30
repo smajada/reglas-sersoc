@@ -4,11 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Access Denied</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+
+    <!-- Bootstrap JS -->
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
 </head>
-<body>
-<h1>403 - Access Denied</h1>
-<p>Sorry, you don't have permission to access this page.</p>
-<p>Please contact the administrator for assistance.</p>
-<p><a href="/home">Go to Home</a></p>
+<body class="text-center d-flex align-items-center vh-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="display-1">403</h1>
+                <h2>Access Denied</h2>
+                <p>Sorry, you don't have permission to access this page.</p>
+            </div>
+            <div>
+                <a class="btn btn-secondary px-4" th:href="@{/home}">Go to Home</a>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
