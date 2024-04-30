@@ -60,7 +60,9 @@
                 <li class="nav-item" th:if="${authenticated}">
                     <form th:action="@{/logout}" method="post" class="nav-link">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                        <button type="submit" class="btn btn-link">Logout</button>
+                        <a type="submit" class="btn btn-outline-secondary">
+                            Cerrar sesión
+                        </a>
                     </form>
                 </li>
             </ul>
