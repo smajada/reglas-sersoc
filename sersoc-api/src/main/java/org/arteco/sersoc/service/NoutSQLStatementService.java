@@ -1,7 +1,7 @@
 package org.arteco.sersoc.service;
 
 import org.arteco.sersoc.base.AbstractCrudService;
-import org.arteco.sersoc.dto.PageDto;
+import org.arteco.sersoc.dto.PageDTO;
 import org.arteco.sersoc.model.entities.NoutSQLStatement;
 import org.arteco.sersoc.repository.NoutSQLStatementRepository;
 import org.springframework.data.domain.Page;
@@ -29,9 +29,9 @@ public class NoutSQLStatementService extends AbstractCrudService<NoutSQLStatemen
         repo.save(bean);
     }
 
-    public PageDto<NoutSQLStatement> findByActiveTrue(Pageable pageable) {
+    public PageDTO<NoutSQLStatement> findByActiveTrue(Pageable pageable) {
         Page<NoutSQLStatement> statements = repo.findByActiveTrue(pageable);
-        return new PageDto<>(statements);
+        return new PageDTO<>(statements);
     }
 
     public Map<String, String> getAllSqlStatement() {

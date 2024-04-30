@@ -1,7 +1,7 @@
 package org.arteco.sersoc.controller;
 
 
-import org.arteco.sersoc.dto.PageDto;
+import org.arteco.sersoc.dto.PageDTO;
 import org.arteco.sersoc.model.entities.NoutRegles;
 import org.arteco.sersoc.model.entities.NoutTipprs;
 import org.arteco.sersoc.model.entities.ReglaTipoPrestacionEntity;
@@ -18,13 +18,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 
@@ -43,8 +40,6 @@ public class ReglaTipoPrestacionControllerTests {
     @MockBean
     private ReglaTipoPrestacionService service;
 
-    @MockBean
-    private Model model;
 
     @Autowired
     private MockMvc mockMvc;
@@ -57,8 +52,8 @@ public class ReglaTipoPrestacionControllerTests {
         List<NoutRegles> regles = new ArrayList<>();
         List<ReglaTipoPrestacionEntity> reglasTipoPrestacion = new ArrayList<>();
 
-        PageDto<NoutRegles> reglesPage = new PageDto<>(new PageImpl<>(regles));
-        PageDto<ReglaTipoPrestacionEntity> reglasTipoPrestacionPage = new PageDto<>(new PageImpl<>(reglasTipoPrestacion));
+        PageDTO<NoutRegles> reglesPage = new PageDTO<>(new PageImpl<>(regles));
+        PageDTO<ReglaTipoPrestacionEntity> reglasTipoPrestacionPage = new PageDTO<>(new PageImpl<>(reglasTipoPrestacion));
 
         when(service.page(pageRequest)).thenReturn(new PageImpl<>(reglasTipoPrestacion));
         when(noutReglesController.page(pageRequest)).thenReturn(reglesPage);

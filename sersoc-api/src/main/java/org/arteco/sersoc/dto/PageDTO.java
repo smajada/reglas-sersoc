@@ -8,7 +8,7 @@ import javax.swing.text.html.ListView;
 import java.util.List;
 
 @Data
-public class PageDto<ENTITY> {
+public class PageDTO<ENTITY> {
 
     @JsonView(ListView.class)
     private final int totalPages;
@@ -28,7 +28,7 @@ public class PageDto<ENTITY> {
     @JsonView(ListView.class)
     private final int number;
 
-    public PageDto(Page<ENTITY> page) {
+    public PageDTO(Page<ENTITY> page) {
         this.totalPages = page.getTotalPages();
         this.totalElements = page.getTotalElements();
         this.content = page.getContent();

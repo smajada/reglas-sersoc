@@ -2,7 +2,7 @@ package org.arteco.sersoc.controller;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.arteco.sersoc.base.AbstractCrudController;
-import org.arteco.sersoc.dto.PageDto;
+import org.arteco.sersoc.dto.PageDTO;
 import org.arteco.sersoc.model.entities.NoutSQLStatement;
 import org.arteco.sersoc.repository.NoutSQLStatementRepository;
 import org.arteco.sersoc.service.NoutSQLStatementService;
@@ -16,7 +16,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -35,7 +34,7 @@ public class NoutSQLStatementController extends AbstractCrudController<
     public String ListSqlStatement(Model model, @RequestParam(name = "page", defaultValue = "0") int page) {
         AuthenticateUtils.addAuthenticatedAttribute(model);
         Pageable pageRequest = PageRequest.of(page, 10);
-        PageDto<NoutSQLStatement> sqlStatementPageDto2 = super.service.findByActiveTrue(pageRequest);
+        PageDTO<NoutSQLStatement> sqlStatementPageDto2 = super.service.findByActiveTrue(pageRequest);
 
         model.addAttribute("totalPages", sqlStatementPageDto2.getTotalPages());
         model.addAttribute("sentences", sqlStatementPageDto2.getContent());

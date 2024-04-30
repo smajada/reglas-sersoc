@@ -4,7 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import org.arteco.sersoc.base.AbstractCrudController;
-import org.arteco.sersoc.dto.*;
+import org.arteco.sersoc.dto.PageDTO;
+import org.arteco.sersoc.dto.ReglaDTO;
+import org.arteco.sersoc.dto.validation.DateValidationDTO;
+import org.arteco.sersoc.dto.validation.GenericValidationDTO;
 import org.arteco.sersoc.model.base.ReglasTipoPrestacionId;
 import org.arteco.sersoc.model.entities.NoutPrestacions;
 import org.arteco.sersoc.model.entities.NoutRegles;
@@ -12,6 +15,9 @@ import org.arteco.sersoc.model.entities.NoutTipprs;
 import org.arteco.sersoc.model.entities.ReglaTipoPrestacionEntity;
 import org.arteco.sersoc.repository.ReglaTipoPrestacionRepository;
 import org.arteco.sersoc.service.*;
+import org.arteco.sersoc.utils.AuthenticateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -25,12 +31,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/regla-tipo-prestacion")
 public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaTipoPrestacionEntity, ReglasTipoPrestacionId, ReglaTipoPrestacionRepository, ReglaTipoPrestacionService> {
 
+    private static final Logger logger = LoggerFactory.getLogger(ReglaTipoPrestacionController.class);
     private final NoutTipprsService noutTipprsService;
     private final NoutReglesService noutReglesService;
     private final NoutReglesController noutReglesController;
@@ -38,6 +44,7 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
     private final NashornService nashornService;
     private final DataService dataService;
     private final NoutSQLStatementService noutSQLStatementService;
+
 
     public ReglaTipoPrestacionController(ReglaTipoPrestacionService service, NoutTipprsService noutTipprsService, NoutReglesService noutReglesService, NoutReglesController noutReglesController, NoutPrestacionsService noutPrestacionsService, NashornService nashornService, DataService dataService, NoutSQLStatementService noutSQLStatementService) {
         super(service);
@@ -50,11 +57,13 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
         this.noutSQLStatementService = noutSQLStatementService;
     }
 
+
     @GetMapping("/list")
     public String listAll(Model model, @RequestParam(name = "page", defaultValue = "0") int page) {
+        AuthenticateUtils.addAuthenticatedAttribute(model);
         Pageable pageRequest = PageRequest.of(page, 10);
         Iterable<ReglaTipoPrestacionEntity> reglasTipoPrestacionPage = super.service.findAll();
-        PageDto<NoutRegles> reglesPage = noutReglesController.page(pageRequest);
+        PageDTO<NoutRegles> reglesPage = noutReglesController.page(pageRequest);
 
         model.addAttribute("reglas", reglesPage);
         model.addAttribute("reglasTipoPrestacion", reglasTipoPrestacionPage);
@@ -65,6 +74,7 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
 
     @GetMapping("/editar/{reglaId}")
     public String edit(@PathVariable("reglaId") Long reglaId, Model model) {
+        AuthenticateUtils.addAuthenticatedAttribute(model);
         NoutRegles regla = this.noutReglesService.findById(reglaId).orElseThrow(EntityNotFoundException::new);
 
         List<NoutTipprs> allTipoPrestacion = (List<NoutTipprs>) noutTipprsService.findAll();
@@ -102,6 +112,7 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
 
     @GetMapping("/crear")
     public String createView(Model model) {
+        AuthenticateUtils.addAuthenticatedAttribute(model);
         ReglaDTO reglaDTO = new ReglaDTO();
         reglaDTO.setAllTipoPrestacion(new ArrayList<>());
 
@@ -113,6 +124,7 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
 
         return "reglas/crear_regla";
     }
+
 
     @PostMapping("/save")
     public String save(@ModelAttribute("reglaDTO") @Valid ReglaDTO reglaDTO,
@@ -149,25 +161,11 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
                          BindingResult bindingResult,
                          @RequestParam("tipoPrestacion") List<String> tipoPrestacionIds,
                          Model model) {
-
         // Verificar si las fechas son válidas
         checkDate(reglaDTO, bindingResult);
 
         if (bindingResult.hasErrors()) {
             List<NoutTipprs> allTipoPrestacion = (List<NoutTipprs>) noutTipprsService.findAll();
-
-            List<ReglaTipoPrestacionEntity> allReglasTipoPrestacion = (List<ReglaTipoPrestacionEntity>) super.service.findAll();
-
-            List<ReglaTipoPrestacionEntity> filteredReglasTipoPrestacion = allReglasTipoPrestacion
-                    .stream()
-                    .filter(reglaTipoPrestacion -> reglaTipoPrestacion.getNoutRegles().getCon().equals(reglaDTO.getCon())
-                            && reglaTipoPrestacion.getActive())
-                    .toList();
-
-            List<String> reglasTipoPrestacionList = filteredReglasTipoPrestacion
-                    .stream()
-                    .map(reglaTipoPrestacion -> reglaTipoPrestacion.getNoutTipprs().getCoa())
-                    .toList();
 
             reglaDTO.setCon(reglaId);
             reglaDTO.setAllTipoPrestacion(allTipoPrestacion);
@@ -192,21 +190,23 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
         return "redirect:/regla-tipo-prestacion/list";
     }
 
-
-    //Validación de prestación
-
     //Template resultado validación
     @GetMapping("/validation/{prestacionTipID}/{prestacionID}")
     public String validate(Model model, @PathVariable String prestacionTipID, @PathVariable Long prestacionID) {
-        GenericValidationDTO genericValidationDTO = validateTipoPrestacion(prestacionTipID, prestacionID);
+        AuthenticateUtils.addAuthenticatedAttribute(model);
+        List<GenericValidationDTO> genericValidationDTO = validateTipoPrestacion(prestacionTipID, prestacionID, noutReglesService, noutPrestacionsService);
 
-        if (genericValidationDTO.getError().isEmpty()) {
-            model.addAttribute("titlePage", "Validación correcta.");
-        } else {
-            model.addAttribute("titlePage", "Prestación no validada.");
-        }
+        List<GenericValidationDTO> validationError = genericValidationDTO.stream()
+                .filter(validation -> validation.getType().equals("ERROR"))
+                .toList();
+        List<GenericValidationDTO> validationWarning = genericValidationDTO.stream().filter(validation -> validation.getType().equals("WARNING")).toList();
+        List<GenericValidationDTO> validationSuccess = genericValidationDTO.stream().filter(validation -> validation.getType().equals("SUCCESS")).toList();
 
-        model.addAttribute("genericValidationDTO", genericValidationDTO);
+
+        model.addAttribute("titlePage", "Validación de prestación");
+        model.addAttribute("validationError", validationError);
+        model.addAttribute("validationWarning", validationWarning);
+        model.addAttribute("validationSuccess", validationSuccess);
 
         return "reglas/validacion";
     }
@@ -214,6 +214,7 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
     //Template de prestación
     @GetMapping("/prestacions/{prestacionId}")
     public String getPrestacion(@PathVariable("prestacionId") Long prestacionId, Model model) {
+        AuthenticateUtils.addAuthenticatedAttribute(model);
         NoutPrestacions prestacion = this.noutPrestacionsService.findById(prestacionId).orElseThrow(EntityNotFoundException::new);
 
         NoutTipprs tipoPrestacion = prestacion.getTipoPrestacion();
@@ -225,95 +226,71 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
     }
 
     //Métodos privados
-
-    private GenericValidationDTO validateTipoPrestacion(String prestacionTipoID, Long prestacionID) {
-
+    private List<GenericValidationDTO> validateTipoPrestacion(String prestacionTipoID, Long prestacionID, NoutReglesService noutReglesService, NoutPrestacionsService noutPrestacionsService) {
         List<NoutRegles> reglas = noutReglesService.findByIdTipoPrestacion(prestacionTipoID);
         NoutPrestacions prestacion = noutPrestacionsService.findById(prestacionID).orElseThrow(EntityNotFoundException::new);
+        List<GenericValidationDTO> validationList = new ArrayList<>();
 
-        //Acceder a la fecha de ahora
         Date now = new Date(System.currentTimeMillis());
-        GenericValidationDTO genericValidationDTO = new GenericValidationDTO();
 
         try {
-            nashornInitialConfig(prestacion, dataService);
+            nashornInitialConfig(prestacion);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("An error occurred while initializing Nashorn", e);
         }
-
 
         for (NoutRegles regla : reglas) {
             String script = regla.getScript();
 
+            // Validación de fecha de caducidad de la regla
+            GenericValidationDTO dateValidation = DateValidationDTO.checkExpireDate(regla, now);
+
+            if (dateValidation != null) {
+                validationList.add(dateValidation);
+            }
+
             try {
-                Object result = nashornService.executeScript(script);
+                GenericValidationDTO validationResults = (GenericValidationDTO) nashornService.executeScript(script);
+                GenericValidationDTO genericValidationDTO = new GenericValidationDTO();
+                genericValidationDTO.setMessage(validationResults.getMessage());
+                genericValidationDTO.setType(validationResults.getType());
 
-                if (Boolean.TRUE.equals(result)) {
-                    if (this.numDias(now, regla.getDatFin())) {
-                        ValidationWarningDTO warningDTO = new ValidationWarningDTO();
-                        warningDTO.setReglaId(regla.getCon());
-                        warningDTO.setDescription(regla.getDec());
-                        genericValidationDTO.getWarning().add(warningDTO);
-                    } else {
-                        ValidationSuccessDTO validationSuccessDTO = new ValidationSuccessDTO();
-                        validationSuccessDTO.setReglaId(regla.getCon());
-                        validationSuccessDTO.setDescription(regla.getDec());
-                        genericValidationDTO.getSuccess().add(validationSuccessDTO);
-                    }
-
-                } else {
-                    ValidationErrorDTO validationErrorDTO = new ValidationErrorDTO();
-                    validationErrorDTO.setReglaId(regla.getCon());
-                    validationErrorDTO.setDescription(regla.getDec());
-                    genericValidationDTO.getError().add(validationErrorDTO);
-                }
+                validationList.add(genericValidationDTO);
 
             } catch (ScriptException e) {
-                e.printStackTrace();
+                logger.error("An error occurred while executing the script", e);
             }
         }
 
-        return genericValidationDTO;
+        return validationList;
     }
 
-    private void nashornInitialConfig(NoutPrestacions prestacion, DataService dataService) throws JsonProcessingException, ScriptException {
+    private void nashornInitialConfig(NoutPrestacions prestacion) throws JsonProcessingException, ScriptException {
 
         // Serializa el objeto prestacion a JSON con ObjectMapper
         String prestacionJson = nashornService.serializeObjectToJson(prestacion);
         Map<String, String> sentencias = noutSQLStatementService.getAllSqlStatementByActive();
         ObjectMapper objectMapper = new ObjectMapper();
         String sentenciasJson = objectMapper.writeValueAsString(sentencias);
+        GenericValidationDTO genericValidationDTO = new GenericValidationDTO();
 
-        // Add the DataService instance to the Nashorn context
-        nashornService.putInContext("DataService", dataService);
-
-        // Add the JSON objects to the Nashorn context
+        nashornService.putInContext("DataService", this.dataService);
         nashornService.putInContext("prestacion", prestacionJson);
         nashornService.putInContext("sentencias", sentenciasJson);
+        nashornService.putInContext("validacion", genericValidationDTO);
 
         // Script of initialization
         String script = "var prestacion = JSON.parse(prestacion);"
                 + "var datIni = new Date(prestacion.datIni);"
                 + "var datFin = new Date(prestacion.datFin);"
                 + "var sentencias = JSON.parse(sentencias);"
-                + "var dataService = DataService;";
+                + "var dataService = DataService;"
+                + "var validacion = validacion;";
 
         nashornService.executeScript(script);
-
     }
 
-    private Boolean numDias(Date date1, Date date2) {
-        // Calcular la diferencia en milisegundos
-        long diferenciaMilisegundos = Math.abs(date2.getTime() - date1.getTime());
-
-        // Convertir la diferencia de milisegundos a días
-        long diferenciaDias = diferenciaMilisegundos / (1000 * 60 * 60 * 24);
-
-        // Devolver true si la diferencia es menor que 7 días
-        return diferenciaDias < 7;
-    }
-
-    private static void checkDate(ReglaDTO reglaDTO, BindingResult bindingResult) {
+    private void checkDate(ReglaDTO reglaDTO, BindingResult bindingResult) {
         if (reglaDTO.getDatIni().after(reglaDTO.getDatFin())) {
             bindingResult.rejectValue("datIni", "error.reglaDTO", "La fecha de inicio debe ser anterior a la fecha de finalización");
         }
