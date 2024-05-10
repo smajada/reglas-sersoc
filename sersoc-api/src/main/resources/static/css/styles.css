@@ -7,11 +7,11 @@
     --danger: #dc3545;
     --light: #DDF1F0;
     --dark: #182329;
+    --white: #ffffff;
 }
 
 #btn-delete {
     font-size: 1.1em;
-
     :hover {
     background-color: var(--danger);
 }
@@ -47,3 +47,6 @@
         background-color: var(--dark); /* Color del borde */
     }
 
+.ml-wide{
+    margin-left: 10vw;
+}
