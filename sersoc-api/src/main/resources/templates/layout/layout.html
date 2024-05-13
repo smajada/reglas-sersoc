@@ -23,73 +23,72 @@
 <!-- Navbar -->
 <nav th:fragment="navbar" class="navbar navbar-expand-lg bg-dark m-0 p-0">
     <div class="mx-4">
-        <img class="mx-2" th:src="@{/img/escudo_palma.png}" alt="Escudo de Palma de Mallorca" width="65" />
+        <img class="mx-2" th:src="@{/img/escudo_palma.png}" alt="Escudo de Palma de Mallorca" width="50" />
     </div>
     <div class="d-flex flex-column container-fluid m-0 p-0">
-    <div class="container-fluid d-flex flex-row px-4 py-3">
-        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="btn btn-dark text-white"  th:href="@{/home}">Ventana</a>
-                </li>
-                <li class="nav-item">
-                    <a class="btn btn-dark text-white" th:href="@{/home}">Edición</a>
-                </li>
-                <li class="nav-item">
-                    <a class="btn btn-dark text-white" th:href="@{/home}">Manteniments</a>
-                </li>
-                <li class="nav-item">
-                    <a class="btn btn-dark text-white" th:href="@{/home}">Prestacions</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav px-5">
-                <li class="nav-item" th:if="${authenticated}">
-                    <form th:action="@{/logout}" method="post" class="nav-link">
-                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                        <a type="submit" class="btn btn-secondary rounded-0">
-                            Cerrar sesión
+        <div class="container-fluid d-flex flex-row px-4 py-2">
+            <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="btn btn-dark text-white"  th:href="@{/home}">Ventana</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-dark text-white" th:href="@{/home}">Edición</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-dark text-white" th:href="@{/home}">Manteniments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-dark text-white" th:href="@{/home}">Prestacions</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav px-5">
+                    <li class="nav-item" th:if="${authenticated}">
+                        <form th:action="@{/logout}" method="post" class="nav-link">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            <a type="submit" class="btn btn-secondary rounded-0">
+                                Cerrar sesión
+                            </a>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="container-fluid d-flex flex-row bg-secondary px-4 py-1 m-0">
+            <a class="navbar-brand text-white" th:href="@{/home}">SERSOC</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <!-- Reglas Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white" href="#" id="reglasDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Reglas
                         </a>
-                    </form>
-                </li>
-            </ul>
+                        <ul class="dropdown-menu" aria-labelledby="reglasDropdown">
+                            <li><a class="dropdown-item" th:href="@{/regla-tipo-prestacion/list}">Listado reglas</a></li>
+                            <li><a class="dropdown-item" th:href="@{/regla-tipo-prestacion/crear}">Crear regla</a></li>
+                        </ul>
+                    </li>
 
+                    <!-- SQL Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white" href="#" id="sqlDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            SQL
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="sqlDropdown">
+                            <li><a class="dropdown-item" th:href="@{/sql/list}">Listado sql</a></li>
+                            <li><a class="dropdown-item" th:href="@{/sql/crear}">Crear sentencia</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
-    <div class="container-fluid d-flex flex-row bg-secondary px-4 py-2 m-0">
-        <a class="navbar-brand text-white" th:href="@{/home}">SERSOC</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <!-- Reglas Dropdown -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-white" href="#" id="reglasDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        Reglas
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="reglasDropdown">
-                        <li><a class="dropdown-item" th:href="@{/regla-tipo-prestacion/list}">Listado reglas</a></li>
-                        <li><a class="dropdown-item" th:href="@{/regla-tipo-prestacion/crear}">Crear regla</a></li>
-                    </ul>
-                </li>
-
-                <!-- SQL Dropdown -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-white" href="#" id="sqlDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        SQL
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="sqlDropdown">
-                        <li><a class="dropdown-item" th:href="@{/sql/list}">Listado sql</a></li>
-                        <li><a class="dropdown-item" th:href="@{/sql/crear}">Crear sentencia</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
 </nav>
 
 </body>

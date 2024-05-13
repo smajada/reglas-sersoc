@@ -1,21 +1,26 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html class="bg-light" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{layout/layout :: head}">
 
 </head>
-<body>
+<body class="h-100">
 <nav th:replace="~{layout/layout :: navbar}"></nav>
 
-<section class="h-100 bg-light">
-    <div class="bg-light py-3 py-md-5">
-        <div class="container">
-            <div class="row justify-content-md-center">
-                <div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-6">
-                    <div class="bg-white p-4 p-md-5 rounded shadow-sm">
+<section class="h-100">
+    <div class="h-100 bg-light">
+        <div class="h-100 container">
+            <div class="row justify-content-md-center align-items-stretch h-100">
+                <div class="h-100 col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-6">
+                    <div class="h-100 bg-white p-4 p-md-5 rounded-0 align-items-stretch">
+                        <div class="row">
+                            <div class="col-12 my-5 d-flex justify-content-center">
+                                <img class="mx-2" th:src="@{/img/escudo_palma.png}" alt="Escudo de Palma de Mallorca" width="80" />
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-12">
-                                <div class="mb-5">
-                                    <h2 class="h3">Login</h2>
+                                <div class="mb-4">
+                                    <h2 class="h3 fw-bolder">Login</h2>
                                 </div>
                             </div>
                         </div>
@@ -23,14 +28,14 @@
                             <div class="row gy-3 gy-md-4 overflow-hidden justify-content-center">
                                 <div class="col-12">
                                     <label for="username" class="form-label">Username</label>
-                                    <input type="text" class="form-control" name="username" id="username" aria-label="username"
+                                    <input type="text" class="form-control rounded-0" name="username" id="username" aria-label="username"
                                            placeholder="username">
                                 </div>
 
-                                <div class="col-12">
+                                <div class="col-12 mb-5">
                                     <label for="password" class="form-label">Password</label>
                                     <input type="password"
-                                           class="form-control"
+                                           class="form-control rounded-0"
                                            name="password"
                                            id="password"
                                            aria-label="password"
@@ -38,7 +43,7 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="d-grid">
-                                        <button class="btn btn-primary" type="submit">Login</button>
+                                        <button class="btn btn-secondary rounded-0" type="submit">Login</button>
                                     </div>
                                 </div>
                             </div>
