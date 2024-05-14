@@ -23,38 +23,15 @@
 <!-- Navbar -->
 <nav th:fragment="navbar" class="navbar navbar-expand-lg bg-dark m-0 p-0">
     <div class="mx-4">
-        <img class="mx-2" th:src="@{/img/escudo_palma.png}" alt="Escudo de Palma de Mallorca" width="50" />
+        <img class="mx-2" th:src="@{/img/escudo_palma.png}" alt="Escudo de Palma de Mallorca" width="30" />
     </div>
     <div class="d-flex flex-column container-fluid m-0 p-0">
         <div class="container-fluid d-flex flex-row px-4 py-2">
-            <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="btn btn-dark text-white"  th:href="@{/home}">Ventana</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-dark text-white" th:href="@{/home}">Edición</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-dark text-white" th:href="@{/home}">Manteniments</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-dark text-white" th:href="@{/home}">Prestacions</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav px-5">
-                    <li class="nav-item" th:if="${authenticated}">
-                        <form th:action="@{/logout}" method="post" class="nav-link">
-                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                            <a type="submit" class="btn btn-secondary rounded-0">
-                                Cerrar sesión
-                            </a>
-                        </form>
-                    </li>
-                </ul>
+            <div class="collapse navbar-collapse justify-content-end">
+                
             </div>
         </div>
-        <div class="container-fluid d-flex flex-row bg-secondary px-4 py-1 m-0">
+        <div class="container-fluid d-flex align-items-center flex-row bg-secondary px-4 py-1 m-0">
             <a class="navbar-brand text-white" th:href="@{/home}">SERSOC</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -86,9 +63,29 @@
                         </ul>
                     </li>
                 </ul>
-            </div>
+                <ul class="navbar-nav px-5"  >
+                    <li class="nav-item" th:if="${authenticated}">
+                            <div>
+                                <a type="submit" id="logoutmenubutton" class="h-full w-full btn btn-light flex align-items-center justify-content-center">
+                                    <img th:src="@{/img/box-arrow-right.svg}" alt="Log out button" width="30" />
+                                </a>
+                            </div>
+                    </li>
+                </ul>
+                <div id="logoutmenu" style="transition: all 0.5s ease; opacity: 0 !important; width: 200px; height: 100px; margin: 60; top: 40px; right: 80px; border-radius: 15px;" class="shadow-sm position-absolute bg-white d-flex justify-content-center align-items-center">
+                    <form th:action="@{/logout}" method="post">
+                        <div>
+                                <a type="submit" class="btn btn-light">
+                                    Cerrar Sesión
+                                </a>
+                        </div>
+                    </form>
+                </div>
+            </div>   
         </div>
     </div>
+       <!-- Custom JS -->
+       <script th:src="@{/js/logoutmenu.js}"></script>
 </nav>
 
 </body>
