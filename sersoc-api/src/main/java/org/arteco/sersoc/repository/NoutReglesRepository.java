@@ -4,6 +4,8 @@ import org.arteco.sersoc.model.entities.NoutRegles;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -19,6 +21,11 @@ public interface NoutReglesRepository extends JpaRepository<NoutRegles, Long> {
             "AND r.active = true " +
             "AND rtp.active = true")
     List<NoutRegles> findByIdTipoPrestacion(String idTipoPrestacion);
+
+
+
+    Page<NoutRegles> findByActiveTrue(Pageable pageable);
+
 
 
 }
