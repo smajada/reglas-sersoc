@@ -31,17 +31,13 @@
                 
             </div>
         </div>
-        <div class="container-fluid d-flex align-items-center flex-row bg-secondary px-4 py-1 m-0">
+        <div class="container-fluid d-flex align-items-center justify-content-between flex-row bg-secondary px-4 py-1 m-0">
             <a class="navbar-brand text-white" th:href="@{/home}">SERSOC</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
             <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <!-- Reglas Dropdown -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-white" href="#" id="reglasDropdown" role="button"
+                        <a class="nav-link dropdown-toggle text-white lead" href="#" id="reglasDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
                             Reglas
                         </a>
@@ -81,7 +77,11 @@
                         </div>
                     </form>
                 </div>
-            </div>   
+            </div>  
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button> 
         </div>
     </div>
        <!-- Custom JS -->

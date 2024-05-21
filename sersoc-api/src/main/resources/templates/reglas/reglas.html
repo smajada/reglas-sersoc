@@ -3,119 +3,135 @@
       xmlns:th="http://www.thymeleaf.org"
 >
 <head th:replace="~{layout/layout :: head}"></head>
-<body>
+<body class="h-100 bg-light">
 <nav th:replace="~{layout/layout :: navbar}" class="nav"></nav>
 
-<section class="container mt-4 p-5">
-    <div class="row mb-3">
-        <h1>Reglas</h1>
-    </div>
-
-    <div class="d-flex my-4 col-lg-3 col-md-4  align-content-end">
-        <input class="form-control me-1" type="search" placeholder="Search" aria-label="Search" id="search">
-    </div>
-
-
-    <!--    <p th:text="${reglasTipoPrestacion}"></p>-->
-
-    <table id="table" class="table table-striped table-bordered table-hover">
-        <thead>
-        <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">Fecha de inicio</th>
-            <th scope="col">Fecha de fin</th>
-            <th scope="col">Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-
-        <!-- Itera sobre la lista de reglas -->
-        <tr th:each="regla : ${reglas.getContent()}"
-            th:if="${regla.isActive()}"
-        >
-            <td th:text="${regla.con}"></td>
-            <td th:text="${regla.dec}"></td>
-
-            <td th:text="${#dates.format(regla.datIni,'dd/MM/yyyy' )}"></td>
-            <td th:text="${#dates.format(regla.datFin,'dd/MM/yyyy' )}"></td>
-            <td class="d-flex justify-content-evenly">
-                <a type="button" class="btn btn-outline-info" id="btn-info" data-bs-toggle="modal"
-                   th:data-bs-target="'#modal-' + ${regla.con}">
-                    +
-                </a>
-                <a th:href="@{/regla-tipo-prestacion/editar/{reglaId}(reglaId=${regla.con})}"
-                   class="btn btn-outline-warning" id="btn-edit">✎</a>
-
-                <a th:href="@{/regla-tipo-prestacion/delete/{reglaId}(reglaId=${regla.con})}"
-                   class="btn btn-outline-danger" id="btn-delete">
-                    ✕
-                </a>
-            </td>
-
-            <!--             Modal-->
-            <div class="modal fade" th:id="'modal-' + ${regla.con}" tabindex="-1"
-                 th:aria-labelledby="'masInfo-' + ${regla.con}" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" th:id="'masInfo-' + ${regla.con}">Más información</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<section class="h-100 bg-light ">
+    <div class="h-100 bg-white ml-wide">
+        <div class="pl-4 w-100 h-100">
+            <div class="row justify-content-md-center align-items-stretch  w-100  h-100">
+                <div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-7  h-100">
+                    <div class="p-4 p-md-5 rounded-0 pt-5 containter">
+                        <div class="row pt-5">
+                            <h1 class="h2 fw-bolder">Reglas</h1>
                         </div>
-                        <div class="modal-body">
+                        <div class="d-flex my-4 col-lg-8 col-md-6  align-content-end rounded-0">
+                            <input class="form-control me-1 rounded-0" type="search" placeholder="Search" aria-label="Search" id="search">
+                        </div>
 
-                            <h3>Prestaciones</h3>
-                            <ul th:each="reglaTipoPrestacion : ${reglasTipoPrestacion}"
 
+                        <!--    <p th:text="${reglasTipoPrestacion}"></p>-->
+
+                        <table id="table" class="table table-striped table-bordered table-hover">
+                            <thead >
+                            <tr>
+                                <th  class="bg-dark text-white " scope="col">Id</th>
+                                <th  class="bg-dark text-white" scope="col">Nombre</th>
+                                <th  class="bg-dark text-white" scope="col">Fecha de inicio</th>
+                                <th  class="bg-dark text-white" scope="col">Fecha de fin</th>
+                                <th  class="bg-dark text-white" scope="col">Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <!-- Itera sobre la lista de reglas -->
+                            <tr th:each="regla : ${reglas.getContent()}"
+                                th:if="${regla.isActive()}"
                             >
-                                <li
-                                        th:if="${reglaTipoPrestacion.noutRegles.con == regla.con && reglaTipoPrestacion.getActive() == true}"
-                                        th:text="${reglaTipoPrestacion.noutTipprs.dec}"
-                                ></li>
-                            </ul>
+                                <td th:text="${regla.con}"></td>
+                                <td th:text="${regla.dec}"></td>
 
-                            <h3>Script</h3>
-                            <textarea class="form-control" th:id="'regla-'+${regla.con}" aria-label="regla"
-                                      th:text="${regla.script}"></textarea>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
+                                <td th:text="${#dates.format(regla.datIni,'dd/MM/yyyy' )}"></td>
+                                <td th:text="${#dates.format(regla.datFin,'dd/MM/yyyy' )}"></td>
+                                <td class="d-flex justify-content-evenly">
+                                    <a type="button" class="btn btn-outline-info" id="btn-info" data-bs-toggle="modal"
+                                    th:data-bs-target="'#modal-' + ${regla.con}">
+                                        +
+                                    </a>
+                                    <a th:href="@{/regla-tipo-prestacion/editar/{reglaId}(reglaId=${regla.con})}"
+                                    class="btn btn-outline-warning" id="btn-edit">✎</a>
+
+                                    <a th:href="@{/regla-tipo-prestacion/delete/{reglaId}(reglaId=${regla.con})}"
+                                    class="btn btn-outline-danger" id="btn-delete">
+                                        ✕
+                                    </a>
+                                </td>
+
+                                <!--             Modal-->
+                                <div class="modal fade" th:id="'modal-' + ${regla.con}" tabindex="-1"
+                                    th:aria-labelledby="'masInfo-' + ${regla.con}" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" th:id="'masInfo-' + ${regla.con}">Más información</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+
+                                                <h3>Prestaciones</h3>
+                                                <ul th:each="reglaTipoPrestacion : ${reglasTipoPrestacion}"
+
+                                                >
+                                                    <li
+                                                            th:if="${reglaTipoPrestacion.noutRegles.con == regla.con && reglaTipoPrestacion.getActive() == true}"
+                                                            th:text="${reglaTipoPrestacion.noutTipprs.dec}"
+                                                    ></li>
+                                                </ul>
+
+                                                <h3>Script</h3>
+                                                <textarea class="form-control" th:id="'regla-'+${regla.con}" aria-label="regla"
+                                                        th:text="${regla.script}"></textarea>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </tr>
+
+                            </tbody>
+
+                        </table>
+
+                        <!-- Paginación -->
+                        <p th:if="${reglas.getTotalPages() == 0}">No hay reglas</p>
+
+                        <nav aria-label="Navegación de la página" th:if="${totalPages > 0}">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item">
+                                    <a class="page-link rounded-0"
+                                    th:classappend="${currentPage == 0} ? disabled"
+                                    th:href="@{/regla-tipo-prestacion/list(page=${currentPage - 1})}"
+                                    >Previous</a></li>
+
+                                <li class="page-item" th:each="page : ${#numbers.sequence(0, totalPages - 1)}">
+                                    <a th:href="@{/regla-tipo-prestacion/list(page=${page})}"
+                                    th:text="${page + 1}"
+                                    th:classappend="${currentPage==page} ? active"
+                                    class="page-link"></a>
+                                </li>
+
+                                <li class="page-item">
+                                    <a class="page-link rounded-0"
+                                    th:classappend="${currentPage == totalPages - 1} ? disabled"
+                                    th:href="@{/regla-tipo-prestacion/list(page=${currentPage + 1})}"
+                                    >Next</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <div class="bg-light p-4 p-md-5 rounded-0 col-12 col-md-12 col-lg-4 col-xl-5 col-xxl-5">
+                    <div class="pt-5">
+                        <h2 class="fw-bolder h3 mb-3">Placeholder Instrucciones</h2>
+                        <h3 class="fw-bolder h6 mx-6">1. Subtítulo</h3>
+                        <p>Prueba de texto de ejemplo, tutorial para demostrar cómo funciona la aplicación.</p>
+                        <textarea class="form-control rounded-0" readonly > Esto es una prueba</textarea>
                     </div>
                 </div>
             </div>
-        </tr>
-
-        </tbody>
-
-    </table>
-
-    <!-- Paginación -->
-    <p th:if="${reglas.getTotalPages() == 0}">No hay reglas</p>
-
-    <nav aria-label="Navegación de la página" th:if="${totalPages > 0}">
-        <ul class="pagination justify-content-center">
-            <li class="page-item">
-                <a class="page-link"
-                   th:classappend="${currentPage == 0} ? disabled"
-                   th:href="@{/regla-tipo-prestacion/list(page=${currentPage - 1})}"
-                >Previous</a></li>
-
-            <li class="page-item" th:each="page : ${#numbers.sequence(0, totalPages - 1)}">
-                <a th:href="@{/regla-tipo-prestacion/list(page=${page})}"
-                   th:text="${page + 1}"
-                   th:classappend="${currentPage==page} ? active"
-                   class="page-link"></a>
-            </li>
-
-            <li class="page-item">
-                <a class="page-link"
-                   th:classappend="${currentPage == totalPages - 1} ? disabled"
-                   th:href="@{/regla-tipo-prestacion/list(page=${currentPage + 1})}"
-                >Next</a></li>
-        </ul>
-    </nav>
-
+        </div>
+    </div>
 </section>
 
 
