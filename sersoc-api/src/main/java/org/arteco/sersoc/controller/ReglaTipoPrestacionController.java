@@ -61,12 +61,13 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<ReglaT
     @GetMapping("/list")
     public String listAll(Model model, @RequestParam(name = "page", defaultValue = "0") int page) {
         AuthenticateUtils.addAuthenticatedAttribute(model);
-        Pageable pageRequest = PageRequest.of(page, 10);
+        Pageable pageRequest = PageRequest.of(page, 1);
         Iterable<ReglaTipoPrestacionEntity> reglasTipoPrestacionPage = super.service.findAll();
         PageDTO<NoutRegles> reglesPage = noutReglesController.page(pageRequest);
 
         model.addAttribute("reglas", reglesPage);
         model.addAttribute("reglasTipoPrestacion", reglasTipoPrestacionPage);
+        model.addAttribute("totalPages", reglesPage.getTotalPages());
         model.addAttribute("currentPage", page);
         model.addAttribute("titlePage", "Reglas ");
         return "reglas/reglas";
