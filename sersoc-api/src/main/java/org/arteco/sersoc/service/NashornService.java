@@ -2,7 +2,6 @@ package org.arteco.sersoc.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Data;
 import org.springframework.stereotype.Service;
 
 import javax.script.ScriptEngine;

@@ -1,12 +1,10 @@
 package org.arteco.sersoc.model.entities;
 
 import jakarta.persistence.*;
-
-import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.ScriptAssert;
 import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 @NoArgsConstructor

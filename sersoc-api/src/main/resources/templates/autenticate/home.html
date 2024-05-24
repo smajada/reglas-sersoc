@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{layout/layout :: head}">
 
 </head>
@@ -7,9 +7,9 @@
 <nav th:replace="~{layout/layout :: navbar}"></nav>
 <div class="container mt-5">
     <h1>Welcome Home!</h1>
-    <!-- Botón de logout -->
-    <p th:if="${authenticated}">Hello, <span th:text="${username}"></span>! </p>
-    <p th:unless="${authenticated}">Please <a th:href="@{/login}">login</a></p>
+    <p sec:authorize="isAuthenticated()">Hello, <span sec:authentication="name"></span>! </p>
+    <p sec:authorize="hasRole('USER')">With rol <span sec:authentication="principal.authorities"></span></p>
+    <p sec:authorize="hasRole('ADMIN')">With rol <span sec:authentication="principal.authorities"></span></p>
 </div>
 </body>
 </html>
