@@ -1,6 +1,9 @@
 package org.arteco.sersoc.controller;
 
 import jakarta.persistence.EntityNotFoundException;
+import java.util.Collections;
+import java.util.Map;
+import javax.validation.Valid;
 import org.arteco.sersoc.base.AbstractCrudController;
 import org.arteco.sersoc.dto.PageDTO;
 import org.arteco.sersoc.model.entities.NoutSQLStatement;
@@ -12,117 +15,129 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.Map;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/sql")
 public class NoutSQLStatementController extends AbstractCrudController<
-        NoutSQLStatement,
-        Long,
-        NoutSQLStatementRepository,
-        NoutSQLStatementService> {
+	NoutSQLStatement,
+	Long,
+	NoutSQLStatementRepository,
+	NoutSQLStatementService> {
 
-    protected NoutSQLStatementController(NoutSQLStatementService service) {
-        super(service);
-    }
+	protected NoutSQLStatementController(NoutSQLStatementService service) {
 
-    @GetMapping("/list")
-    public String ListSqlStatement(Model model, @RequestParam(name = "page", defaultValue = "0") int page) {
+		super(service);
+	}
 
-        Pageable pageRequest = PageRequest.of(page, 2);
-        PageDTO<NoutSQLStatement> sqlStatementPageDto2 = super.service.findByActiveTrue(pageRequest);
+	@GetMapping("/list")
+	public String ListSqlStatement(Model model, @RequestParam(name = "page", defaultValue = "0") int page) {
 
-        model.addAttribute("totalPages", sqlStatementPageDto2.getTotalPages());
-        model.addAttribute("sentences", sqlStatementPageDto2.getContent());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("titlePage", "SQL");
+		Pageable pageRequest = PageRequest.of(page, 2);
+		PageDTO<NoutSQLStatement> sqlStatementPageDto2 = super.service.findByActiveTrue(pageRequest);
 
-        return "sql/sql_statement";
-    }
+		if (sqlStatementPageDto2 != null) {
+			model.addAttribute("totalPages", sqlStatementPageDto2.getTotalPages());
+			model.addAttribute("sentences", sqlStatementPageDto2.getContent());
+		} else {
+			// Handle the case when sqlStatementPageDto2 is null, maybe show an error message or return an empty page
+			model.addAttribute("totalPages", 0);
+			model.addAttribute("sentences", Collections.emptyList());
+		}
 
-    @GetMapping("/crear")
-    public String createSqlSentence(Model model) {
+		model.addAttribute("currentPage", page);
+		model.addAttribute("titlePage", "SQL");
 
-        NoutSQLStatement sql = new NoutSQLStatement();
-        model.addAttribute("sql", sql);
-        model.addAttribute("titlePage", "Crear Sentencia");
-        return "sql/crear_sentencia";
-    }
-
-    @PostMapping("/save")
-    public String saveSQLStatement(@ModelAttribute @Valid NoutSQLStatement sql, BindingResult bindingResult, Model model) {
-
-        checkCustomErrors(sql, bindingResult);
-
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("sql", sql);
-            model.addAttribute("org.springframework.validation.BindingResult.sql", bindingResult);
-            return "sql/crear_sentencia";
-        }
-
-        super.service.save(sql);
-        return "redirect:/sql/list";
-    }
-
-    @GetMapping("/editar/{con}")
-    public String editSQLStatement(@PathVariable("con") Long con, Model model) {
-
-        NoutSQLStatement sql = this.service.findById(con).orElseThrow(EntityNotFoundException::new);
-
-        model.addAttribute("sql", sql);
-        model.addAttribute("titlePage", "Editar Sentencia");
-
-        return "sql/editar_sentencia";
-    }
-
-    @PostMapping("/save/{con}")
-    public String updateSQLStatement(@PathVariable Long con,
-                                     @ModelAttribute @Valid NoutSQLStatement sql,
-                                     BindingResult bindingResult,
-                                     Model model) {
-
-        if (sql.getValue().isEmpty()) {
-            bindingResult.addError(new FieldError("sql", "value", "El campo no puede estar vacío"));
-        }
-
-        if (bindingResult.hasErrors()) {
-            NoutSQLStatement sqlStatement = this.service.findById(con).orElseThrow(EntityNotFoundException::new);
-
-            model.addAttribute("sql", sqlStatement);
-            model.addAttribute("org.springframework.validation.BindingResult.sql", bindingResult);
-            model.addAttribute("titlePage", "Editar Sentencia");
-            return "sql/editar_sentencia";
-        }
-
-        super.service.update(sql, con);
-
-        return "redirect:/sql/list";
-    }
+		return "sql/sql_statement";
+	}
 
 
-    @GetMapping("/delete/{con}")
-    public String deleteSQLStatement(@PathVariable("con") Long con) {
+	@GetMapping("/crear")
+	public String createSqlSentence(Model model) {
 
-        NoutSQLStatement sql = this.service.findById(con).orElseThrow(EntityNotFoundException::new);
+		NoutSQLStatement sql = new NoutSQLStatement();
+		model.addAttribute("sql", sql);
+		model.addAttribute("titlePage", "Crear Sentencia");
+		return "sql/crear_sentencia";
+	}
 
-        this.service.delete(sql);
+	@PostMapping("/save")
+	public String saveSQLStatement(@ModelAttribute @Valid NoutSQLStatement sql, BindingResult bindingResult, Model model) {
 
-        return "redirect:/sql/list";
-    }
+		checkCustomErrors(sql, bindingResult);
 
-    private void checkCustomErrors(NoutSQLStatement sql, BindingResult result) {
-        Map<String, String> sqls = this.service.getAllSqlStatementByActive();
-        for (Map.Entry<String, String> entry : sqls.entrySet()) {
-            if (entry.getKey().equals(sql.getKey())) {
-                result.rejectValue("key", "error.key", "La clave ya existe");
-            }
-        }
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("sql", sql);
+			model.addAttribute("org.springframework.validation.BindingResult.sql", bindingResult);
+			return "sql/crear_sentencia";
+		}
 
-        if (sql.getValue().isEmpty()) {
-            result.addError(new FieldError("sql", "value", "El campo no puede estar vacío"));
-        }
-    }
+		super.service.save(sql);
+		return "redirect:/sql/list";
+	}
+
+	@GetMapping("/editar/{con}")
+	public String editSQLStatement(@PathVariable("con") Long con, Model model) {
+
+		NoutSQLStatement sql = this.service.findById(con).orElseThrow(EntityNotFoundException::new);
+
+		model.addAttribute("sql", sql);
+		model.addAttribute("titlePage", "Editar Sentencia");
+
+		return "sql/editar_sentencia";
+	}
+
+	@PostMapping("/save/{con}")
+	public String updateSQLStatement(@PathVariable Long con,
+									 @ModelAttribute @Valid NoutSQLStatement sql,
+									 BindingResult bindingResult,
+									 Model model) {
+
+		if (sql.getValue().isEmpty()) {
+			bindingResult.addError(new FieldError("sql", "value", "El campo no puede estar vacío"));
+		}
+
+		if (bindingResult.hasErrors()) {
+			NoutSQLStatement sqlStatement = this.service.findById(con).orElseThrow(EntityNotFoundException::new);
+
+			model.addAttribute("sql", sqlStatement);
+			model.addAttribute("org.springframework.validation.BindingResult.sql", bindingResult);
+			model.addAttribute("titlePage", "Editar Sentencia");
+			return "sql/editar_sentencia";
+		}
+
+		super.service.update(sql, con);
+
+		return "redirect:/sql/list";
+	}
+
+
+	@GetMapping("/delete/{con}")
+	public String deleteSQLStatement(@PathVariable("con") Long con) {
+
+		NoutSQLStatement sql = this.service.findById(con).orElseThrow(EntityNotFoundException::new);
+
+		this.service.delete(sql);
+
+		return "redirect:/sql/list";
+	}
+
+	private void checkCustomErrors(NoutSQLStatement sql, BindingResult result) {
+
+		Map<String, String> sqls = this.service.getAllSqlStatementByActive();
+		for (Map.Entry<String, String> entry : sqls.entrySet()) {
+			if (entry.getKey().equals(sql.getKey())) {
+				result.rejectValue("key", "error.key", "La clave ya existe");
+			}
+		}
+
+		if (sql.getValue().isEmpty()) {
+			result.addError(new FieldError("sql", "value", "El campo no puede estar vacío"));
+		}
+	}
 }
