@@ -117,15 +117,6 @@
 		reglaDiv.style.display = 'contents';
 		myCodeMirror.setValue(sql.value); // Actualizar el contenido del CodeMirror
 	}
-
-	function showRegla(regla) {
-		reglaDiv.style.display = 'contents';
-		const rtp = /*[[${reglasTipoPrestacion}]]*/ [];
-		const tiposPrestaciones = rtp.filter(rtp => rtp.noutRegles.con === regla.con && rtp.active);
-
-		prestaciones.innerHTML = tiposPrestaciones.map(tp => `<li>${tp.noutTipprs.dec}</li>`).join('');
-		myCodeMirror.setValue(regla.script); // Actualizar el contenido del CodeMirror
-	}
 </script>
 <script th:src="@{/js/custom_index.js}"></script>
 <script th:src="@{/js/codemirror.min.js}"></script>
