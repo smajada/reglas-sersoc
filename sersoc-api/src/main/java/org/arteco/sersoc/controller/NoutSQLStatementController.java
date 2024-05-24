@@ -32,7 +32,7 @@ public class NoutSQLStatementController extends AbstractCrudController<
     @GetMapping("/list")
     public String ListSqlStatement(Model model, @RequestParam(name = "page", defaultValue = "0") int page) {
 
-        Pageable pageRequest = PageRequest.of(page, 1);
+        Pageable pageRequest = PageRequest.of(page, 2);
         PageDTO<NoutSQLStatement> sqlStatementPageDto2 = super.service.findByActiveTrue(pageRequest);
 
         model.addAttribute("totalPages", sqlStatementPageDto2.getTotalPages());

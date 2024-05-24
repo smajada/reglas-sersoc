@@ -62,7 +62,7 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<NoutRe
     @GetMapping("/list")
     public String listAll(Model model, @RequestParam(name = "page", defaultValue = "0") int page) {
 
-        Pageable pageRequest = PageRequest.of(page, 1);
+        Pageable pageRequest = PageRequest.of(page, 2);
         Iterable<ReglaTipoPrestacionEntity> reglasTipoPrestacionPage = reglaTipoPrestacionService.findAll();
         Page<NoutRegles> reglesPage = this.service.findByActiveTrue(pageRequest);
 
