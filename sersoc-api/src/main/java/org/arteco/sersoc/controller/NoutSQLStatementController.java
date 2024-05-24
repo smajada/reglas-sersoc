@@ -38,7 +38,7 @@ public class NoutSQLStatementController extends AbstractCrudController<
         model.addAttribute("totalPages", sqlStatementPageDto2.getTotalPages());
         model.addAttribute("sentences", sqlStatementPageDto2.getContent());
         model.addAttribute("currentPage", page);
-        model.addAttribute("titlePage", "SQL ");
+        model.addAttribute("titlePage", "SQL");
 
         return "sql/sql_statement";
     }
