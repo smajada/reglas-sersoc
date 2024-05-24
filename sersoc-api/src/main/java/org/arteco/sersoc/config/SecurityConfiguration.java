@@ -69,7 +69,6 @@ public class SecurityConfiguration {
                                 .requestMatchers("/api/sql/**", "/cache/**").hasRole("API")
                                 .requestMatchers("/regla-tipo-prestacion/list", "/sql/list").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/regla-tipo-prestacion/**", "/sql/**").hasRole("ADMIN")
-                                //.requestMatchers("/sql/**").hasAnyRole("USER", "ADMIN")
                                 .anyRequest().authenticated())
                 .formLogin(httpSecurityFormLoginConfigurer ->
                         httpSecurityFormLoginConfigurer.loginPage("/login").permitAll().successForwardUrl("/home"))

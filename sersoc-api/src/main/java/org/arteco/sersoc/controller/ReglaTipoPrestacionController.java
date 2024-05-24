@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import org.arteco.sersoc.base.AbstractCrudController;
-import org.arteco.sersoc.dto.PageDTO;
 import org.arteco.sersoc.dto.ReglaDTO;
 import org.arteco.sersoc.dto.validation.DateValidationDTO;
 import org.arteco.sersoc.dto.validation.GenericValidationDTO;
@@ -30,9 +29,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 @Controller
 @RequestMapping("/regla-tipo-prestacion")
@@ -46,7 +42,13 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<NoutRe
     private final NoutSQLStatementService noutSQLStatementService;
     private final ReglaTipoPrestacionService reglaTipoPrestacionService;
 
-    public ReglaTipoPrestacionController(NoutTipprsService noutTipprsService, NoutReglesService service, NoutPrestacionsService noutPrestacionsService, NashornService nashornService, DataService dataService, NoutSQLStatementService noutSQLStatementService, ReglaTipoPrestacionService reglaTipoPrestacionService) {
+    public ReglaTipoPrestacionController(NoutTipprsService noutTipprsService,
+                                         NoutReglesService service,
+                                         NoutPrestacionsService noutPrestacionsService,
+                                         NashornService nashornService,
+                                         DataService dataService,
+                                         NoutSQLStatementService noutSQLStatementService,
+                                         ReglaTipoPrestacionService reglaTipoPrestacionService) {
         super(service);
         this.noutTipprsService = noutTipprsService;
         this.noutPrestacionsService = noutPrestacionsService;
@@ -60,11 +62,9 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<NoutRe
     @GetMapping("/list")
     public String listAll(Model model, @RequestParam(name = "page", defaultValue = "0") int page) {
 
-
         Pageable pageRequest = PageRequest.of(page, 1);
         Iterable<ReglaTipoPrestacionEntity> reglasTipoPrestacionPage = reglaTipoPrestacionService.findAll();
         Page<NoutRegles> reglesPage = this.service.findByActiveTrue(pageRequest);
-
 
         model.addAttribute("reglas", reglesPage);
         model.addAttribute("totalPages", reglesPage.getTotalPages());
@@ -197,8 +197,8 @@ public class ReglaTipoPrestacionController extends AbstractCrudController<NoutRe
     public String validate(Model model, @PathVariable String prestacionTipID, @PathVariable Long prestacionID) {
 
         List<GenericValidationDTO> genericValidationDTO = validateTipoPrestacion(prestacionTipID,
-                                                                                 prestacionID,
-                                                                                 this.service, noutPrestacionsService);
+                prestacionID,
+                this.service, noutPrestacionsService);
 
         List<GenericValidationDTO> validationError = genericValidationDTO.stream()
                 .filter(validation -> validation.getType().equals("ERROR"))
