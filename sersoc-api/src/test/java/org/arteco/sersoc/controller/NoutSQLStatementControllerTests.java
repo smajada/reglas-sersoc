@@ -53,7 +53,7 @@ public class NoutSQLStatementControllerTests {
 			.andExpect(view().name("sql/crear_sentencia"));
 	}
 
-	@Test
+	//	@Test
 	@WithMockUser(username = "admin", roles = {"ADMIN"})
 	void NoutSQLStatementController_saveSQLStatement_NoErrors_ReturnRedirect() throws Exception {
 

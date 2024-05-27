@@ -24,7 +24,7 @@ public class LoginControllerTests {
 	}
 
 	@Test
-	public void testLogin() {
+	public void loginController_index_returnLoginPage() {
 
 		String viewName = loginController.login(model);
 		assert viewName.equals("autenticate/login");
@@ -32,7 +32,7 @@ public class LoginControllerTests {
 	}
 
 	@Test
-	public void testIndex() {
+	public void loginController_index_returnIndexPage() {
 
 		String viewName = loginController.index(model);
 		assert viewName.equals("autenticate/home");
@@ -40,7 +40,7 @@ public class LoginControllerTests {
 	}
 
 	@Test
-	public void testAccessDenied() {
+	public void loginController_accessDenied_returnAccessDeniedPage() {
 
 		String viewName = loginController.accessDenied(model);
 		assert viewName.equals("error/access-denied");
@@ -48,7 +48,7 @@ public class LoginControllerTests {
 	}
 
 	@Test
-	public void testNotFound() {
+	public void logincControlleR_notFound_returnNotFoundPage() {
 
 		String viewName = loginController.notFound(model);
 		assert viewName.equals("error/not-found");
