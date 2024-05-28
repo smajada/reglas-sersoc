@@ -2,11 +2,8 @@ package org.arteco.sersoc.service;
 
 import org.arteco.sersoc.base.AbstractCrudService;
 import org.arteco.sersoc.model.entities.NoutPrestacions;
-import org.arteco.sersoc.model.entities.NoutTipprs;
 import org.arteco.sersoc.repository.NoutPrestacionsRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class NoutPrestacionsService extends AbstractCrudService<NoutPrestacions, Long, NoutPrestacionsRepository> {

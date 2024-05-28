@@ -196,7 +196,38 @@
 </section>
 
 
+<script th:inline="javascript">
+	const prestaciones = document.getElementById('prestaciones');
+	const reglaDiv = document.getElementById('regla-container');
+	const codeRegla = document.getElementById('regla');
+	let myCodeMirror; // Variable global para guardar la instancia de CodeMirror
+
+	// Función para inicializar CodeMirror
+	function initializeCodeMirror() {
+		myCodeMirror = CodeMirror.fromTextArea(codeRegla, {
+			lineNumbers: true,
+			lineWrapping: true,
+			mode: 'javascript',
+			styleActiveLine: true,
+			readOnly: true
+		});
+	}
+
+	// Llamar a la inicialización de CodeMirror cuando la página se carga
+	window.onload = initializeCodeMirror;
+
+	function showRegla(regla) {
+		reglaDiv.style.display = 'contents';
+		const rtp = /*[[${reglasTipoPrestacion}]]*/ [];
+		const tiposPrestaciones = rtp.filter(rtp => rtp.noutRegles.con === regla.con && rtp.active);
+
+		prestaciones.innerHTML = tiposPrestaciones.map(tp => `<li>${tp.noutTipprs.dec}</li>`).join('');
+		myCodeMirror.setValue(regla.script); // Actualizar el contenido del CodeMirror
+	}
+
+</script>
+
+<script th:src="@{/js/pack-codemirror.js}"></script>
 <script th:src="@{/js/custom_index.js}"></script>
-<script th:src="@{/js/codemirror.min.js}"></script>
 </body>
 </html>

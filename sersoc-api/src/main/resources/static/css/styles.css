@@ -18,34 +18,34 @@
 }
 
 #btn-edit {
-    font-size: 1.1em;
+	font-size: 1.1em;
 
-    :hover {
-        background-color: var(--warning);
-    }
+	:hover {
+		background-color: var(--warning);
+	}
 }
 
 #btn-info {
-    font-size: 1.1em;
+	font-size: 1.1em;
 
-    :hover {
-        background-color: var(--info);
-    }
+	:hover {
+		background-color: var(--info);
+	}
 }
 
-    .active-link {
-        position: relative;
-    }
+.active-link {
+	position: relative;
+}
 
-    .active-link::after {
-        content: '';
-        position: absolute;
-        left: 0;
-        bottom: -2px; /* Ajusta este valor según tu preferencia para el grosor del borde */
-        width: 100%;
-        height: 1px; /* Grosor del borde */
-        background-color: var(--dark); /* Color del borde */
-    }
+.active-link::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	bottom: -2px; /* Ajusta este valor según tu preferencia para el grosor del borde */
+	width: 100%;
+	height: 1px; /* Grosor del borde */
+	background-color: var(--dark); /* Color del borde */
+}
 
 .ml-wide{
     margin-left: 10vw;

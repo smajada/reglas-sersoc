@@ -6,7 +6,6 @@ import org.arteco.sersoc.dto.PageDTO;
 import org.arteco.sersoc.model.entities.NoutSQLStatement;
 import org.arteco.sersoc.repository.NoutSQLStatementRepository;
 import org.arteco.sersoc.service.NoutSQLStatementService;
-import org.arteco.sersoc.utils.AuthenticateUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -32,21 +31,21 @@ public class NoutSQLStatementController extends AbstractCrudController<
 
     @GetMapping("/list")
     public String ListSqlStatement(Model model, @RequestParam(name = "page", defaultValue = "0") int page) {
-        AuthenticateUtils.addAuthenticatedAttribute(model);
-        Pageable pageRequest = PageRequest.of(page, 10);
+
+        Pageable pageRequest = PageRequest.of(page, 2);
         PageDTO<NoutSQLStatement> sqlStatementPageDto2 = super.service.findByActiveTrue(pageRequest);
 
         model.addAttribute("totalPages", sqlStatementPageDto2.getTotalPages());
         model.addAttribute("sentences", sqlStatementPageDto2.getContent());
         model.addAttribute("currentPage", page);
-        model.addAttribute("titlePage", "SQL ");
+        model.addAttribute("titlePage", "SQL");
 
         return "sql/sql_statement";
     }
 
     @GetMapping("/crear")
     public String createSqlSentence(Model model) {
-        AuthenticateUtils.addAuthenticatedAttribute(model);
+
         NoutSQLStatement sql = new NoutSQLStatement();
         model.addAttribute("sql", sql);
         model.addAttribute("titlePage", "Crear Sentencia");
@@ -70,7 +69,7 @@ public class NoutSQLStatementController extends AbstractCrudController<
 
     @GetMapping("/editar/{con}")
     public String editSQLStatement(@PathVariable("con") Long con, Model model) {
-        AuthenticateUtils.addAuthenticatedAttribute(model);
+
         NoutSQLStatement sql = this.service.findById(con).orElseThrow(EntityNotFoundException::new);
 
         model.addAttribute("sql", sql);
@@ -85,7 +84,7 @@ public class NoutSQLStatementController extends AbstractCrudController<
                                      BindingResult bindingResult,
                                      Model model) {
 
-        if (sql.getValue().isEmpty()){
+        if (sql.getValue().isEmpty()) {
             bindingResult.addError(new FieldError("sql", "value", "El campo no puede estar vacío"));
         }
 
@@ -102,7 +101,6 @@ public class NoutSQLStatementController extends AbstractCrudController<
 
         return "redirect:/sql/list";
     }
-
 
 
     @GetMapping("/delete/{con}")
@@ -123,7 +121,7 @@ public class NoutSQLStatementController extends AbstractCrudController<
             }
         }
 
-        if (sql.getValue().isEmpty()){
+        if (sql.getValue().isEmpty()) {
             result.addError(new FieldError("sql", "value", "El campo no puede estar vacío"));
         }
     }

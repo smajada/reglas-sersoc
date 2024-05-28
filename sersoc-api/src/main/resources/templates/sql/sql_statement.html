@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
+	  xmlns:th="http://www.thymeleaf.org"
 >
 <head th:replace="~{layout/layout :: head}"></head>
 <body>
-<nav th:replace="~{layout/layout :: navbar}" class="nav"></nav>
+<nav class="nav" th:replace="~{layout/layout :: navbar}"></nav>
 
 <section class="h-100 bg-light ">
     <div class="h-100 bg-white ml-wide">
@@ -119,8 +119,35 @@
     </div>
 </section>
 
+<script th:inline="javascript">
+	const reglaDiv = document.getElementById('sentencia-container');
+	const codeSentencia = document.getElementById('sentencia');
+	let myCodeMirror; // Variable global para guardar la instancia de CodeMirror
 
-<script th:src="@{/js/custom_index.js}"></script>
+	// Función para inicializar CodeMirror
+	function initializeCodeMirror() {
+		myCodeMirror = CodeMirror.fromTextArea(codeSentencia, {
+			lineNumbers: true,
+			lineWrapping: true,
+			mode: 'sql',
+			styleActiveLine: true,
+			readOnly: true
+		});
+	}
+
+	// Llamar a la inicialización de CodeMirror cuando la página se carga
+	window.onload = initializeCodeMirror;
+
+	// Función para mostrar las sentencias
+	function showSql(sql) {
+		const sentences = /*[[${sentences}]]*/ [];
+		const sentence = sentences.find(s => s.con === sql.con);
+
+		reglaDiv.style.display = 'contents';
+		myCodeMirror.setValue(sql.value); // Actualizar el contenido del CodeMirror
+	}
+</script>
+<script th:src="@{/js/custom_index_sql.js}"></script>
 <script th:src="@{/js/codemirror.min.js}"></script>
 </body>
 </html>
