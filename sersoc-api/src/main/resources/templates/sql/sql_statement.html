@@ -39,38 +39,19 @@
 
                                 <td th:text="${sentence.key}"></td>
                                 <td class="d-flex justify-content-evenly">
-                                    <a type="button" class="btn btn-outline-info" id="btn-info" data-bs-toggle="modal"
-                                       th:data-bs-target="'#modal-' + ${sentence.con}">
+                                    <a class="btn btn-outline-info botonesAcciones" id="btn-info" th:onclick="showSql([[${sentence}]])"
+                                    type="button">
                                         +
                                     </a>
                                     <a th:href="@{/sql/editar/{con}(con=${sentence.con})}"
-                                       class="btn btn-outline-warning" id="btn-edit">✎</a>
+                                       class="btn btn-outline-warning botonesAcciones" id="btn-edit">✎</a>
                     
                                     <a th:href="@{/sql/delete/{con}(con=${sentence.con})}"
-                                       class="btn btn-outline-danger" id="btn-delete">
+                                       class="btn btn-outline-danger botonesAcciones" id="btn-delete">
                                         ✕
                                     </a>
                                 </td>
-                                <!--             Modal-->
-                                <div class="modal fade" th:id="'modal-' + ${sentence.con}" tabindex="-1"
-                                th:aria-labelledby="'masInfo-' + ${sentence.con}" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered modal-lg">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" th:id="'masInfo-' + ${sentence.con}">Más información</h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <h3>Sentencia</h3>
-                                            <textarea class="form-control" th:id="'sentence-'+${sentence.con}" aria-label="sentence"
-                                                        th:text="${sentence.value}" readonly></textarea>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                    </div>
-                                </div>
+                                
                                 
                             </tr>
 
@@ -107,11 +88,15 @@
                     </div>
                 </div>
                 <div class="bg-light p-4 p-md-5 rounded-0 col-12 col-md-12 col-lg-4 col-xl-5 col-xxl-5">
-                    <div class="pt-5">
-                        <h2 class="fw-bolder h3 mb-3">Placeholder Instrucciones</h2>
-                        <h3 class="fw-bolder h6 mx-6">1. Subtítulo</h3>
-                        <p>Prueba de texto de ejemplo, tutorial para demostrar cómo funciona la aplicación.</p>
-                        <textarea class="form-control rounded-0" readonly > Esto es una prueba</textarea>
+                    <div id="sentencia-container" style="display: none">
+                        <div class="pt-5">
+                            <h3 class="fw-bolder h3 mb-3">Sentencia</h3>
+                            
+                            <div class="col-12">
+                                <textarea aria-label="regla" class="form-control" id="sentencia"
+                                ></textarea>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

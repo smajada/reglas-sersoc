@@ -44,50 +44,19 @@
                                 <td th:text="${#dates.format(regla.datIni,'dd/MM/yyyy' )}"></td>
                                 <td th:text="${#dates.format(regla.datFin,'dd/MM/yyyy' )}"></td>
                                 <td class="d-flex justify-content-evenly">
-                                    <a type="button" class="btn btn-outline-info" id="btn-info" data-bs-toggle="modal"
-                                    th:data-bs-target="'#modal-' + ${regla.con}">
+                                    <a class="btn btn-outline-info botonesAcciones" id="btn-info" th:onclick="showRegla([[${regla}]])"
+                                     type="button">
                                         +
                                     </a>
                                     <a th:href="@{/regla-tipo-prestacion/editar/{reglaId}(reglaId=${regla.con})}"
-                                    class="btn btn-outline-warning" id="btn-edit">✎</a>
+                                    class="btn btn-outline-warning botonesAcciones" id="btn-edit">✎</a>
 
                                     <a th:href="@{/regla-tipo-prestacion/delete/{reglaId}(reglaId=${regla.con})}"
-                                    class="btn btn-outline-danger" id="btn-delete">
+                                    class="btn btn-outline-danger botonesAcciones" id="btn-delete">
                                         ✕
                                     </a>
                                 </td>
 
-                                <!--             Modal-->
-                                <div class="modal fade" th:id="'modal-' + ${regla.con}" tabindex="-1"
-                                    th:aria-labelledby="'masInfo-' + ${regla.con}" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered modal-lg">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h1 class="modal-title fs-5" th:id="'masInfo-' + ${regla.con}">Más información</h1>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-
-                                                <h3>Prestaciones</h3>
-                                                <ul th:each="reglaTipoPrestacion : ${reglasTipoPrestacion}"
-
-                                                >
-                                                    <li
-                                                            th:if="${reglaTipoPrestacion.noutRegles.con == regla.con && reglaTipoPrestacion.getActive() == true}"
-                                                            th:text="${reglaTipoPrestacion.noutTipprs.dec}"
-                                                    ></li>
-                                                </ul>
-
-                                                <h3>Script</h3>
-                                                <textarea class="form-control" th:id="'regla-'+${regla.con}" aria-label="regla"
-                                                        th:text="${regla.script}"></textarea>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </tr>
 
                             </tbody>
@@ -121,80 +90,26 @@
                         </nav>
                     </div>
                 </div>
-                <div class="bg-light p-4 p-md-5 rounded-0 col-12 col-md-12 col-lg-4 col-xl-5 col-xxl-5">
-                    <div class="pl-4 w-100">
-                        <div class="row justify-content-md-center align-items-stretch  w-100">
-                            <div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-7 ">
-                                <div class="p-4 p-md-5 rounded-0 pt-5 containter">
-                                    <form >
-                                        <div class=" row gy-3 gy-md-4 overflow-hidden justify-content-center fs-6">
-                                            <div class=" row col-12 mx-0 px-0">
-                                                <div class="my-2 mx-0">
-                                                    <label class="form-label" for="descripcion">Descripción</label>
-                                                    <input aria-label="descripcion" class="form-control rounded-0" id="descripcion"
-                                                       name="descripcion"
-                                                       placeholder="Descripción" required
-                                                       type="text">
-                                                    <p class="text-danger" ></p>
-                                                </div>
-                                            </div>
-                                            <div class="row col-12 px-0">
-                                                <div class="col-6 my-2 mx-0">
-                                                    <label class="form-label" for="fecha_inicio">Fecha de inicio</label>
-                                                    <input class="form-control rounded-0" id="fecha_inicio" name="fecha_inicio"
-                                                          
-                                                           type="date">
-                                                    <p class="text-danger" 
-                                                      ></p>
-                                                </div>
-                                                <div class="col-6 my-2 mx-0">
-                                                    <label class="form-label" for="fecha_fin">Fecha de finalización</label>
-                                                    <input class="form-control rounded-0" id="fecha_fin" name="fecha_fin" 
-                                                        type="date">
-                                                    <p class="text-danger"
-                                                       ></p>
-                                                </div>
-            
-                                            </div>
-            
-                                            <div class="row col-12 px-0">
-                                                <div class="my-2 mx-0">
-                                                    <label class="form-label
-                                                    " for="tipo_prestacion">Tipo de prestación</label>
-                                                    <select class="form-select rounded-0" id="tipo_prestacion" multiple name="tipoPrestacion"
-                                                        required>
-                                                    <option 
-                                                           
-                                                           ></option>
-                                                    </select>
-                                                </div>
-                                            </div>
-            
-                                            <div class="col-12">
-                                                <p class="text-danger" 
-                                                  ></p>
-                                                <label class="form-label mb-2" for="regla">Script</label>
-                                                <textarea aria-label="regla" class="form-control rounded-0" id="regla"
-                                                          ></textarea>
-                                            </div>
-            
-                                            <div class="col-6">
-                                                <div class="d-grid">
-                                                    <button class="btn btn-secondary rounded-0" type="submit">Enviar</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
+                <div class="bg-light p-4 p-md-5 rounded-0 col-12 col-md-12 col-lg-4 col-xl-5 col-xxl-5 pt-5">
+                            <div id="regla-container" style="display: none" >
+                                <div class="pt-5">
+                                    <h3 class="fw-bolder h3 mb-3">Prestaciones</h3>
+                                    <ul id="prestaciones">
+                            
+                                    </ul>
+                            
+                                    <div class="col-12">
+                                        <label class="form-label mb-2" for="regla">Script</label>
+                                        <textarea aria-label="regla" class="form-control" id="regla"
+                                        ></textarea>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-
 
 <script th:inline="javascript">
 	const prestaciones = document.getElementById('prestaciones');
@@ -226,6 +141,7 @@
 	}
 
 </script>
+
 
 <script th:src="@{/js/pack-codemirror.js}"></script>
 <script th:src="@{/js/custom_index.js}"></script>

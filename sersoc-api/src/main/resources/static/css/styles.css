@@ -58,3 +58,24 @@ html{
 nav{
     font-size: 1.2rem !important;
 }
+
+.CodeMirror-wrap pre.CodeMirror-line, .CodeMirror-wrap pre.CodeMirror-line-like {
+	padding-left: 2.5em !important; /* Ajusta este valor según sea necesario */
+}
+
+html, body{
+    height:100%;
+    width:100%;
+}
+section{
+	height: 100% !important;
+}
+
+.botonesAcciones{
+	width: 30px;
+	height: 30px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+}
