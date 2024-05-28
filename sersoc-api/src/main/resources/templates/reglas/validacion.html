@@ -3,90 +3,109 @@
       xmlns:th="http://www.thymeleaf.org"
 >
 <head th:replace="~{layout/layout :: head}"></head>
-<body>
+<body class="h-100 bg-light">
 <nav class="nav" th:replace="~{layout/layout :: navbar}"></nav>
 
-<section class="container mt-4 p-5">
-    <div class="row mb-3" th:if="${!validationError.isEmpty()}">
-        <h2 class="text-danger text-center"> Prestación no validada </h2>
-
-        <h3>Errores en la validación</h3>
-        <p class="text-muted">Corrija los errores para continuar</p>
-
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th scope="col"></th>
-                <th scope="col">Mensaje</th>
-            </tr>
-            </thead>
-            <tbody>
-            <!-- Itera sobre getError() -->
-            <tr th:each="genericValidatio : ${validationError}">
-                <td class="col-1 py-3">
-                    <span class="badge bg-danger">
-                        <img alt="check" th:src="@{/img/ban.svg}">
-                    </span>
-                </td>
-                <td class="py-3" th:text="${genericValidatio.getMessage()}"></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <h3>Reglas validadas</h3>
-    <p class="text-muted">Las siguientes reglas han sido validadas con éxito</p>
-
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th scope="col"></th>
-            <th scope="col">Mensaje</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="genericValidatio : ${validationSuccess}">
-            <td class="col-1 py-3">
-                    <span class="badge bg-success">
-                        <img alt="check" th:src="@{/img/check-lg.svg}">
-                    </span>
-            </td>
-            <td class="py-3" th:text="${genericValidatio.getMessage()}"></td>
-        </tr>
-        </tbody>
-    </table>
-
-    <div th:if="${!validationWarning.isEmpty()}">
-        <div class="row mb-3">
-            <h3>A punto de caducar</h3>
-            <p class="text-muted">Las siguientes reglas están a punto de caducar</p>
-        </div>
-
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th scope="col"></th>
-                <th scope="col">Mensaje</th>
-            </tr>
-            </thead>
-            <tbody>
-            <!-- Itera sobre getWarning() -->
-            <tr th:each="genericValidatio : ${validationWarning}">
-                <td class="col-1 py-3">
-                        <span class="badge bg-warning">
-                            <img alt="check" th:src="@{/img/exclamation-triangle.svg}">
-                        </span>
-                </td>
-                <td class="py-3" th:text="${genericValidatio.getMessage()}"></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="row my-3 justify-content-center" th:if="${validationError.isEmpty()}">
-        <div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-6 d-flex justify-content-center">
-            <a class="btn btn-secondary col-4" th:href="@{/regla-tipo-prestacion/list}" type="button">Finalizar
-                validación</a>
+<section class="h-100 bg-light">
+    <div class="bg-white ml-wide h-100">
+        <div class="pl-4 w-100 h-100">
+            <div class="row justify-content-md-center align-items-stretch h-100  w-100">
+                <div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-7 ">
+                    <div class="p-4 p-md-5 rounded-0 pt-5 containter">
+                        <div class="row" th:if="${!validationError.isEmpty()}">
+                            <h2 class="text-danger text-center h2 fw-bolder"> Prestación no validada </h2>
+                        </div>
+                        <div class="row pt-5">  
+                            <h3 class="h2 fw-bolder">Reglas validadas</h3>
+                            <p class="text-muted">Las siguientes reglas han sido validadas con éxito</p>
+                        
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col">Mensaje</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="genericValidatio : ${validationSuccess}">
+                                    <td class="col-1 p-3">
+                                            <span class="badge bg-success">
+                                                <img alt="check" th:src="@{/img/check-lg.svg}">
+                                            </span>
+                                    </td>
+                                    <td class="py-3" th:text="${genericValidatio.getMessage()}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        
+                            <div th:if="${!validationWarning.isEmpty()}">
+                                <div class="row mb-3">
+                                    <h3 class="h2 fw-bolder">A punto de caducar</h3>
+                                    <p class="text-muted">Las siguientes reglas están a punto de caducar</p>
+                                </div>
+                        
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">Mensaje</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <!-- Itera sobre getWarning() -->
+                                    <tr th:each="genericValidatio : ${validationWarning}">
+                                        <td class="col-1 py-3">
+                                                <span class="badge bg-warning">
+                                                    <img alt="check" th:src="@{/img/exclamation-triangle.svg}">
+                                                </span>
+                                        </td>
+                                        <td class="py-3" th:text="${genericValidatio.getMessage()}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        
+                            <div class="row my-3 justify-content-center" th:if="${validationError.isEmpty()}">
+                                <div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-6 d-flex justify-content-center">
+                                    <a class="btn btn-primary col-4 rounded-0" th:href="@{/regla-tipo-prestacion/list}" type="button">Finalizar
+                                        validación</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-light p-4 p-md-5 rounded-0 col-12 col-md-12 col-lg-4 col-xl-5 col-xxl-5 h-100">
+                    <div class="row" th:if="${!validationError.isEmpty()}">
+                        <h2 class="text-danger text-center h2 fw-bolder"> Errores </h2>
+                    </div>
+                    <div class="pt-5">
+                        <div class="row mb-3" th:if="${!validationError.isEmpty()}">
+                            <h3 class="h2 fw-bolder">Errores en la validación</h3>
+                            <p class="text-muted">Corrija los errores para continuar</p>
+                    
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col">Mensaje</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- Itera sobre getError() -->
+                                <tr th:each="genericValidatio : ${validationError}">
+                                    <td class="col-1 py-3">
+                                        <span class="badge bg-danger">
+                                            <img alt="check" th:src="@{/img/ban.svg}">
+                                        </span>
+                                    </td>
+                                    <td class="py-3" th:text="${genericValidatio.getMessage()}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>

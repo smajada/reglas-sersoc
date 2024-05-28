@@ -13,11 +13,11 @@
         <div class="container">
             <div class="row justify-content-md-center">
                 <div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-6">
-                    <div class="bg-white p-4 p-md-5 rounded shadow-sm">
+                    <div class="bg-white p-4 p-md-5 rounded-0 shadow-sm">
                         <div class="row">
                             <div class="col-12">
                                 <div class="mb-5">
-                                    <h2 th:text="${tipoPrestacion.coa}"></h2>
+                                    <h2 class="h2 fw-bolder" th:text="${tipoPrestacion.coa}"></h2>
                                 </div>
                             </div>
                         </div>
@@ -25,8 +25,8 @@
 
                             <div class="row gy-3 gy-md-4 overflow-hidden justify-content-center">
                                 <div class="col-12">
-                                    <h3 th:text="${tipoPrestacion.dec}"></h3>
-                                    <p th:text="${tipoPrestacion.dem}"></p>
+                                    <h3 class="h2 fw-bolder" th:text="${tipoPrestacion.dec}"></h3>
+                                    <p class="fs-6 fw-normal text-secondary m-0" th:text="${tipoPrestacion.dem}"></p>
                                 </div>
                             </div>
                         </div>
@@ -35,7 +35,7 @@
             </div>
             <div class="row justify-content-md-center my-3">
                 <div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-6 d-flex justify-content-end">
-                    <a class="btn btn-secondary col-2" type="button" th:href="@{/regla-tipo-prestacion/validation/{prestacionTipID}/{prestacionID}(prestacionTipID=${tipoPrestacion.coa}, prestacionID=${prestacion.con})}">Validar</a>
+                    <a class="btn btn-primary col-2 rounded-0" type="button" th:href="@{/regla-tipo-prestacion/validation/{prestacionTipID}/{prestacionID}(prestacionTipID=${tipoPrestacion.coa}, prestacionID=${prestacion.con})}">Validar</a>
                 </div>
             </div>
         </div>
