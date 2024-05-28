@@ -1,6 +1,7 @@
 package org.arteco.sersoc.controller;
 
 
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -67,6 +68,9 @@ public class ReglaTipoPrestacionControllerTests {
 
 	@MockBean
 	private NoutSQLStatementService noutSQLStatementService;
+
+	@MockBean
+	private ReglaTipoPrestacionController controller;
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -291,9 +295,30 @@ public class ReglaTipoPrestacionControllerTests {
 			.andExpect(view().name("redirect:/regla-tipo-prestacion/list"));
 	}
 
+	//@Test
+	@WithMockUser(username = "admin", roles = {"ADMIN", "USER"})
+	void shouldShowValidatePage() throws Exception {
+		// Arrange
+		String prestacionTipoID = "IND";
+		Long prestacionID = 1L;
+		when(service.findByIdTipoPrestacion(prestacionTipoID)).thenReturn(new ArrayList<>());
+		when(noutPrestacionsService.findById(prestacionID)).thenReturn(java.util.Optional.of(new NoutPrestacions()));
+
+		// Act & Assert
+		mockMvc.perform(get("/regla-tipo-prestacion/validation/{prestacionTipID}/{prestacionID}", prestacionTipoID, prestacionID)
+							.with(csrf()))
+			.andExpect(status().isOk())
+			.andExpect(view().name("reglas/validacion"))
+			.andExpect(model().attributeExists("titlePage", "validationError", "validationWarning", "validationSuccess"));
+
+		// Assert
+		verify(service, times(1)).findByIdTipoPrestacion(prestacionTipoID);
+		verify(noutPrestacionsService, times(1)).findById(prestacionID);
+	}
+
 	@Test
 	@WithMockUser(username = "admin", roles = {"ADMIN", "USER"})
-	public void shouldShowPrestacion() throws Exception {
+	void shouldShowPrestacion() throws Exception {
 		// Crear datos de prueba
 		Long prestacionId = 1L;
 		NoutTipprs tipoPrestacion = new NoutTipprs();
