@@ -9,46 +9,51 @@
 <nav th:replace="~{layout/layout :: navbar}"></nav>
 
 <section class="h-100 bg-light">
-    <div class="bg-light py-3 py-md-5">
-        <div class="container">
-            <div class="row justify-content-md-center">
-                <div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-6">
-                    <div class="bg-white p-4 p-md-5 rounded shadow-sm">
-                        <div class="row">
+    <div class="bg-white ml-wide">
+        <div class="pl-4 w-100">
+            <div class="row justify-content-md-center align-items-stretch  w-100">
+                <div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-7 ">
+                    <div class="p-4 p-md-5 rounded-0 pt-5 containter">
+                        <div class="row pt-5">
                             <div class="col-12">
                                 <div class="mb-5">
-                                    <h2 class="h3">Sentencias SQL</h2>
+                                    <h1 class="h2 fw-bolder">Sentencias</h1>
+                                    <h3 class="fs-6 fw-normal text-secondary m-0">Inserta los detalles para crear la
+                                        sentencia SQL</h3>
                                 </div>
                             </div>
                         </div>
                         <form
-                                method="post" th:action="@{/sql/save/{con}(con=${sql.con})}" th:object="${sql}">
-
-                            <div class="row gy-3 gy-md-4 overflow-hidden justify-content-center">
-                                <div class="col-12">
-                                    <label class="form-label" for="key">KEY</label>
-                                    <input aria-label="key" class="form-control" id="key" name="key" placeholder="key"
-                                           th:field="*{key}" type="text">
-                                    <span class="text-danger"
-                                          style="font-size: 80%;"
-                                          th:if="${#fields.hasErrors('key')}">
+                            method="post" th:action="@{/sql/save/{con}(con=${sql.con})}" th:object="${sql}">
+                            <div class=" row gy-3 gy-md-4 overflow-hidden justify-content-center fs-6">
+                                <div  class=" row col-12 mx-0 px-0">
+                                    <div class="my-2 mx-0">
+                                        <label class="form-label" for="key">KEY</label>
+                                        <input aria-label="key" class="form-control rounded-0" id="key" name="key" placeholder="key"
+                                            th:field="*{key}" type="text">
+                                        <span class="text-danger"
+                                            style="font-size: 80%;"
+                                            th:if="${#fields.hasErrors('key')}">
                                         <span th:errors="*{key}"></span>
-                                    </span>
+                                        </span>
+                                    </div>
                                 </div>
 
-                                <div class="col-12">
-                                    <label class="form-label" for="descripcion">Descripción</label>
-                                    <input aria-label="descripcion"
-                                           class="form-control"
-                                           id="descripcion"
-                                           name="descripcion"
-                                           placeholder="descripcion"
-                                           th:field="*{description}" type="text">
-                                    <span class="text-danger"
-                                          style="font-size: 80%;"
-                                          th:if="${#fields.hasErrors('description')}">
-                                        <span th:errors="*{description}"></span>
-                                    </span>
+                                <div class="row col-12 px-0">
+                                    <div class="col-6 my-2 mx-0">
+                                        <label class="form-label" for="descripcion">Descripción</label>
+                                        <input aria-label="descripcion"
+                                            class="form-control rounded-0"
+                                            id="descripcion"
+                                            name="descripcion"
+                                            placeholder="descripcion"
+                                            th:field="*{description}" type="text">
+                                        <span class="text-danger"
+                                            style="font-size: 80%;"
+                                            th:if="${#fields.hasErrors('description')}">
+                                            <span th:errors="*{description}"></span>
+                                        </span>
+                                    </div> 
                                 </div>
 
                                 <div class="col-12">
@@ -60,7 +65,7 @@
                                     ></p>
                                     <textarea
                                             aria-label="sentence"
-                                            class="form-control"
+                                            class="form-control rounded-0"
                                             id="sentence"
                                             th:field="*{value}">
                                     </textarea>
@@ -68,17 +73,26 @@
 
                                 <div class="col-6">
                                     <div class="d-grid">
-                                        <button class="btn btn-primary" type="submit">Enviar</button>
+                                        <button class="btn btn-primary rounded-0" type="submit">Enviar</button>
                                     </div>
                                 </div>
                             </div>
                         </form>
                     </div>
                 </div>
+                <div class="bg-light p-4 p-md-5 rounded-0 col-12 col-md-12 col-lg-4 col-xl-5 col-xxl-5">
+                    <div class="pt-5">
+                        <h2 class="fw-bolder h3 mb-3">Placeholder Instrucciones</h2>
+                        <h3 class="fw-bolder h6 mx-6">1. Subtítulo</h3>
+                        <p>Prueba de texto de ejemplo, tutorial para demostrar cómo funciona la aplicación.</p>
+                        <textarea class="form-control rounded-0" readonly > Esto es una prueba</textarea>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
+
 
 <!-- CodeMirror JavaScript -->
 <script th:src="@{/js/pack-codemirror.js}"></script>
