@@ -22,11 +22,11 @@
 <body>
 <!-- Navbar -->
 <nav th:fragment="navbar" class="navbar navbar-dark navbar-expand-lg  bg-dark m-0 p-0">
-    <div class="mx-lg-4 mx-0 pt-lg-0 pt-4  d-flex  justify-content-center">
+    <div class="mx-lg-4 mx-0 pt-lg-0 pt-4 col-lg-1 col-12 d-flex  justify-content-center">
         <img class="mx-2" th:src="@{/img/escudo_palma.png}" alt="Escudo de Palma de Mallorca" width="26" />
     </div>
     <div class="m-0 mt-3 p-0 w-100">
-        <div class="2-100 bg-secondary px-4 py-1 m-0  d-flex flex-row align-items-center">
+        <div class="2-100 bg-secondary px-4 py-1 m-0 navbar navbar-dark navbar-expand-lg ">
             <a class="navbar-brand text-white" th:href="@{/home}">SERSOC</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,10 +67,11 @@
                             </div>
                     </li>
                 </ul>
-                <div id="logoutmenu" style="transition: all 0.5s ease; opacity: 0 !important; width: 160px; height: 80px; margin: 60; top: 40px; right: 80px; border-radius: 4px;" class="shadow-sm position-absolute bg-white d-flex justify-content-center align-items-center">
+                <div id="logoutmenu" style="transition: all 0.5s ease; opacity: 0 !important; width: 160px; height: 80px; margin: 60; top: 40px; right: 80px; border-radius: 4px;" class="shadow-sm position-absolute bg-white d-flex justify-content-center navbar-nav align-items-center">
                     <form th:action="@{/logout}" method="post">
                         <div>
-                                <a type="submit" class="btn btn-light rounded-0">
+                                <p class="fs-6 fw-normal text-secondary m-0 py-2 text-capitalize" sec:authentication="name"></p>
+                                <a type="submit" class="btn btn-light rounded-0 pb-2">
                                     Cerrar Sesión
                                 </a>
                         </div>

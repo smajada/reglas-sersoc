@@ -74,7 +74,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-light p-4 p-md-5 rounded-0 col-12 col-md-12 col-lg-4 col-xl-5 col-xxl-5 h-100">
+                <div class="bg-light p-4 p-md-5 rounded-0 col-12 col-md-12 col-lg-4 col-xl-5 col-xxl-5 h-100" th:if="${!validationError.isEmpty()}">
                     <div class="row" th:if="${!validationError.isEmpty()}">
                         <h2 class="text-danger text-center h2 fw-bolder"> Errores </h2>
                     </div>
