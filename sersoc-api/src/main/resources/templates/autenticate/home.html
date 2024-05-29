@@ -3,14 +3,94 @@
 <head th:replace="~{layout/layout :: head}">
 
 </head>
-<body>
+<body class="max-w-100 h-100">
 <nav th:replace="~{layout/layout :: navbar}"></nav>
-<div class="container mt-5">
-    <h1>Welcome Home!</h1>
-    <p sec:authorize="isAuthenticated()">Hello, <span sec:authentication="name"></span>! </p>
-    <p sec:authorize="hasRole('USER')">With rol <span sec:authentication="principal.authorities"></span></p>
-    <p sec:authorize="hasRole('ADMIN')">With rol <span sec:authentication="principal.authorities"></span></p>
-</div>
+
+<section class="h-100 bg-light">
+    <div class="bg-white ml-wide">
+        <div class="pl-4 w-100">
+            <div class="row justify-content-md-center align-items-stretch  w-100">
+                <div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-7 ">
+                    <div class="p-4 p-md-5 rounded-0 pt-5 containter">
+                        <div class="container pt-5">
+                            <h1 class="fw-bolder h3 ">Welcome Home!</h1>
+                            <p class="fs-6 fw-normal text-secondary m-0" sec:authorize="isAuthenticated()">Hello, <span sec:authentication="name"></span>! </p>
+                            <p class="fs-6 fw-normal text-secondary m-0" sec:authorize="hasRole('USER')">With rol <span sec:authentication="principal.authorities"></span></p>
+                            <p class="fs-6 fw-normal text-secondary m-0" sec:authorize="hasRole('ADMIN')">With rol <span sec:authentication="principal.authorities"></span></p>
+                        </div>
+                        <div class="pt-4">
+                            <h2 class="fw-bolder h3 mb-3">Placeholder Instrucciones</h2>
+                            <h3 class="fw-bolder h6 mx-6">1. Punto primero</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                            <textarea rows="11" class="h-100 form-control rounded-0" readonly > var presentaciónDB = dataService.selectOneRow(senten
+
+                                if (presentacionDB) {
+                                                validacion.addSuccess(“Mensaje”);
+                                }
+                                else {
+                                                validacion.addError(“Mensaje”);
+                                }
+                                
+                                validación;
+                            </textarea>
+                        </div>
+                        <div class="pt-3">
+                            <h3 class="fw-bolder h6 mx-6">2. Validación</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                           <div class="d-flex flex-row justify-content-center">
+                                <span class="badge bg-warning mx-2">
+                                    <img alt="check" th:src="@{/img/exclamation-triangle.svg}">
+                                </span>
+                                <span class="badge bg-success mx-2">
+                                    <img alt="check" th:src="@{/img/check-lg.svg}">
+                                </span>
+                                <span class="badge bg-danger mx-2">
+                                    <img alt="check" th:src="@{/img/ban.svg}">
+                                </span>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-light p-4 p-md-5 rounded-0 col-12 col-md-12 col-lg-4 col-xl-5 col-xxl-5">
+                    <div class="pt-5">
+                        <div>
+                            <h2 class="fw-bolder h3 mb-3">Placeholder Instrucciones</h2>
+                            <h3 class="fw-bolder h6 mx-6">1. Punto primero</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
+                            <textarea rows="11" class="h-100 form-control rounded-0" readonly > var presentaciónDB = dataService.selectOneRow(senten
+
+                                if (presentacionDB) {
+                                                validacion.addSuccess(“Mensaje”);
+                                }
+                                else {
+                                                validacion.addError(“Mensaje”);
+                                }
+                                
+                                validación;
+                            </textarea>
+                        </div>
+                        <div class="pt-3">
+                            <h3 class="fw-bolder h6 mx-6">2. Punto segundo</h3>
+                            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                            <textarea rows="11" class="h-100 form-control rounded-0" readonly > var presentaciónDB = dataService.selectOneRow(senten
+    
+                                if (presentacionDB) {
+                                                  validacion.addSuccess(“Mensaje”);
+                                }
+                                else {
+                                                  validacion.addError(“Mensaje”);
+                                }
+                                
+                                validación;
+                                </textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 </body>
 </html>
 
