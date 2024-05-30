@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
+	  xmlns:th="http://www.thymeleaf.org"
 >
 <head th:replace="~{layout/layout :: head}">
 
@@ -9,95 +9,246 @@
 <nav th:replace="~{layout/layout :: navbar}"></nav>
 
 <section class="h-100 bg-light">
-    <div class="bg-white ml-wide">
-        <div class="pl-4 w-100">
-            <div class="row justify-content-md-center align-items-stretch  w-100">
-                <div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-7 ">
-                    <div class="p-4 p-md-5 rounded-0 pt-5 containter">
-                        <div class="row pt-5">
-                            <div class="col-12">
-                                <div class="mb-5">
-                                    <h1 class="h2 fw-bolder">Reglas</h1>
-                                    <h3 class="fs-6 fw-normal text-secondary m-0">Inserta los detalles para crear la
-                                        regla</h3>
-                                </div>
-                            </div>
-                        </div>
-                        <form
-                                th:method="post"
-                                th:action="@{/regla-tipo-prestacion/save/{reglaId}(reglaId=${reglaDTO.con})}">
-                            <div class=" row gy-3 gy-md-4 overflow-hidden justify-content-center fs-6">
-                                <div class=" row col-12 mx-0 px-0">
-                                    <div class="my-2 mx-0">
-                                        <label for="descripcion" class="form-label">Descripción</label>
-                                        <input type="text" class="form-control rounded-0" name="descripcion" id="descripcion" aria-label="descripcion" placeholder="Descripción"
-                                               th:field="*{reglaDTO.dec}" required>
-                                        <p class="text-danger" th:errors="*{reglaDTO.dec}" th:if="${#fields.hasErrors('reglaDTO.dec')}"></p>
-                                    </div>
-                                </div>
-                                <div class="row col-12 px-0">
-                                    <div class="col-6 my-2 mx-0">
-                                        <label for="fecha_inicio" class="form-label">Fecha de inicio</label>
-                                        <input type="date" class="form-control rounded-0" id="fecha_inicio" name="fecha_inicio"
-                                            th:field="*{reglaDTO.datIni}" required>
-                                        <p class="text-danger" th:errors="*{reglaDTO.datIni}"
-                                        th:if="${#fields.hasErrors('reglaDTO.datIni')}"></p>
-                                    </div>
-                                    <div class="col-6 my-2 mx-0">
-                                        <label for="fecha_fin" class="form-label">Fecha de finalización</label>
-                                        <input type="date" class="form-control rounded-0" id="fecha_fin" name="fecha_fin"  th:field="*{reglaDTO.datFin}" required>
-                                        <p class="text-danger" th:errors="*{reglaDTO.datFin}"
-                                            th:if="${#fields.hasErrors('reglaDTO.datFin')}"></p>
-                                    </div>
+	<div class="bg-white ml-wide">
+		<div class="pl-4 w-100">
+			<div class="row justify-content-md-center align-items-stretch  w-100">
+				<div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-7 ">
+					<div class="p-4 p-md-5 rounded-0 pt-5 containter">
+						<div class="row pt-5">
+							<div class="col-12">
+								<div class="mb-5">
+									<h1 class="h2 fw-bolder">Reglas</h1>
+									<h3 class="fs-6 fw-normal text-secondary m-0">Inserte los detalles para crear la
+										regla</h3>
+								</div>
+							</div>
+						</div>
+						<form
+							th:method="post"
+							th:action="@{/regla-tipo-prestacion/save/{reglaId}(reglaId=${reglaDTO.con})}">
+							<div class=" row gy-3 gy-md-4 overflow-hidden justify-content-center fs-6">
+								<div class=" row col-12 mx-0 px-0">
+									<div class="my-2 mx-0">
+										<label for="descripcion" class="form-label">Descripción</label>
+										<input type="text" class="form-control rounded-0" name="descripcion" id="descripcion"
+											   aria-label="descripcion" placeholder="Descripción"
+											   th:field="*{reglaDTO.dec}" required>
+										<p class="text-danger" th:errors="*{reglaDTO.dec}"
+										   th:if="${#fields.hasErrors('reglaDTO.dec')}"></p>
+									</div>
+								</div>
+								<div class="row col-12 px-0">
+									<div class="col-6 my-2 mx-0">
+										<label for="fecha_inicio" class="form-label">Fecha de inicio</label>
+										<input type="date" class="form-control rounded-0" id="fecha_inicio" name="fecha_inicio"
+											   th:field="*{reglaDTO.datIni}" required>
+										<p class="text-danger" th:errors="*{reglaDTO.datIni}"
+										   th:if="${#fields.hasErrors('reglaDTO.datIni')}"></p>
+									</div>
+									<div class="col-6 my-2 mx-0">
+										<label for="fecha_fin" class="form-label">Fecha de finalización</label>
+										<input type="date" class="form-control rounded-0" id="fecha_fin" name="fecha_fin"
+											   th:field="*{reglaDTO.datFin}" required>
+										<p class="text-danger" th:errors="*{reglaDTO.datFin}"
+										   th:if="${#fields.hasErrors('reglaDTO.datFin')}"></p>
+									</div>
 
-                                </div>
-                                <div class="row col-12 px-0">
-                                    <div class="my-2 mx-0">
-                                        <label for="tipo_prestacion" class="form-label
+								</div>
+								<div class="row col-12 px-0">
+									<div class="my-2 mx-0">
+										<label for="tipo_prestacion" class="form-label
                                         ">Tipo de prestación</label>
-                                            <select class="form-select rounded-0" multiple id="tipo_prestacion" name="tipoPrestacion" required>
-                                            <!-- Iterar sobre la lista allTipoPrestacion y generar las opciones del select -->
-                                            <option th:each="tipoPrestacion : ${reglaDTO.allTipoPrestacion}"
-                                                    th:value="${tipoPrestacion.coa}"
-                                                    th:text="${tipoPrestacion.dec}"
-                                                    th:selected="${reglaDTO.tipoPrestacionSelected.contains(tipoPrestacion.coa)}">
-                                            </option>
-                                    </select>
-                                    </div>
-                                </div>
+										<select class="form-select rounded-0" multiple id="tipo_prestacion" name="tipoPrestacion"
+												required>
+											<!-- Iterar sobre la lista allTipoPrestacion y generar las opciones del select -->
+											<option th:each="tipoPrestacion : ${reglaDTO.allTipoPrestacion}"
+													th:value="${tipoPrestacion.coa}"
+													th:text="${tipoPrestacion.dec}"
+													th:selected="${reglaDTO.tipoPrestacionSelected.contains(tipoPrestacion.coa)}">
+											</option>
+										</select>
+									</div>
+								</div>
 
-                                <div class="col-12">
-                                    <p class="text-danger" th:errors="*{reglaDTO.script}"
-                                           th:if="${#fields.hasErrors('reglaDTO.script')}"></p>
-                                    <label for="regla" class="form-label mb-2">Script</label>
-                                    <textarea class="form-control rounded-0" id="regla" aria-label="regla" th:field="*{reglaDTO.script}" required></textarea>        
-                                </div>
-                                <div class="col-6">
-                                    <div class="d-grid">
-                                        <button class="btn btn-primary rounded-0" type="submit">Enviar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                        <div id="regla">
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-light p-4 p-md-5 rounded-0 col-12 col-md-12 col-lg-4 col-xl-5 col-xxl-5">
-                    <div class="pt-5">
-                        <h2 class="fw-bolder h3 mb-3">Placeholder Instrucciones</h2>
-                        <h3 class="fw-bolder h6 mx-6">1. Subtítulo</h3>
-                        <p>Prueba de texto de ejemplo, tutorial para demostrar cómo funciona la aplicación.</p>
-                        <textarea class="form-control rounded-0" readonly > Esto es una prueba</textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+								<div class="col-12">
+									<p class="text-danger" th:errors="*{reglaDTO.script}"
+									   th:if="${#fields.hasErrors('reglaDTO.script')}"></p>
+									<label for="regla" class="form-label mb-2">Script</label>
+									<textarea class="form-control rounded-0 codemirror-textarea" aria-label="regla"
+											  th:field="*{reglaDTO.script}" data-mode="javascript" required></textarea>
+								</div>
+								<div class="col-6">
+									<div class="d-grid">
+										<button class="btn btn-primary rounded-0" type="submit">Enviar</button>
+									</div>
+								</div>
+							</div>
+						</form>
+						<div id="regla">
+						</div>
+					</div>
+				</div>
+				<div class="bg-light p-4 p-md-5 rounded-0 col-12 col-md-12 col-lg-4 col-xl-5 col-xxl-5">
+					<div class="pt-5">
+						<div>
+							<h2 class="fw-bolder h3 mb-3">Instrucciones</h2>
+							<p>
+								Elija los tipos de prestación a los que se aplicará la regla y complete el script con la lógica
+								necesaria para validar la prestación.
+								Recuerde que la fecha de inicio y la fecha de finalización de la regla deben ser coherentes.
+
+							</p>
+							<textarea class="h-100 form-control rounded-0 codemirror-textarea" data-mode="javascript" readonly
+									  rows="11">var presentaciónDB =
+	dataService.selectOneRow(sentencias.PRESENTACION, prestacion.con);
+
+if (presentacionDB) {
+	validacion.addSuccess(“Mensaje”);
+}
+else {
+	validacion.addError(“Mensaje”);
+}
+
+validación;</textarea>
+						</div>
+						<div class="pt-3">
+							<h2 class="fw-bolder h3 mb-3">Variables</h2>
+							<p>Dentro del script se pueden utilizar toda una serie de variables que se encuentran disponibles en
+								el contexto de la regla. A continuación se listan las variables disponibles:
+							</p>
+							<h3 class="fw-bolder h6 mx-6">prestacion</h3>
+							<p>Objeto que contiene la información de la prestación que se está evaluando.</p>
+							<textarea class="h-100 form-control rounded-0 codemirror-textarea" data-mode="javascript" readonly
+									  rows="11">{
+  "con": Integer,
+  "expAnyAno": Integer,
+  "imp": Double,
+  "noutPersona": {
+    "con": Integer,
+    "dni": String,
+    "sexe": String,
+    "dataNaixement": Date,
+    "edat": Integer
+  },
+  "tipoPrestacion": {
+    "coa": String,
+    "dec": String,
+    "dem": String,
+    "tipprsCoa": String,
+    "gruprsCoa": {
+      "coa": String,
+      "dec": String,
+      "dem": String
+    }
+  },
+  "tipcor": {
+    "coa": String,
+    "dec": String,
+    "dem": String
+  },
+  "tiprcp": {
+    "coa": String,
+    "dec": String,
+    "dem": String
+  }</textarea>
+						</div>
+						<div class="mt-3">
+
+							<h3 class="fw-bolder h6 mx-6">datIni</h3>
+							<p>Fecha de inicio de la prestación formateada como Date() para su correcto uso.
+							</p>
+							<p><code> dd-MM-yyyy </code></p>
+						</div>
+						<div class="mt-3">
+
+							<h3 class="fw-bolder h6 mx-6">datFin</h3>
+							<p>Fecha de finalización de la prestación formateada como Date() para su correcto uso.
+							</p>
+							<p><code> dd-MM-yyyy </code></p>
+
+							<textarea class="h-50 form-control rounded-0 codemirror-textarea" data-height="150"
+									  data-mode="javascript" readonly
+									  rows="6">if (datIni > datFin) {
+  validacion.addError("La fecha de inicio es posterior
+								a la fecha de finalización.");
+}
+
+validacion;
+</textarea>
+						</div>
+						<div class="mt-3">
+
+							<h3 class="fw-bolder h6 mx-6">dataService</h3>
+							<p>Conjunto de métodos para seleccionar elementos de la base de datos de la base de datos. Se
+								pueden utilizar los siguientes:
+							</p>
+							<ul>
+								<li><code>dataService.selectOneColumn(key, argumentos)</code>: Devuelve un valor de la primera
+									fila que cumple
+									la
+									sentencia.
+								</li>
+								<li><code>dataService.selectOneRow(key, argumentos)</code>: Devuelve un objeto con la primera fila
+									que cumple
+									la sentencia.
+								</li>
+								<li><code>dataService.selectMany(key, argumentos)</code>: Devuelve un array con todas las filas
+									que cumplen la sentencia.
+								</li>
+
+							</ul>
+						</div>
+						<div class="mt-3">
+
+							<h3 class="fw-bolder h6 mx-6">sentencias</h3>
+							<p>Sentencias SQL almacenadas en la ruta /sql que se pueden utilizar para realizar consultas
+								relacionadas con la prestación.
+								Para acceder a una sentencia se debe utilizar la siguiente estructura: <br>
+								<code>sentencias.key</code> <br>
+								Donde <code>key</code> es el nombre de la sentencia que se corresponde con el KEY utilizado en la
+								lista de sentencias.
+							</p>
+							<img class="img-fluid" th:src="@{/img/ejemplo_sentencias.jpg}" alt="lista SQL">
+
+
+							<textarea class="h-50 form-control rounded-0 codemirror-textarea" data-height="150"
+									  data-mode="javascript" readonly
+									  rows="6">var row = dataService.selectOneRow(sentencias.PREST_ID, prestacion.con);</textarea>
+						</div>
+						<div class="mt-3">
+
+							<h3 class="fw-bolder h6 mx-6">validacion</h3>
+							<p>Objeto propio de la validación que contiene métodos para generar mensajes dependiendo del resultado
+								de la regla. <b>Debe ser incluido al final de cada regla</b> para asegurar la correcta ejecución
+								del
+								programa.
+							</p>
+							<ul>
+								<li><code>validacion.addSuccess(mensaje)</code>: Añade un mensaje de éxito a la validación.</li>
+								<li><code>validacion.addError(mensaje)</code>: Añade un mensaje de error a la validación.</li>
+								<li><code>validacion.addWarning(mensaje)</code>: Añade un mensaje de advertencia a la validación.
+								</li>
+								<li><code>validacion</code>: Devuelve la validación completa.</li>
+
+							</ul>
+
+							<textarea class="h-50 form-control rounded-0 codemirror-textarea" data-height="150"
+									  data-mode="javascript" readonly
+									  rows="6">if (prestacion.imp > 100) {
+validacion.addError("El importe no puede ser mayor a 100.");
+}
+validacion;
+								</textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </section>
 
 
-<script th:src="@{/js/codemirror.min.js}"></script>
+<script th:src="@{/js/pack-codemirror-javascript.js}"></script>
 
 <script type="text/javascript" th:src="@{/js/custom_crear_editar.js}"></script>
 </body>
