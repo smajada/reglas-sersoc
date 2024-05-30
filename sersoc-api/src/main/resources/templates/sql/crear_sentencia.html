@@ -63,9 +63,10 @@
                                     <label class="form-label mb-2" for="sentence">Sentencia</label>
                                     <textarea
                                             aria-label="sentence"
-                                            class="form-control"
+                                            class="form-control codemirror-textarea"
                                             id="sentence"
-                                            th:field="*{value}">
+                                            th:field="*{value}"
+                                            data-mode="text/x-sql">
                                     </textarea>
                                 </div>
 
@@ -84,7 +85,7 @@
 </section>
 
 <!-- CodeMirror JavaScript -->
-<script th:src="@{/js/pack-codemirror.js}"></script>
+<script th:src="@{/js/pack-codemirror-javascript.js}"></script>
 
 </body>
 </html>
