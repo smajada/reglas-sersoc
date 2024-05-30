@@ -71,8 +71,8 @@
                                     <p class="text-danger" th:errors="*{script}"
                                        th:if="${#fields.hasErrors('script')}"></p>
                                     <label class="form-label mb-2" for="regla">Script</label>
-                                    <textarea aria-label="regla" class="form-control rounded-0" id="regla"
-                                              th:field="*{script}"></textarea>
+                                    <textarea aria-label="regla" class="form-control codemirror-textarea" id="regla"
+                                              th:field="*{script}" data-mode="javascript"></textarea>
                                 </div>
 
                                 <div class="col-6">
@@ -125,8 +125,6 @@
 </section>
 
 
-<script th:src="@{/js/pack-codemirror.js}"></script>
-
-<script th:src="@{/js/custom_crear_editar.js}" type="text/javascript"></script>
+<script th:src="@{/js/pack-codemirror-javascript.js}"></script>
 </body>
 </html>
