@@ -80,3 +80,6 @@ section{
 	text-align: center;
 }
 
+.columnaInstrucciones{
+	max-height: 850px !important;
+}
