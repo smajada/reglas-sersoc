@@ -1,0 +1,87 @@
+commonLabels:
+  app: prestacions-api
+replicaCount: 1
+image:
+  pullPolicy: Always
+service:
+  port: 8080
+extraEnv:
+  TZ: Europe/Madrid
+  LC_ALL: es_ES.UTF-8
+secretEnv:
+  # Exra environment variables from secret to be inject (pendent de saber quin nom donarà el Pedro al secret db-credentials)
+  - secretName: microsoft-azure-credentials
+    env:
+      AZURE_APPLICATION_ID: application-id
+      AZURE_APPLICATION_SECRET: aplication-secret-value
+  - secretName: corpapi-credentials
+    env:
+      CORPAPI_HEADER_NAME: header-name
+      CORPAPI_PASSWORD: header-password
+  - secretName: geiser-db-credentials
+    env:
+      GEISERAPI_DBUSER: user-name
+      GEISERAPI_DBPASS: user-password
+  - secretName: seres-ws-palma-credentials
+    env:
+      SERES_PALMA_WSUSER: user-name
+      SERES_PALMA_WSPASS: user-password
+  - secretName: seres-ws-imi-credentials
+    env:
+      SERES_IMI_WSUSER: user-name
+      SERES_IMI_WSPASS: user-password
+  - secretName: seres-ws-ime-credentials
+    env:
+      SERES_IME_WSUSER: user-name
+      SERES_IME_WSPASS: user-password
+  - secretName: seres-ws-palmaactiva-credentials
+    env:
+      SERES_PALMAACTIVA_WSUSER: user-name
+      SERES_PALMAACTIVA_WSPASS: user-password
+  - secretName: seres-ws-pmei-credentials
+    env:
+      SERES_PMEI_WSUSER: user-name
+      SERES_PMEI_WSPASS: user-password
+  - secretName: seres-ws-pmhriba-credentials
+    env:
+      SERES_PMHRIBA_WSUSER: user-name
+      SERES_PMHRIBA_WSPASS: user-password
+resources:
+  limits:
+    cpu: 750m
+    memory: 768Mi
+  requests:
+    cpu: 500m
+    memory: 512Mi
+livenessProbe:
+  httpGet:
+    path: /geiserapi/actuator/health/liveness
+    port: http
+  periodSeconds: 10
+  timeoutSeconds: 5
+readinessProbe:
+  httpGet:
+    path: /geiserapi/actuator/health/readiness
+    port: http
+  periodSeconds: 10
+  timeoutSeconds: 3
+startupProbe:
+  httpGet:
+    path: /geiserapi/actuator/health/liveness
+    port: http
+  failureThreshold: 30
+  periodSeconds: 10
+  timeoutSeconds: 3
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - prestacions-api
+          topologyKey: "kubernetes.io/hostname"
+

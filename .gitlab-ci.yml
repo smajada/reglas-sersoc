@@ -1,0 +1,106 @@
+# Variables comunes de la pipeline
+variables:
+  PROJECT_IMAGE: "imi/prestacions-api"
+
+# Fases de la pipeline y su orden
+stages:
+  - test
+  - deploy
+
+# Código común a los jobs que usan Maven
+.common_mvn:
+  image: maven:3-openjdk-17
+  cache:
+    paths:
+      - .m2/repository/
+  variables:
+    MAVEN_CLI_OPTS: "--batch-mode -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+  before_script:
+    - mkdir ~/.m2; cat "$M2_SETTINGS_FILE" > ~/.m2/settings.xml
+    - cat "$IMI_CA_FILE" > /tmp/ca.pem
+    - keytool -importcert -file /tmp/ca.pem -cacerts -storepass changeit -noprompt
+
+# Job de la fase test que ejecuta los tests unitarios y de integración y pasa el resultado por Sonar
+test:
+  stage: test
+  extends: .common_mvn
+  script:
+    - echo mvn $MAVEN_CLI_OPTS $MAVEN_OPTS clean verify sonar:sonar -Pcoverage
+    - mvn $MAVEN_CLI_OPTS $MAVEN_OPTS clean verify sonar:sonar -Pcoverage
+    - VERSION=$(mvn --non-recursive help:evaluate -Dexpression=project.version -q -DforceStdout)
+    - echo "VERSION=$VERSION"
+    - echo "VERSION=$VERSION" > version.env
+  artifacts:
+    name: "prestacions-api"
+    reports:
+      dotenv: version.env
+    expire_in: 1 hour
+
+# Job de la fase de despliegue que genera la imagen Docker
+deploy-docker:
+  stage: deploy
+  extends: .common_mvn
+  script:
+    - echo "Generate docker image"
+    - echo mvn $MAVEN_CLI_OPTS clean compile jib:build -DskipTests -Djib.container.creationTime=USE_CURRENT_TIMESTAMP -Djib.to.auth.username=${CI_REGISTRY_USER} -Djib.to.auth.password=${CI_REGISTRY_PASSWORD} -Djib.to.image=${CI_REGISTRY_IMAGE}:$VERSION
+    - mvn $MAVEN_CLI_OPTS clean compile jib:build -DskipTests -Djib.container.creationTime=USE_CURRENT_TIMESTAMP -Djib.to.auth.username=${CI_REGISTRY_USER} -Djib.to.auth.password=${CI_REGISTRY_PASSWORD} -Djib.to.image=${CI_REGISTRY_IMAGE}:$VERSION
+    - echo mvn $MAVEN_CLI_OPTS clean compile jib:build -DskipTests -Djib.container.creationTime=USE_CURRENT_TIMESTAMP -Djib.to.image=${NEXUS_REGISTRY}/${PROJECT_IMAGE}:$VERSION
+    - mvn $MAVEN_CLI_OPTS clean compile jib:build -DskipTests -Djib.container.creationTime=USE_CURRENT_TIMESTAMP -Djib.to.image=${NEXUS_REGISTRY}/${PROJECT_IMAGE}:$VERSION
+  only:
+    - develop
+    - main
+
+# Código común de los jobs de despliegue con Helm
+.common_helm:
+  stage: deploy
+  image: dtzar/helm-kubectl
+  variables:
+    HELM_CHART: "imi-helm-hosted/imi-microservice"
+  needs:
+    - job: test
+      artifacts: true
+    - deploy-docker
+  before_script:
+    - mkdir ~/.helm; cat "$IMI_CA_FILE" > ~/.helm/ca.pem ; echo "1"
+    - mkdir ~/.kube; echo "$PROJECT_KUBE_CONFIG" > ~/.kube/config ; chmod 700 ~/.kube/config
+    - helm repo add stable https://nexus.devops.develop.imi/repository/helm-central/ --force-update --ca-file ~/.helm/ca.pem
+    - helm repo add imi-helm-hosted https://nexus.devops.develop.imi/repository/helm-hosted/ --ca-file ~/.helm/ca.pem
+    - helm repo update
+  script:
+    - echo helm upgrade --install $CI_PROJECT_NAME $HELM_CHART --set image.repository=${NEXUS_REGISTRY}/${PROJECT_IMAGE} --set image.tag=$VERSION --set podAnnotations.buildId=$CI_COMMIT_SHA -f ./k8s/values.yaml -f ./k8s/values-${ENVIRONMENT}.yaml -n $PROJECT_NAMESPACE
+    - helm upgrade --install $CI_PROJECT_NAME $HELM_CHART --set image.repository=${NEXUS_REGISTRY}/${PROJECT_IMAGE} --set image.tag=$VERSION --set podAnnotations.buildId=$CI_COMMIT_SHA -f ./k8s/values.yaml -f ./k8s/values-${ENVIRONMENT}.yaml -n $PROJECT_NAMESPACE
+
+# Job de la fase de despliegue que realiza el despliegue en el entorno de desarrollo de K8s
+deploy-helm-devel:
+  extends: .common_helm
+  variables:
+    ENVIRONMENT: 'devel'
+    PROJECT_NAMESPACE: $PROJECT_NAMESPACE_DEVEL
+    PROJECT_KUBE_CONFIG: $PROJECT_KUBE_CONFIG_DEVEL
+  only:
+    - develop
+
+# Job de la fase de despliegue que realiza el despliegue en el entorno de consolidación de K8s
+deploy-helm-cons:
+  extends: .common_helm
+  variables:
+    ENVIRONMENT: 'cons'
+    PROJECT_NAMESPACE: $PROJECT_NAMESPACE_CONS
+    PROJECT_KUBE_CONFIG: $PROJECT_KUBE_CONFIG_CONS
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop"
+      when: manual
+
+# Job de la fase de despliegue que realiza el despliegue en el entorno de producción de K8s
+deploy-helm-prod:
+  extends: .common_helm
+  variables:
+    ENVIRONMENT: 'prod'
+    PROJECT_NAMESPACE: $PROJECT_NAMESPACE_PROD
+    PROJECT_KUBE_CONFIG: $PROJECT_KUBE_CONFIG_PROD
+  only:
+    - main
+  when:
+    manual
+
+

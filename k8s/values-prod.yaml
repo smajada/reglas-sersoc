@@ -1,0 +1,20 @@
+extraEnv:
+  URL_DATABASE: jdbc:oracle:thin:@proora.databases.cort1.pm:1526:PROORA
+ingress:
+  enabled: true
+  hosts:
+    - host: geiserapi.ajt.cort1.pm
+      paths:
+        - /
+  tls:
+    - hosts:
+        - geiserapi.ajt.cort1.pm
+      secretName: ajt-tls
+volumeMounts:
+  - mountPath: "/var/log/app"
+    name: geiserapi-api-log
+    readOnly: false
+volumes:
+  - name: geiserapi-api-log
+    hostPath:
+      path: /var/log/geiserapi

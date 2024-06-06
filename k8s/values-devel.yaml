@@ -1,0 +1,13 @@
+extraEnv:
+  SPRING_PROFILES_ACTIVE: devk8s
+  URL_DATABASE: jdbc:oracle:thin:@imides.databases.develop.imi:1521:OCIDB14
+ingress:
+  enabled: true
+  hosts:
+    - host: geiserapi.ajt.develop.imi
+      paths:
+        - /
+  tls:
+    - hosts:
+        - geiserapi.ajt.develop.imi
+      secretName: ajt-tls
