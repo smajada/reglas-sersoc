@@ -3,18 +3,18 @@ extraEnv:
 ingress:
   enabled: true
   hosts:
-    - host: geiserapi.ajt.cort1.pm
+    - host: prestacions.ajt.cort1.pm
       paths:
         - /
   tls:
     - hosts:
-        - geiserapi.ajt.cort1.pm
+        - prestacions.ajt.cort1.pm
       secretName: ajt-tls
 volumeMounts:
   - mountPath: "/var/log/app"
-    name: geiserapi-api-log
+    name: prestacions-api-log
     readOnly: false
 volumes:
-  - name: geiserapi-api-log
+  - name: prestacions-api-log
     hostPath:
-      path: /var/log/geiserapi
+      path: /var/log/prestacions

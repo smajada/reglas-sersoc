@@ -1,5 +1,5 @@
 commonLabels:
-  app: prestacions-api
+  app: prestacions
 replicaCount: 1
 image:
   pullPolicy: Always
@@ -55,19 +55,19 @@ resources:
     memory: 512Mi
 livenessProbe:
   httpGet:
-    path: /prestacions-api/actuator/health/liveness
+    path: /prestacions/actuator/health/liveness
     port: http
   periodSeconds: 10
   timeoutSeconds: 5
 readinessProbe:
   httpGet:
-    path: /prestacions-api/actuator/health/readiness
+    path: /prestacions/actuator/health/readiness
     port: http
   periodSeconds: 10
   timeoutSeconds: 3
 startupProbe:
   httpGet:
-    path: /prestacions-api/actuator/health/liveness
+    path: /prestacions/actuator/health/liveness
     port: http
   failureThreshold: 30
   periodSeconds: 10
@@ -82,6 +82,6 @@ affinity:
               - key: app
                 operator: In
                 values:
-                  - prestacions-api
+                  - prestacions
           topologyKey: "kubernetes.io/hostname"
 

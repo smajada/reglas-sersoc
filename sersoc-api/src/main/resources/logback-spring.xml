@@ -2,9 +2,9 @@
 	<property name="LOG_PATH" value="/var/log/app"/>
 
 	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${LOG_PATH}/prestacions-api.log</file>
+		<file>${LOG_PATH}/prestacions.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${LOG_PATH}/prestacions-api.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<fileNamePattern>${LOG_PATH}/prestacions.%d{yyyy-MM-dd}.log</fileNamePattern>
 			<maxHistory>30</maxHistory>
 		</rollingPolicy>
 		<encoder>

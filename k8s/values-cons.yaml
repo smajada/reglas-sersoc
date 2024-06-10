@@ -4,10 +4,10 @@ extraEnv:
 ingress:
   enabled: true
   hosts:
-    - host: geiserapi.ajt.consolidation.imi
+    - host: prestacions.ajt.consolidation.imi
       paths:
         - /
   tls:
     - hosts:
-        - geiserapi.ajt.consolidation.imi
+        - prestacions.ajt.consolidation.imi
       secretName: ajt-tls

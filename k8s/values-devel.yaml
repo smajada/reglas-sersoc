@@ -4,10 +4,10 @@ extraEnv:
 ingress:
   enabled: true
   hosts:
-    - host: geiserapi.ajt.develop.imi
+    - host: prestacions.ajt.develop.imi
       paths:
         - /
   tls:
     - hosts:
-        - geiserapi.ajt.develop.imi
+        - prestacions.ajt.develop.imi
       secretName: ajt-tls
