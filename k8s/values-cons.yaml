@@ -1,0 +1,13 @@
+extraEnv:
+  SPRING_PROFILES_ACTIVE: cons
+  URL_DATABASE: jdbc:oracle:thin:@tesora.databases.consolidation.imi:1521:TESORA
+ingress:
+  enabled: true
+  hosts:
+    - host: prestacions.ajt.consolidation.imi
+      paths:
+        - /
+  tls:
+    - hosts:
+        - prestacions.ajt.consolidation.imi
+      secretName: ajt-tls

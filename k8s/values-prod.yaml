@@ -1,0 +1,20 @@
+extraEnv:
+  URL_DATABASE: jdbc:oracle:thin:@proora.databases.cort1.pm:1526:PROORA
+ingress:
+  enabled: true
+  hosts:
+    - host: prestacions.ajt.cort1.pm
+      paths:
+        - /
+  tls:
+    - hosts:
+        - prestacions.ajt.cort1.pm
+      secretName: ajt-tls
+volumeMounts:
+  - mountPath: "/var/log/app"
+    name: prestacions-api-log
+    readOnly: false
+volumes:
+  - name: prestacions-api-log
+    hostPath:
+      path: /var/log/prestacions
