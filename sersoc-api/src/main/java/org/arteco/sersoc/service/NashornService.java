@@ -11,29 +11,29 @@ import javax.script.ScriptException;
 @Service
 public class NashornService {
 
-    private final ScriptEngine engine;
+    public ScriptEngine createEngine() {
 
-    public NashornService() {
         ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
-        this.engine = scriptEngineManager.getEngineByName("nashorn");
+        return scriptEngineManager.getEngineByName("nashorn");
     }
 
-    public void putInContext(String key, Object value) {
+    public void putInContext(ScriptEngine engine, String key, Object value) {
         // Añade un objeto al contexto de scripts
         engine.put(key, value);
     }
 
-    public Object getFromContext(String key) {
+    public Object getFromContext(ScriptEngine engine, String key) {
         // Recupera un objeto del contexto
         return engine.get(key);
     }
 
-    public Object executeScript(String script) throws ScriptException {
+    public Object executeScript(ScriptEngine engine, String script) throws ScriptException {
         // Ejecuta el script de JavaScript y devuelve el resultado
         return engine.eval(script);
     }
 
     public String serializeObjectToJson(Object object) throws JsonProcessingException {
+
         return new ObjectMapper().writeValueAsString(object);
     }
 }

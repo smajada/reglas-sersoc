@@ -14,6 +14,11 @@ public class GenericValidationDTO {
     private String message;
     private String type;
 
+    public GenericValidationDTO(GenericValidationDTO validation) {
+        this.message = validation.getMessage();
+        this.type = validation.getType();
+    }
+
     public void addSuccess(String message) {
         this.setMessage(message);
         this.setType("SUCCESS");
