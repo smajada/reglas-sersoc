@@ -45,7 +45,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 
 @WebMvcTest(ReglaTipoPrestacionController.class)
-@ExtendWith(MockitoExtension.class)
 public class ReglaTipoPrestacionControllerTests {
 
 	@MockBean
@@ -68,9 +67,6 @@ public class ReglaTipoPrestacionControllerTests {
 
 	@MockBean
 	private NoutSQLStatementService noutSQLStatementService;
-
-	@MockBean
-	private ReglaTipoPrestacionController controller;
 
 	@Autowired
 	private MockMvc mockMvc;
