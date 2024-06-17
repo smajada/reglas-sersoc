@@ -70,7 +70,7 @@ public class ReglaTipoPrestacionController extends
 		this.reglaTipoPrestacionService = reglaTipoPrestacionService;
 	}
 
-	@GetMapping("/list")
+	@GetMapping("/all")
 	public String listAll(Model model, @RequestParam(name = "page", defaultValue = "0") int page) {
 
 		Pageable pageRequest = PageRequest.of(page, 2);
