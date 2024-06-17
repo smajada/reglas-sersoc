@@ -20,51 +20,58 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/sql")
 public class NoutSQLStatementRestController extends AbstractCrudController<
-        NoutSQLStatement,
-        Long,
-        NoutSQLStatementRepository,
-        NoutSQLStatementService> {
+	NoutSQLStatement,
+	Long,
+	NoutSQLStatementRepository,
+	NoutSQLStatementService> {
 
-    protected NoutSQLStatementRestController(NoutSQLStatementService service) { super(service); }
+	protected NoutSQLStatementRestController(NoutSQLStatementService service) {
+
+		super(service);
+	}
 
 
-    @Operation(summary = "Save sql endpoint" , description = "Save SQL endpoint to check if the API is working properly")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful operation"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - API key is missing or invalid")
-    })
-    @PostMapping("/save")
-    public void saveNoutSQLStatement(@RequestBody NoutSQLStatement noutSQLStatement) {
-        service.save(noutSQLStatement);
-    }
+	@Operation(summary = "Save sql endpoint", description = "Save SQL endpoint to check if the API is working properly")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Successful operation"),
+		@ApiResponse(responseCode = "403", description = "Forbidden - API key is missing or invalid")
+	})
+	@PostMapping("/save")
+	public void saveNoutSQLStatement(@RequestBody NoutSQLStatement noutSQLStatement) {
 
-    @Operation(summary = "all sql endpoint" , description = "SQL endpoint to check if the API is working properly")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful operation"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - API key is missing or invalid")
-    })
-    @GetMapping("/all")
-    public List<NoutSQLStatement> all() {
-        return (List<NoutSQLStatement>) service.findAll();
-    }
+		service.save(noutSQLStatement);
+	}
 
-    @Operation(summary = "allMapKey sql endpoint" , description = "AllMapKey SQL endpoint to check if the API is working properly")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful operation"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - API key is missing or invalid")
-    })
-    @GetMapping("/map")
-    public Map<String, String> allMapKey() {
-        return service.getAllSqlStatement();
-    }
+	@Operation(summary = "all sql endpoint", description = "SQL endpoint to check if the API is working properly")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Successful operation"),
+		@ApiResponse(responseCode = "403", description = "Forbidden - API key is missing or invalid")
+	})
+	@GetMapping("/all")
+	public List<NoutSQLStatement> all() {
 
-    @Operation(summary = "allMapKeyActive sql endpoint" , description = "allMapKeyActive SQL endpoint to check if the API is working properly")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful operation"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - API key is missing or invalid")
-    })
-    @GetMapping("/map_active")
-    public Map<String, String> allMapKeyActive() {
-        return service.getAllSqlStatementByActive();
-    }
+		return (List<NoutSQLStatement>) service.findAll();
+	}
+
+	@Operation(summary = "allMapKey sql endpoint", description = "AllMapKey SQL endpoint to check if the API is working properly")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Successful operation"),
+		@ApiResponse(responseCode = "403", description = "Forbidden - API key is missing or invalid")
+	})
+	@GetMapping("/map")
+	public Map<String, String> allMapKey() {
+
+		return service.getAllSqlStatement();
+	}
+
+	@Operation(summary = "allMapKeyActive sql endpoint", description = "allMapKeyActive SQL endpoint to check if the API is working properly")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Successful operation"),
+		@ApiResponse(responseCode = "403", description = "Forbidden - API key is missing or invalid")
+	})
+	@GetMapping("/map_active")
+	public Map<String, String> allMapKeyActive() {
+
+		return service.getAllSqlStatementByActive();
+	}
 }

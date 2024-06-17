@@ -13,19 +13,19 @@ import java.util.List;
 public interface NoutReglesRepository extends JpaRepository<NoutRegles, Long> {
 
 
-    @Query("SELECT r " +
-            "FROM NoutRegles r " +
-            "JOIN ReglaTipoPrestacionEntity rtp " +
-            "ON r.con = rtp.noutRegles.con " +
-            "WHERE rtp.noutTipprs.coa = :idTipoPrestacion " +
-            "AND r.active = true " +
-            "AND rtp.active = true")
-    List<NoutRegles> findByIdTipoPrestacion(String idTipoPrestacion);
+	@Query("SELECT r " +
+		"FROM NoutRegles r " +
+		"JOIN ReglaTipoPrestacionEntity rtp " +
+		"ON r.con = rtp.noutRegles.con " +
+		"WHERE rtp.noutTipprs.coa = :idTipoPrestacion " +
+		"AND r.active = true " +
+        "AND r.datIni <= CURRENT_DATE " +
+        "AND r.datFin >= CURRENT_DATE " +
+		"AND rtp.active = true")
+	List<NoutRegles> findByIdTipoPrestacion(String idTipoPrestacion);
 
 
-
-    Page<NoutRegles> findByActiveTrue(Pageable pageable);
-
+	Page<NoutRegles> findByActiveTrue(Pageable pageable);
 
 
 }

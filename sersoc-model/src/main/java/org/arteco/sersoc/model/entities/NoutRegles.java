@@ -34,5 +34,6 @@ public class NoutRegles {
     @Column(columnDefinition = "TEXT", name = "SCR")
     private String script;
 
+    @Column(name = "ACTIVE")
     private boolean active = true;
 }

@@ -249,6 +249,7 @@ public class ReglaTipoPrestacionController extends
 	private List<GenericValidationDTO> validateTipoPrestacion(String prestacionTipoID, Long prestacionID, NoutReglesService noutReglesService, NoutPrestacionsService noutPrestacionsService) {
 		List<GenericValidationDTO> validationList = new ArrayList<>(); // Mover la lista aquí
 
+		GenericValidationDTO genericValidationDTO = new GenericValidationDTO();
 		List<NoutRegles> reglas = noutReglesService.findByIdTipoPrestacion(prestacionTipoID);
 
 		NoutPrestacions prestacion = noutPrestacionsService
@@ -261,7 +262,7 @@ public class ReglaTipoPrestacionController extends
 			ScriptEngine engine = nashornService.createEngine();
 
 			// Configurar Nashorn
-			nashornInitialConfig(engine, prestacion);
+			nashornInitialConfig(engine, prestacion, genericValidationDTO);
 
 			for (NoutRegles regla : reglas) {
 				String script = regla.getScript();
@@ -276,8 +277,7 @@ public class ReglaTipoPrestacionController extends
 				executeNashornScript(engine, script);
 
 				// Obtener la nueva instancia de validacion desde el contexto de Nashorn
-				GenericValidationDTO validation = (GenericValidationDTO) nashornService.getFromContext(engine, "validacion");
-				GenericValidationDTO clonedValidation = new GenericValidationDTO(validation);
+				GenericValidationDTO clonedValidation = new GenericValidationDTO(genericValidationDTO);
 				validationList.add(clonedValidation);
 			}
 		} catch (Exception e) {
@@ -297,19 +297,18 @@ public class ReglaTipoPrestacionController extends
 		}
 	}
 
-	private void nashornInitialConfig(ScriptEngine engine, NoutPrestacions prestacion)
+	private void nashornInitialConfig(ScriptEngine engine, NoutPrestacions prestacion, GenericValidationDTO validationDTO)
 		throws JsonProcessingException, ScriptException {
 		// Serializa el objeto prestacion a JSON con ObjectMapper
 		String prestacionJson = nashornService.serializeObjectToJson(prestacion);
 		Map<String, String> sentencias = noutSQLStatementService.getAllSqlStatementByActive();
 		ObjectMapper objectMapper = new ObjectMapper();
 		String sentenciasJson = objectMapper.writeValueAsString(sentencias);
-		GenericValidationDTO genericValidationDTO = new GenericValidationDTO();
 
 		nashornService.putInContext(engine, "DataService", this.dataService);
 		nashornService.putInContext(engine, "prestacion", prestacionJson);
 		nashornService.putInContext(engine, "sentencias", sentenciasJson);
-		nashornService.putInContext(engine, "validacion", genericValidationDTO);
+		nashornService.putInContext(engine, "validacion", validationDTO);
 
 		// Script de inicialización
 		String script = "var prestacion = JSON.parse(prestacion);"

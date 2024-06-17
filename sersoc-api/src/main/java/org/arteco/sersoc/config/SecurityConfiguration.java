@@ -82,7 +82,6 @@ public class SecurityConfiguration {
         return http.build();
     }
 
-
     @Bean
     public Filter apiKeyFilter() {
         return new OncePerRequestFilter() {

@@ -8,6 +8,7 @@ class SersocApplicationTests {
 
     @Test
     void contextLoads() {
+
     }
 
 }
