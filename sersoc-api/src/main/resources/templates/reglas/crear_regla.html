@@ -58,7 +58,7 @@
 									<div class="my-2 mx-0">
 										<label class="form-label
                                         " for="tipo_prestacion">Tipo de prestación</label>
-										<select class="form-select rounded-0" id="tipo_prestacion" multiple name="tipoPrestacion"
+										<select class="form-select rounded-0" id="tipo_prestacion" multiple="multiple" name="tipoPrestacion"
 												required>
 											<option th:each="tipoPrestacion : ${tipoPrestacionList}"
 													th:text="${tipoPrestacion.dec}"
@@ -72,7 +72,7 @@
 									   th:if="${#fields.hasErrors('script')}"></p>
 									<label class="form-label mb-2" for="regla">Script</label>
 									<textarea aria-label="regla" class="form-control codemirror-textarea" data-mode="javascript"
-											  id="regla" th:field="*{script}"></textarea>
+											  id="regla" th:field="*{script}" ></textarea>
 								</div>
 
 								<div class="col-6">
@@ -245,5 +245,17 @@ validacion;
 
 
 <script th:src="@{/js/pack-codemirror-javascript.js}"></script>
+<script th:inline = "javascript">
+	$(document).ready(function() {
+		$('#tipo_prestacion').select2({
+			placeholder: "Seleccione los tipos de prestación",
+			closeOnSelect: false,
+			theme: 'classic',
+			allowClear: true,
+		});
+	});
+
+
+</script>
 </body>
 </html>

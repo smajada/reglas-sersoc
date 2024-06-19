@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -132,7 +134,12 @@ public class ReglaTipoPrestacionController extends
 		ReglaDTO reglaDTO = new ReglaDTO();
 		reglaDTO.setAllTipoPrestacion(new ArrayList<>());
 
-		Iterable<NoutTipprs> tipoPrestacionList = noutTipprsService.findAll();
+		// Obtener todos los tipos de prestación ordenados
+		List<NoutTipprs> tipoPrestacionList = (List<NoutTipprs>) noutTipprsService.findAll();
+		Collections.sort(tipoPrestacionList, Comparator.comparing(NoutTipprs::getDec)); // Ajusta "getNombre" al método adecuado
+
+
+
 
 		model.addAttribute("reglaDTO", reglaDTO);
 		model.addAttribute("tipoPrestacionList", tipoPrestacionList);
@@ -149,6 +156,11 @@ public class ReglaTipoPrestacionController extends
 
 		// Verificar si las fechas son válidas
 		checkDate(reglaDTO, bindingResult);
+
+		//Verificar que el script no esté vacío
+		if (reglaDTO.getScript().isEmpty()) {
+			bindingResult.rejectValue("script", "error.reglaDTO", "El script no puede estar vacío");
+		}
 
 		if (bindingResult.hasErrors()) {
 			Iterable<NoutTipprs> tipoPrestacionList = noutTipprsService.findAll();
@@ -178,6 +190,11 @@ public class ReglaTipoPrestacionController extends
 			Model model) {
 		// Verificar si las fechas son válidas
 		checkDate(reglaDTO, bindingResult);
+
+		//Verificar que el script no esté vacío
+		if (reglaDTO.getScript().isEmpty()) {
+			bindingResult.rejectValue("script", "error.reglaDTO", "El script no puede estar vacío");
+		}
 
 		if (bindingResult.hasErrors()) {
 			List<NoutTipprs> allTipoPrestacion = (List<NoutTipprs>) noutTipprsService.findAll();
