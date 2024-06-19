@@ -83,3 +83,7 @@ section{
 .columnaInstrucciones{
 	max-height: 850px !important;
 }
+
+.select-2.select2-container--default .select2-selection--multiple{
+	border-radius: 0 !important;
+}
