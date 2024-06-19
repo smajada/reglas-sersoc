@@ -20,11 +20,13 @@ public class NoutPerPrs {
     @ManyToOne
     @JsonBackReference
     @MapsId("perId")
+    @JoinColumn(name = "PER_CON")
     private NoutPersona noutPersona;
 
     @ManyToOne
     @JsonBackReference
     @MapsId("prsId")
+    @JoinColumn(name = "PRS_CON")
     private NoutPrestacions noutPrestacions;
 
 }

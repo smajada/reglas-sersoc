@@ -23,13 +23,13 @@ public class NoutPrestacionsService extends AbstractCrudService<NoutPrestacions,
     }
 
     public Optional<NoutPrestacionsDTO> findByIdPerPrs(final Long idPrestacio) {
-        String sql = "SELECT NOUT_PER_PRS.PER_CON, NOUT_PER_PRS.PRS_CON " +
-                "FROM NOUT_PER_PRS " +
-                "WHERE NOUT_PER_PRS.PER_CON = ?";
+        String sql = "SELECT per_prs.* " +
+            "FROM NOUVIS_PER_PRS_AMP  per_prs, gen_persones  gen " +
+            "WHERE per_prs.prs_con = ? AND per_prs.per_con = gen.con";
         Optional<NoutPrestacions> optionalEntity = super.findById(idPrestacio);
 
         if (optionalEntity.isPresent()) {
-            List<Map<String, Object>> noutPerPrsList = dataService.selectMany(sql, optionalEntity.get().getPerCon());
+            List<Map<String, Object>> noutPerPrsList = dataService.selectMany(sql, optionalEntity.get().getCon());
             return Optional.of(convertToDto(optionalEntity.get(), noutPerPrsList));
         }
         return Optional.empty();
@@ -48,7 +48,7 @@ public class NoutPrestacionsService extends AbstractCrudService<NoutPrestacions,
         dto.setForpag(noutPrestacions.getForpag());
         dto.setTipcot(noutPrestacions.getTipcot());
         dto.setTiprcp(noutPrestacions.getTiprcp());
-        dto.setNoutPerPrs(perPrs);
+        dto.setBeneficiaris(perPrs);
         return dto;
     }
 

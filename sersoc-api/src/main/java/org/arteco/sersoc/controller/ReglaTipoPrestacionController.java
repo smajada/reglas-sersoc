@@ -70,7 +70,7 @@ public class ReglaTipoPrestacionController extends
 		this.reglaTipoPrestacionService = reglaTipoPrestacionService;
 	}
 
-	@GetMapping("/all")
+	@GetMapping("/list")
 	public String listAll(Model model, @RequestParam(name = "page", defaultValue = "0") int page) {
 
 		Pageable pageRequest = PageRequest.of(page, 2);
@@ -254,6 +254,8 @@ public class ReglaTipoPrestacionController extends
 
 		NoutPrestacions prestacion = noutPrestacionsService
 				.findById(prestacionID).orElseThrow(EntityNotFoundException::new);
+
+
 
 		List<GenericValidationDTO> validationList = new ArrayList<>();
 
