@@ -46,6 +46,10 @@ secretEnv:
     env:
       SERES_PMHRIBA_WSUSER: user-name
       SERES_PMHRIBA_WSPASS: user-password
+  - secretName: bensoc-db-credentials
+    env:
+      BENEFICISOCIAL_DBUSER: user-name
+      BENEFICISOCIAL_DBPASS: user-password
 resources:
   limits:
     cpu: 750m

@@ -1,4 +1,5 @@
 extraEnv:
+  SPRING_PROFILES_ACTIVE: prod
   URL_DATABASE: jdbc:oracle:thin:@proora.databases.cort1.pm:1526:PROORA
 ingress:
   enabled: true
