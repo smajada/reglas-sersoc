@@ -48,7 +48,7 @@
 }
 
 .ml-wide{
-    margin-left: 10vw;
+    margin-left: calc(1.5rem + 8.3vw + 20px);
 }
 
 html{
@@ -80,3 +80,6 @@ section{
 	text-align: center;
 }
 
+.columnaInstrucciones{
+	max-height: 850px !important;
+}

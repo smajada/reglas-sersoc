@@ -7,10 +7,10 @@
 <nav th:replace="~{layout/layout :: navbar}"></nav>
 
 <section class="h-100 bg-light">
-	<div class="bg-white ml-wide">
-		<div class="pl-4 w-100">
+	<div class="bg-white ml-wide mr-4">
+		<div class="pl-4 col-10">
 			<div class="row justify-content-md-center align-items-stretch  w-100">
-				<div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-7 ">
+				<div class="col-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6 ">
 					<div class="p-4 p-md-5 rounded-0 pt-5 containter">
 						<div class="container pt-5">
 							<h1 class="fw-bolder h3 ">Welcome Home!</h1>
@@ -35,53 +35,57 @@
 								</li>
 							</ol>
 						</div>
-						<div class="pt-4">
-							<h3 class="fw-bolder h5 mx-6">2. Crear reglas</h3>
-							<p>Para establecer una regla, sigue estos pasos:</p>
-							<ol class="bold">
-								<li>
-									<b>Nombre de la Regla:</b> Escribe un nombre descriptivo.
-								</li>
-								<li>
-									<b>Tipos de Prestación:</b> Selecciona los tipos de prestación a los que se aplicará la regla.
-								</li>
-								<li>
-									<b>Código JavaScript:</b> Escribe el código JavaScript necesario para la ejecución de la
-									regla.
-								</li>
-							</ol>
-						</div>
-						<div class="pt-3">
-							<h3 class="fw-bolder h5 mx-6">3. Validar prestaciones</h3>
-							<p>Cuando hagas clic en el botón "Validar" en la página de una prestación, serás redirigido a una
-								nueva pantalla.
-								En esta pantalla podrás ver el estado de las reglas:</p>
-							<ul class="bold">
-								<li>
-									<b>Reglas no Validadas:</b> Indicadas con el símbolo de error.
-								</li>
-								<li>
-									<b>Reglas Validadas:</b> Indicadas con el símbolo éxito.
-								</li>
-								<li>
-									<b>Reglas con Advertencias:</b> Indicadas con el símbolo correspondiente.
-								</li>
-							</ul>
-							<div class="d-flex flex-row justify-content-center">
+					</div>
+				</div>
+                <div class="col-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6 ">
+					<div class="p-4 p-md-5 rounded-0 pt-5 containter">
+                        <div class="pt-5">
+                            <h3 class="fw-bolder h5 mx-6">2. Crear reglas</h3>
+                            <p>Para establecer una regla, sigue estos pasos:</p>
+                            <ol class="bold">
+                                <li>
+                                    <b>Nombre de la Regla:</b> Escribe un nombre descriptivo.
+                                </li>
+                                <li>
+                                    <b>Tipos de Prestación:</b> Selecciona los tipos de prestación a los que se aplicará la regla.
+                                </li>
+                                <li>
+                                    <b>Código JavaScript:</b> Escribe el código JavaScript necesario para la ejecución de la
+                                    regla.
+                                </li>
+                            </ol>
+                        </div>
+                        <div class="pt-3">
+                            <h3 class="fw-bolder h5 mx-6">3. Validar prestaciones</h3>
+                            <p>Cuando hagas clic en el botón "Validar" en la página de una prestación, serás redirigido a una
+                                nueva pantalla.
+                                En esta pantalla podrás ver el estado de las reglas:</p>
+                            <ul class="bold">
+                                <li>
+                                    <b>Reglas no Validadas:</b> Indicadas con el símbolo de error.
+                                </li>
+                                <li>
+                                    <b>Reglas Validadas:</b> Indicadas con el símbolo éxito.
+                                </li>
+                                <li>
+                                    <b>Reglas con Advertencias:</b> Indicadas con el símbolo correspondiente.
+                                </li>
+                            </ul>
+                            <div class="d-flex flex-row justify-content-center">
                                 <span class="badge bg-warning mx-2">
                                     <img alt="check" th:src="@{/img/exclamation-triangle.svg}">
                                 </span>
-								<span class="badge bg-success mx-2">
+                                <span class="badge bg-success mx-2">
                                     <img alt="check" th:src="@{/img/check-lg.svg}">
                                 </span>
-								<span class="badge bg-danger mx-2">
+                                <span class="badge bg-danger mx-2">
                                     <img alt="check" th:src="@{/img/ban.svg}">
                                 </span>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 		</div>
 	</div>
 </section>
