@@ -58,7 +58,7 @@
 									<div class="my-2 mx-0">
 										<label for="tipo_prestacion" class="form-label
                                         ">Tipo de prestación</label>
-										<select class="form-select rounded-0" multiple id="tipo_prestacion" name="tipoPrestacion"
+										<select class="form-select rounded-0" id="tipo_prestacion" multiple="multiple" name="tipoPrestacion"
 												required>
 											<!-- Iterar sobre la lista allTipoPrestacion y generar las opciones del select -->
 											<option th:each="tipoPrestacion : ${reglaDTO.allTipoPrestacion}"
@@ -74,7 +74,7 @@
 									<p class="text-danger" th:errors="*{reglaDTO.script}"
 									   th:if="${#fields.hasErrors('reglaDTO.script')}"></p>
 									<label for="regla" class="form-label mb-2">Script</label>
-									<textarea class="form-control rounded-0 codemirror-textarea" aria-label="regla"
+									<textarea aria-label="regla" class="form-control codemirror-textarea"
 											  th:field="*{reglaDTO.script}" data-mode="javascript" ></textarea>
 								</div>
 								<div class="col-6">
@@ -251,5 +251,16 @@ validacion;
 <script th:src="@{/js/pack-codemirror-javascript.js}"></script>
 
 <script type="text/javascript" th:src="@{/js/custom_crear_editar.js}"></script>
+<script th:inline = "javascript">
+	$(document).ready(function() {
+		$('#tipo_prestacion').select2({
+			placeholder: "Seleccione los tipos de prestación",
+			closeOnSelect: false,
+			allowClear: true,
+		});
+	});
+
+
+</script>
 </body>
 </html>
