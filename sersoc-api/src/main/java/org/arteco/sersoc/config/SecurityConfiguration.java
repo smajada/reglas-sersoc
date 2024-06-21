@@ -12,9 +12,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
@@ -23,13 +27,26 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.core.io.Resource;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.LoggerFactory;
+import org.yaml.snakeyaml.internal.Logger;
+
+import static org.hibernate.id.SequenceMismatchStrategy.LOG;
 
 @Configuration
 @EnableWebSecurity
@@ -37,7 +54,12 @@ public class SecurityConfiguration {
 
     public static final String BEARER_AUTH = "bearerAuth";
     public static final String API_KEY = "Apikey";
+    private static final String PERFIL_PRIVAT = "FUE_USUARI_OPFUE";
 
+    @Autowired
+    ResourceLoader resourceLoader;
+
+    private static List<String> perfils;
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth, PasswordEncoder passwordEncoder) throws Exception {
@@ -67,8 +89,8 @@ public class SecurityConfiguration {
                                 )
                                 .permitAll()
                                 .requestMatchers("/api/sql/**", "/cache/**").hasRole("API")
-                                .requestMatchers("/regla-tipo-prestacion/list", "/sql/list").hasAnyRole("USER", "ADMIN")
-                                .requestMatchers("/regla-tipo-prestacion/**", "/sql/**").hasRole("ADMIN")
+                                .requestMatchers("/regla-tipo-prestacion/list", "/sql/list").hasRole(PERFIL_PRIVAT)
+                                .requestMatchers("/regla-tipo-prestacion/**", "/sql/**").hasRole(PERFIL_PRIVAT)
                                 .anyRequest().authenticated())
                 .formLogin(httpSecurityFormLoginConfigurer ->
                         httpSecurityFormLoginConfigurer.loginPage("/login").permitAll().successForwardUrl("/home"))
@@ -115,6 +137,51 @@ public class SecurityConfiguration {
                 .info(new Info()
                         .title("Servicios Sociales API")
                         .version("1.0.0"));
+    }
+
+    @Bean
+    public AuthenticationFailureHandler loginErrorHandler() {
+        return new LoginErrorHandler();
+    }
+
+    public AuthenticationSuccessHandler loginSuccessHandler() {
+        return new LoginSuccessHandler();
+    }
+
+    @Bean
+    public AuthenticationProvider imiAuthenticationProvider() {
+        return new SersocAuthenticationProvider();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
+    }
+
+    @Bean
+    public Filter loginFilter(AuthenticationManager authManager){
+        ExUsernamePasswordAuthenticationFilter result = new ExUsernamePasswordAuthenticationFilter();
+        result.setAuthenticationManager(authManager);
+        result.setAuthenticationFailureHandler(loginErrorHandler());
+        result.setAuthenticationSuccessHandler(loginSuccessHandler());
+        return result;
+    }
+
+    private String[] loadPerfils() {
+        perfils = new ArrayList<>();
+        Resource resource = resourceLoader.getResource("classpath:prfapl.txt");
+        String line;
+        try (
+                InputStream in = resource.getInputStream();
+                BufferedReader br = new BufferedReader(new InputStreamReader(in))
+        ) {
+            while ((line = br.readLine()) != null) { perfils.add(line); }
+        } catch (IOException e) {
+            LOG.error("OpfueFrontSecurityConfig.loadPerfils", e);
+        }
+        String[] ret = new String[perfils.size()];
+        ret = perfils.toArray(ret);
+        return ret;
     }
 }
 

@@ -70,7 +70,7 @@ public class ReglaTipoPrestacionController extends
 		this.reglaTipoPrestacionService = reglaTipoPrestacionService;
 	}
 
-	@GetMapping("/all")
+	@GetMapping("/list")
 	public String listAll(Model model, @RequestParam(name = "page", defaultValue = "0") int page) {
 
 		Pageable pageRequest = PageRequest.of(page, 2);
@@ -111,7 +111,7 @@ public class ReglaTipoPrestacionController extends
 		reglaDTO.setAllTipoPrestacion(allTipoPrestacion);
 		// Establecer el valor seleccionado en el select
 		reglaDTO.setTipoPrestacionSelected(reglasTipoPrestacionList);
-
+		
 		model.addAttribute("reglaDTO", reglaDTO);
 		model.addAttribute("titlePage", "Editar regla");
 		return "reglas/editar_regla";
