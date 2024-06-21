@@ -79,7 +79,7 @@ public class SecurityConfiguration {
                 .csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                         authorizationManagerRequestMatcherRegistry
-                                .requestMatchers("/swagger-ui/**", "/api-doc/**", "/v3/**", "/swagger-ui.html").permitAll()
+                                .requestMatchers("/swagger-ui/**", "/api-doc/**", "/v3/**", "/swagger-ui.html", "/api/id/**").permitAll()
                                 .requestMatchers("/js/**", "/css/**", "/img/**").permitAll()
                                 .requestMatchers(
                                         new AntPathRequestMatcher("/regla-tipo-prestacion/prestacions/**")

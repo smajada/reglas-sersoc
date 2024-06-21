@@ -255,6 +255,8 @@ public class ReglaTipoPrestacionController extends
 		NoutPrestacions prestacion = noutPrestacionsService
 				.findById(prestacionID).orElseThrow(EntityNotFoundException::new);
 
+
+
 		List<GenericValidationDTO> validationList = new ArrayList<>();
 
 		Date now = new Date(System.currentTimeMillis());

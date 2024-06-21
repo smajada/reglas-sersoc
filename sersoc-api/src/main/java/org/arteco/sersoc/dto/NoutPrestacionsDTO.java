@@ -12,6 +12,7 @@ import org.arteco.sersoc.model.entities.NoutTiprcp;
 import java.sql.Date;
 import java.util.List;
 import java.util.Map;
+import org.arteco.sersoc.service.ReglaTipoPrestacionService;
 
 @Data
 @NoArgsConstructor
@@ -29,5 +30,5 @@ public class NoutPrestacionsDTO {
     private NoutForpag forpag;
     private NoutTipcot tipcot;
     private NoutTiprcp tiprcp;
-    private List<Map<String, Object>> noutPerPrs;
+    private List<Map<String, Object>> beneficiaris;
 }
