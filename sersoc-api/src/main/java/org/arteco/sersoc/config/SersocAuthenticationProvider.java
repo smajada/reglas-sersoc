@@ -2,7 +2,12 @@ package org.arteco.sersoc.config;
 
 import es.palma.imicorpservices.common.dto.usuari.GenPerfilDto;
 import es.palma.imicorpservices.common.dto.usuari.GenUsuariDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import es.palma.imicorpservices.common.dto.usuari.LoginResultDto;
+import org.arteco.sersoc.config.exceptions.CanviarPasswordException;
+import org.arteco.sersoc.config.exceptions.FaltaRolCredentialsException;
+import org.arteco.sersoc.config.exceptions.UsuariDeshabilitatException;
+import org.arteco.sersoc.dto.UsuariDto;
+import org.arteco.sersoc.service.ImicorpService;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -10,6 +15,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
+import es.palma.common.imilib.constants.Constants;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,14 +23,16 @@ import java.util.HashSet;
 import java.util.List;
 
 public class SersocAuthenticationProvider implements AuthenticationProvider {
+    //TODO: Canviar aquesta constant per la que toca
     public static final String[] PRFAPL  = {"FUE_USUARI_OPFUE"};
 
     private static final String ERR_LOGIN = "Login error";
 
-    @Autowired
     private ImicorpService imiService;
 
-    public SersocAuthenticationProvider() { /* Constructor buit. */ }
+    public SersocAuthenticationProvider() { /* Constructor buit. */
+
+	}
 
     @Override
     public Authentication authenticate(Authentication pAuth) throws AuthenticationException {

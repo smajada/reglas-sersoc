@@ -9,6 +9,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,7 +45,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.internal.Logger;
 
 import static org.hibernate.id.SequenceMismatchStrategy.LOG;
 
@@ -54,7 +54,10 @@ public class SecurityConfiguration {
 
     public static final String BEARER_AUTH = "bearerAuth";
     public static final String API_KEY = "Apikey";
+    //TODO: Canviar aquesta constant per la que correspongui
     private static final String PERFIL_PRIVAT = "FUE_USUARI_OPFUE";
+    private static final Logger LOG = LoggerFactory.getLogger(SecurityConfiguration.class.getCanonicalName());
+
 
     @Autowired
     ResourceLoader resourceLoader;
@@ -66,18 +69,22 @@ public class SecurityConfiguration {
         auth.inMemoryAuthentication()
                 .withUser("user")
                 .password(passwordEncoder.encode("password"))
-                .roles("USER")
+                .roles(PERFIL_PRIVAT)
                 .and()
                 .withUser("admin")
                 .password(passwordEncoder.encode("admin"))
-                .roles("ADMIN");
+                .roles(PERFIL_PRIVAT);
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        loadPerfils();
+        AuthenticationManager manager = http.getSharedObject(AuthenticationManager.class);
         http
                 .csrf(CsrfConfigurer::disable)
-                .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
+            .addFilterBefore(loginFilter(manager), UsernamePasswordAuthenticationFilter.class)
+            .authenticationProvider(imiAuthenticationProvider())
+            .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                         authorizationManagerRequestMatcherRegistry
                                 .requestMatchers("/swagger-ui/**", "/api-doc/**", "/v3/**", "/swagger-ui.html", "/api/id/**").permitAll()
                                 .requestMatchers("/js/**", "/css/**", "/img/**").permitAll()
@@ -98,9 +105,8 @@ public class SecurityConfiguration {
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .logoutSuccessUrl("/login"))
                 .exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedPage("/access-denied")
-                        .defaultAuthenticationEntryPointFor(new Http403ForbiddenEntryPoint(), request -> request.getRequestURI().startsWith("/api")))
-                .addFilterBefore(apiKeyFilter(), UsernamePasswordAuthenticationFilter.class);
-
+                        .defaultAuthenticationEntryPointFor(new Http403ForbiddenEntryPoint(), request -> request.getRequestURI().startsWith("/api")));
+//                .addFilterBefore(apiKeyFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -177,7 +183,7 @@ public class SecurityConfiguration {
         ) {
             while ((line = br.readLine()) != null) { perfils.add(line); }
         } catch (IOException e) {
-            LOG.error("OpfueFrontSecurityConfig.loadPerfils", e);
+            LOG.error("SerSocSecurityConfig.loadPerfils", e);
         }
         String[] ret = new String[perfils.size()];
         ret = perfils.toArray(ret);

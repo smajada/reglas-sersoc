@@ -24,6 +24,13 @@
 		</dependency>
 		<dependency>
 			<groupId>es.palma</groupId>
+			<artifactId>imi-corp-common-imilib</artifactId>
+			<version>0.0.2</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/src/lib/imi-corp-common-imilib-0.0.2.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>es.palma</groupId>
 			<artifactId>imi-corp-services-common</artifactId>
 			<version>1.1.0</version>
 			<scope>system</scope>
