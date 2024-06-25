@@ -37,10 +37,10 @@ public class NoutPrestacionsRestController extends
 		if (optionalPrestacion.isPresent()) {
 			NoutPrestacionsDTO prestacion = optionalPrestacion.get();
 
-//			for (Map<String, Object> beneficiario : prestacion.getBeneficiaris()) {
-//				Map<String, Object> padron = reglaTipoPrestacionService.findPadron((String) beneficiario.get("dni"));
-//				beneficiario.put("padron", padron);
-//			}
+			for (Map<String, Object> beneficiario : prestacion.getBeneficiaris()) {
+				Map<String, Object> padron = reglaTipoPrestacionService.findPadron((String) beneficiario.get("dni"));
+				beneficiario.put("padron", padron);
+			}
 
 			return ResponseEntity.ok(prestacion);
 		} else {

@@ -1,2 +1,0 @@
-# TODO: Cambiar el usuario FUE_USUARI_OPFUE
-FUE_USUARI_OPFUE 
