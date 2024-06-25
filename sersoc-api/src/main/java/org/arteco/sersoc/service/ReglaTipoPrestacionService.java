@@ -1,5 +1,6 @@
 package org.arteco.sersoc.service;
 
+import java.util.HashMap;
 import java.util.Map;
 import org.arteco.sersoc.base.AbstractCrudService;
 import org.arteco.sersoc.model.base.ReglasTipoPrestacionId;
@@ -17,21 +18,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Service
 public class ReglaTipoPrestacionService extends
 	AbstractCrudService<ReglaTipoPrestacionEntity, ReglasTipoPrestacionId, ReglaTipoPrestacionRepository> {
 
 	private final NoutReglesService noutReglesService;
-	private final RestTemplate restTemplate;
+	private final WebClient webClient;
 
 	public ReglaTipoPrestacionService(ReglaTipoPrestacionRepository reglaTipoPrestacionRepository,
-									  NoutReglesRepository noutReglesRepository,
-									  RestTemplate restTemplate) {
+									  NoutReglesRepository noutReglesRepository, WebClient webClient) {
 
 		super(reglaTipoPrestacionRepository);
 		this.noutReglesService = new NoutReglesService(noutReglesRepository);
-		this.restTemplate = restTemplate;
+		this.webClient = webClient;
 	}
 
 	@Transactional
@@ -97,20 +99,27 @@ public class ReglaTipoPrestacionService extends
 		repo.save(reglaTipoPrestacion);
 	}
 
-	public Map<String, Object> findPadron(String DNI) {
+	public Map<String, Object> findPadron(String dni) {
+		String url = "https://pmhapi.corp.consolidation.imi/pmhapi/antiguedadMunicipio/BENSOC/DNI/" + dni;
 
-		String url = "https://pmhapi.corp.consolidation.imi/pmhapi/antiguedadMunicipio/BENSOC/DNI/" + DNI;
+		Map<String, Object> response = new HashMap<>();
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("X-API-KEY", "abc123"); // Agrega tu API key aquí
-		HttpEntity<String> entity = new HttpEntity<>(headers);
+		try {
+			response = webClient.get()
+				.uri(url)
+				.header("X-API-KEY", "abc123")
+				.retrieve()
+				.bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
+				.block();
+		} catch (WebClientResponseException e) {
+			// Manejo de errores específicos de WebClient
+			System.err.println("Error en la respuesta: " + e.getMessage());
+		} catch (Exception e) {
+			// Manejo de errores inesperados
+			System.err.println("Error inesperado: " + e.getMessage());
+		}
 
-		return restTemplate.exchange(
-			url,
-			HttpMethod.GET,
-			entity,
-			new ParameterizedTypeReference<Map<String, Object>>() {
-			}
-		).getBody();
+		System.out.println(response);
+		return response;
 	}
 }
