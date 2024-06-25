@@ -11,13 +11,13 @@ import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
-	private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+	private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 										Authentication authentication) throws IOException, ServletException {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-		redirectStrategy.sendRedirect(request, response, "/");
+		redirectStrategy.sendRedirect(request, response, "/home");
 	}
 
 }

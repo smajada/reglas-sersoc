@@ -82,8 +82,7 @@ public class SecurityConfiguration {
         AuthenticationManager manager = http.getSharedObject(AuthenticationManager.class);
         http
                 .csrf(CsrfConfigurer::disable)
-            .addFilterBefore(loginFilter(manager), UsernamePasswordAuthenticationFilter.class)
-            .authenticationProvider(imiAuthenticationProvider())
+//            .authenticationProvider(imiAuthenticationProvider())
             .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                         authorizationManagerRequestMatcherRegistry
                                 .requestMatchers("/swagger-ui/**", "/api-doc/**", "/v3/**", "/swagger-ui.html", "/api/id/**").permitAll()
@@ -105,8 +104,9 @@ public class SecurityConfiguration {
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .logoutSuccessUrl("/login"))
                 .exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedPage("/access-denied")
-                        .defaultAuthenticationEntryPointFor(new Http403ForbiddenEntryPoint(), request -> request.getRequestURI().startsWith("/api")));
-//                .addFilterBefore(apiKeyFilter(), UsernamePasswordAuthenticationFilter.class);
+                        .defaultAuthenticationEntryPointFor(new Http403ForbiddenEntryPoint(), request -> request.getRequestURI().startsWith("/api")))
+            .addFilterBefore(loginFilter(manager), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(apiKeyFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
