@@ -45,14 +45,18 @@
                                 <td th:text="${#dates.format(regla.datFin,'dd/MM/yyyy' )}"></td>
                                 <td class="d-flex justify-content-evenly">
                                     <a class="btn btn-outline-info botonesAcciones" id="btn-info" th:onclick="showRegla([[${regla}]])"
-                                     type="button">
+                                       type="button">
                                         +
                                     </a>
                                     <a th:href="@{/regla-tipo-prestacion/editar/{reglaId}(reglaId=${regla.con})}"
-                                    class="btn btn-outline-warning botonesAcciones" id="btn-edit">✎</a>
+                                       class="btn btn-outline-warning botonesAcciones" id="btn-edit">✎</a>
 
-                                    <a th:href="@{/regla-tipo-prestacion/delete/{reglaId}(reglaId=${regla.con})}"
-                                    class="btn btn-outline-danger botonesAcciones" id="btn-delete">
+                                    <a href="#"
+                                       class="btn btn-outline-danger botonesAcciones"
+                                       id="btn-delete"
+                                       data-bs-toggle="modal"
+                                       data-bs-target="#deleteModal"
+                                       th:attr="data-delete-url=@{/regla-tipo-prestacion/delete/{reglaId}(reglaId=${regla.con})}">
                                         ✕
                                     </a>
                                 </td>
@@ -70,76 +74,108 @@
                             <ul class="pagination justify-content-center">
                                 <li class="page-item">
                                     <a class="page-link rounded-0"
-                                    th:classappend="${currentPage == 0} ? disabled"
-                                    th:href="@{/regla-tipo-prestacion/list(page=${currentPage - 1})}"
+                                       th:classappend="${currentPage == 0} ? disabled"
+                                       th:href="@{/regla-tipo-prestacion/list(page=${currentPage - 1})}"
                                     >Previous</a></li>
 
                                 <li class="page-item" th:each="page : ${#numbers.sequence(0, totalPages - 1)}">
                                     <a th:href="@{/regla-tipo-prestacion/list(page=${page})}"
-                                    th:text="${page + 1}"
-                                    th:classappend="${currentPage==page} ? active"
-                                    class="page-link"></a>
+                                       th:text="${page + 1}"
+                                       th:classappend="${currentPage==page} ? active"
+                                       class="page-link"></a>
                                 </li>
 
                                 <li class="page-item">
                                     <a class="page-link rounded-0"
-                                    th:classappend="${currentPage == totalPages - 1} ? disabled"
-                                    th:href="@{/regla-tipo-prestacion/list(page=${currentPage + 1})}"
+                                       th:classappend="${currentPage == totalPages - 1} ? disabled"
+                                       th:href="@{/regla-tipo-prestacion/list(page=${currentPage + 1})}"
                                     >Next</a></li>
                             </ul>
                         </nav>
                     </div>
                 </div>
                 <div class="bg-light p-4 p-md-5 rounded-0 col-12 col-md-12 col-lg-4 col-xl-5 col-xxl-5 pt-5">
-                            <div id="regla-container" style="display: none" >
-                                <div class="pt-5">
-                                    <h3 class="fw-bolder h3 mb-3">Prestaciones</h3>
-                                    <ul id="prestaciones">
-                            
-                                    </ul>
-                            
-                                    <div class="col-12">
-                                        <label class="form-label mb-2" for="regla">Script</label>
-                                        <textarea aria-label="regla" class="form-control" id="regla"
-                                        ></textarea>
-                                    </div>
-                                </div>
+                    <div id="regla-container" style="display: none" >
+                        <div class="pt-5">
+                            <h3 class="fw-bolder h3 mb-3">Prestaciones</h3>
+                            <ul id="prestaciones">
+
+                            </ul>
+
+                            <div class="col-12">
+                                <label class="form-label mb-2" for="regla">Script</label>
+                                <textarea aria-label="regla" class="form-control" id="regla"
+                                ></textarea>
                             </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
+<!-- Modal de confirmación de eliminación -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar esta regla?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button id="confirmDeleteBtn" class="btn btn-danger">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script th:inline="javascript">
-	const prestaciones = document.getElementById('prestaciones');
-	const reglaDiv = document.getElementById('regla-container');
-	const codeRegla = document.getElementById('regla');
-	let myCodeMirror; // Variable global para guardar la instancia de CodeMirror
+    const prestaciones = document.getElementById('prestaciones');
+    const reglaDiv = document.getElementById('regla-container');
+    const codeRegla = document.getElementById('regla');
+    let myCodeMirror; // Variable global para guardar la instancia de CodeMirror
 
-	// Función para inicializar CodeMirror
-	function initializeCodeMirror() {
-		myCodeMirror = CodeMirror.fromTextArea(codeRegla, {
-			lineNumbers: true,
-			lineWrapping: true,
-			mode: 'javascript',
-			styleActiveLine: true,
-			readOnly: true
-		});
-	}
+    // Función para inicializar CodeMirror
+    function initializeCodeMirror() {
+        myCodeMirror = CodeMirror.fromTextArea(codeRegla, {
+            lineNumbers: true,
+            lineWrapping: true,
+            mode: 'javascript',
+            styleActiveLine: true,
+            readOnly: true
+        });
+    }
 
-	// Llamar a la inicialización de CodeMirror cuando la página se carga
-	window.onload = initializeCodeMirror;
+    // Llamar a la inicialización de CodeMirror cuando la página se carga
+    window.onload = initializeCodeMirror;
 
-	function showRegla(regla) {
-		reglaDiv.style.display = 'contents';
-		const rtp = /*[[${reglasTipoPrestacion}]]*/ [];
-		const tiposPrestaciones = rtp.filter(rtp => rtp.noutRegles.con === regla.con && rtp.active);
+    function showRegla(regla) {
+        reglaDiv.style.display = 'contents';
+        const rtp = /*[[${reglasTipoPrestacion}]]*/ [];
+        const tiposPrestaciones = rtp.filter(rtp => rtp.noutRegles.con === regla.con && rtp.active);
 
-		prestaciones.innerHTML = tiposPrestaciones.map(tp => `<li>${tp.noutTipprs.dec}</li>`).join('');
-		myCodeMirror.setValue(regla.script); // Actualizar el contenido del CodeMirror
-	}
+        prestaciones.innerHTML = tiposPrestaciones.map(tp => `<li>${tp.noutTipprs.dec}</li>`).join('');
+        myCodeMirror.setValue(regla.script); // Actualizar el contenido del CodeMirror
+    }
 
+    document.addEventListener('DOMContentLoaded', function () {
+        const deleteButtons = document.querySelectorAll('.btn-outline-danger');
+
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const deleteUrl = this.getAttribute('data-delete-url');
+
+                document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+                    window.location.href = deleteUrl;
+                });
+            });
+        });
+    });
 </script>
 
 

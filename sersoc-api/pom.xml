@@ -10,7 +10,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
-	<artifactId>prestacions-api</artifactId>
+	<artifactId>sersoc-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
 	<dependencies>
@@ -21,6 +21,20 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>es.palma</groupId>
+			<artifactId>imi-corp-common-imilib</artifactId>
+			<version>0.0.2</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/src/lib/imi-corp-common-imilib-0.0.2.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>es.palma</groupId>
+			<artifactId>imi-corp-services-common</artifactId>
+			<version>1.1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/src/lib/imi-corp-services-common-1.1.0.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -106,9 +120,14 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.projectreactor.netty</groupId>
+			<artifactId>reactor-netty</artifactId>
 		</dependency>
 	</dependencies>
 
