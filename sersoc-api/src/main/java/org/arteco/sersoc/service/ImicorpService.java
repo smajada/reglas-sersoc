@@ -2,16 +2,18 @@ package org.arteco.sersoc.service;
 
 import es.palma.imicorpservices.common.dto.usuari.GenUsuariDto;
 import es.palma.imicorpservices.common.dto.usuari.LoginResultDto;
-import es.palma.imicorpservices.common.utils.HttpUtil;
-import java.util.HashMap;
-import java.util.Map;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import org.arteco.sersoc.dto.UsuariDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-public class imiCorpService {
+public class ImiCorpService {
 	@Value("${imi.service.api.host}")
 	private String servicesApi;
 	@Value("${imi.sersoc.apl}")
@@ -21,25 +23,56 @@ public class imiCorpService {
 	@Value("${corpapi.http.auth-token}")
 	private String principalRequestValue;
 
-	private RestTemplate restTemplate = new RestTemplate();
+	private final Logger logger = LoggerFactory.getLogger(ImiCorpService.class);
+
+	private final WebClient webClient = WebClient.create();
 
 	private String getBaseServiceUrl() { return servicesApi; }
 
 	public LoginResultDto login(GenUsuariDto usuari) {
 
-		Map<String, String> params = new HashMap<>();
-		params.put("apl", application);
-		String url = getBaseServiceUrl() + "/doLoginRest?apl={apl}";
-		ResponseEntity<LoginResultDto> response = restTemplate.exchange(url, HttpMethod.POST,
-																		new HttpEntity<>(usuari,
-																						 HttpUtil.createHeaders(
-																							 principalRequestHeader,
-																							 principalRequestValue)),
-																		LoginResultDto.class, params);
+		String url = getBaseServiceUrl() + "/doLoginRest?apl=" + application;
+
+		ResponseEntity<LoginResultDto> response = ResponseEntity.ofNullable(null);
+
+		try {
+			response  = webClient.post()
+				.uri(url)
+				.header(principalRequestHeader, principalRequestValue)
+				.bodyValue(usuari)
+				.retrieve()
+				.bodyToMono(new ParameterizedTypeReference<ResponseEntity<LoginResultDto>>() {})
+				.block();
+		} catch (WebClientResponseException e) {
+			// Handle exception
+			logger.error("Error: {}", e.getMessage());
+		}
+
+		assert response != null;
 		return response.getBody() == null ? new LoginResultDto() : response.getBody();
+
 	}
 
+	public UsuariDto getPublicUserDto(String token) {
+		String url = getBaseServiceUrl() + "/auth?token=" + URLEncoder.encode(token, StandardCharsets.UTF_8);
 
+		ResponseEntity<UsuariDto> response = ResponseEntity.ofNullable(null);
+
+		try {
+			response = webClient.get()
+				.uri(url)
+				.header(principalRequestHeader, principalRequestValue)
+				.retrieve()
+				.bodyToMono(new ParameterizedTypeReference<ResponseEntity<UsuariDto>>() {})
+				.block();
+		} catch (WebClientResponseException e) {
+			// Handle exception
+			logger.error("Error: {}", e.getMessage());
+		}
+
+		assert response != null;
+		return response.getBody() == null ? null : new UsuariDto(response.getBody());
+	}
 
 
 }
