@@ -4,7 +4,7 @@ import es.palma.imicorpservices.common.dto.usuari.GenUsuariDto;
 import es.palma.imicorpservices.common.dto.usuari.LoginResultDto;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import org.arteco.sersoc.dto.UsuariDto;
+import org.arteco.sersoc.dto.UsuariDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +14,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 public class ImiCorpService {
+
+	private final Logger logger = LoggerFactory.getLogger(ImiCorpService.class);
+	private final WebClient webClient = WebClient.create();
 	@Value("${imi.service.api.host}")
 	private String servicesApi;
 	@Value("${imi.sersoc.apl}")
@@ -23,11 +26,10 @@ public class ImiCorpService {
 	@Value("${corpapi.http.auth-token}")
 	private String principalRequestValue;
 
-	private final Logger logger = LoggerFactory.getLogger(ImiCorpService.class);
+	private String getBaseServiceUrl() {
 
-	private final WebClient webClient = WebClient.create();
-
-	private String getBaseServiceUrl() { return servicesApi; }
+		return servicesApi;
+	}
 
 	public LoginResultDto login(GenUsuariDto usuari) {
 
@@ -36,12 +38,13 @@ public class ImiCorpService {
 		ResponseEntity<LoginResultDto> response = ResponseEntity.ofNullable(null);
 
 		try {
-			response  = webClient.post()
+			response = webClient.post()
 				.uri(url)
 				.header(principalRequestHeader, principalRequestValue)
 				.bodyValue(usuari)
 				.retrieve()
-				.bodyToMono(new ParameterizedTypeReference<ResponseEntity<LoginResultDto>>() {})
+				.bodyToMono(new ParameterizedTypeReference<ResponseEntity<LoginResultDto>>() {
+				})
 				.block();
 		} catch (WebClientResponseException e) {
 			// Handle exception
@@ -53,17 +56,19 @@ public class ImiCorpService {
 
 	}
 
-	public UsuariDto getPublicUserDto(String token) {
+	public UsuariDTO getPublicUserDto(String token) {
+
 		String url = getBaseServiceUrl() + "/auth?token=" + URLEncoder.encode(token, StandardCharsets.UTF_8);
 
-		ResponseEntity<UsuariDto> response = ResponseEntity.ofNullable(null);
+		ResponseEntity<UsuariDTO> response = ResponseEntity.ofNullable(null);
 
 		try {
 			response = webClient.get()
 				.uri(url)
 				.header(principalRequestHeader, principalRequestValue)
 				.retrieve()
-				.bodyToMono(new ParameterizedTypeReference<ResponseEntity<UsuariDto>>() {})
+				.bodyToMono(new ParameterizedTypeReference<ResponseEntity<UsuariDTO>>() {
+				})
 				.block();
 		} catch (WebClientResponseException e) {
 			// Handle exception
@@ -71,7 +76,7 @@ public class ImiCorpService {
 		}
 
 		assert response != null;
-		return response.getBody() == null ? null : new UsuariDto(response.getBody());
+		return response.getBody() == null ? null : new UsuariDTO(response.getBody());
 	}
 
 
